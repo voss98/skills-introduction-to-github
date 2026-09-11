@@ -3,9 +3,9 @@
 
   const CALIBRATION_KEY = "ruler_pxPerInch";
   const MODEL_KEY = "ruler_iphoneModel";
+  const REF_TYPE_KEY = "ruler_refType";
   const DEFAULT_PX_PER_INCH = 96; // CSS reference pixel: 96px == 1in
   const MM_PER_INCH = 25.4;
-  const PT_PER_INCH = 72;
   const LEFT_OFFSET = 16; // keeps the "0" label from being clipped by the rounded edge
 
   // Official Apple exterior lengths (long edge, portrait), in millimeters.
@@ -30,6 +30,24 @@
   ];
   const DEFAULT_MODEL_NAME = "iPhone 16";
 
+  // ISO/IEC 7810 ID-1 (credit card): 85.60 x 53.98 mm.
+  const REFERENCES = {
+    iphone: {
+      label: "iPhone",
+      copy: "Hold your iPhone flat against the screen. Drag the edge until the outline matches its exact length — then every measurement here will be true to life.",
+      getLengthMM: () => state.model.mm,
+      shortMM: () => 71.6, // typical iPhone width, for the silhouette's proportions
+      defaultOrientation: "portrait",
+    },
+    card: {
+      label: "Credit Card",
+      copy: "Hold a credit card, ID, or gift card flat against the screen. Drag the edge until the outline matches its exact width — then every measurement here will be true to life.",
+      getLengthMM: () => 85.6,
+      shortMM: () => 53.98,
+      defaultOrientation: "landscape",
+    },
+  };
+
   const els = {
     track: document.getElementById("rulerTrack"),
     viewport: document.getElementById("rulerViewport"),
@@ -40,11 +58,17 @@
     calibrateBtn: document.getElementById("calibrateBtn"),
     calibrationStatus: document.getElementById("calibrationStatus"),
     modal: document.getElementById("calibrateModal"),
+    modalCopy: document.getElementById("modalCopy"),
+    calibrateStage: document.getElementById("calibrateStage"),
     calibrateBox: document.getElementById("calibrateBox"),
     calibrateHandle: document.getElementById("calibrateHandle"),
+    rotateBtn: document.getElementById("rotateBtn"),
     saveCalibrate: document.getElementById("saveCalibrate"),
     cancelCalibrate: document.getElementById("cancelCalibrate"),
     resetCalibrate: document.getElementById("resetCalibrate"),
+    refTypeToggle: document.getElementById("refTypeToggle"),
+    refTypeButtons: Array.from(document.querySelectorAll(".ref-type-btn")),
+    modelPickerWrap: document.getElementById("modelPickerWrap"),
     modelPickerBtn: document.getElementById("modelPickerBtn"),
     modelPickerLabel: document.getElementById("modelPickerLabel"),
     modelMenu: document.getElementById("modelMenu"),
@@ -54,6 +78,8 @@
     unit: "in",
     pxPerInch: loadCalibration(),
     model: loadModel(),
+    refType: localStorage.getItem(REF_TYPE_KEY) === "card" ? "card" : "iphone",
+    orientation: "portrait",
   };
 
   function loadCalibration() {
@@ -114,26 +140,6 @@
     setTrackWidth(totalSteps * pxPerSixteenth);
   }
 
-  function renderFootTicks() {
-    // Granularity: eighths of an inch, like a real tape measure.
-    const pxPerEighth = state.pxPerInch / 8;
-    const totalFeet = 4;
-    const totalSteps = totalFeet * 12 * 8;
-
-    for (let i = 0; i <= totalSteps; i++) {
-      const position = i * pxPerEighth + LEFT_OFFSET;
-      if (i % 96 === 0) {
-        makeTick(position, 64, "strong", String(i / 96) + " ft");
-      } else if (i % 8 === 0) {
-        const inchInFoot = (i / 8) % 12;
-        makeTick(position, 46, "medium", String(inchInFoot), true);
-      } else if (i % 4 === 0) makeTick(position, 34, null, null);
-      else if (i % 2 === 0) makeTick(position, 24, null, null);
-      else makeTick(position, 16, null, null);
-    }
-    setTrackWidth(totalSteps * pxPerEighth);
-  }
-
   function renderMetricTicks() {
     const pxPerMM = state.pxPerInch / MM_PER_INCH;
     const totalMM = 300; // 30 cm
@@ -162,41 +168,11 @@
     setTrackWidth(totalMM * pxPerMM);
   }
 
-  function renderPointTicks() {
-    const pxPerPt = state.pxPerInch / PT_PER_INCH;
-    const totalPt = 6 * PT_PER_INCH; // 6 inches worth of points
-
-    for (let i = 0; i <= totalPt; i++) {
-      const position = i * pxPerPt + LEFT_OFFSET;
-      if (i % 72 === 0) makeTick(position, 64, "strong", String(i));
-      else if (i % 12 === 0) makeTick(position, 42, "medium", String(i), true);
-      else if (i % 6 === 0) makeTick(position, 26, null, null);
-      else makeTick(position, 15, null, null);
-    }
-    setTrackWidth(totalPt * pxPerPt);
-  }
-
-  function renderPixelTicks() {
-    // Pixels are literal CSS pixels: always 1:1, independent of calibration.
-    const totalPx = 900;
-
-    for (let i = 0; i <= totalPx; i += 10) {
-      const position = i + LEFT_OFFSET;
-      if (i % 100 === 0) makeTick(position, 64, "strong", String(i));
-      else if (i % 50 === 0) makeTick(position, 42, "medium", null);
-      else makeTick(position, 22, null, null);
-    }
-    setTrackWidth(totalPx);
-  }
-
   const RENDERERS = {
     in: renderInchTicks,
-    ft: renderFootTicks,
     cm: renderMetricTicks,
     mm: renderMetricTicks,
     m: renderMeterTicks,
-    pt: renderPointTicks,
-    px: renderPixelTicks,
   };
 
   function render() {
@@ -230,18 +206,12 @@
     switch (state.unit) {
       case "in":
         return (distanceFromZero / state.pxPerInch).toFixed(2) + " in";
-      case "ft":
-        return (distanceFromZero / state.pxPerInch / 12).toFixed(2) + " ft";
       case "cm":
         return (distanceFromZero / pxPerMM / 10).toFixed(1) + " cm";
       case "mm":
         return (distanceFromZero / pxPerMM).toFixed(0) + " mm";
       case "m":
         return (distanceFromZero / pxPerMM / 1000).toFixed(2) + " m";
-      case "pt":
-        return (distanceFromZero / (state.pxPerInch / PT_PER_INCH)).toFixed(0) + " pt";
-      case "px":
-        return distanceFromZero.toFixed(0) + " px";
       default:
         return "";
     }
@@ -275,7 +245,7 @@
     updateCursor(e.clientX);
   });
 
-  // ---- Model picker ----
+  // ---- Model picker (iPhone reference only) ----
   function renderModelMenu() {
     els.modelMenu.innerHTML = "";
     IPHONE_MODELS.forEach((model) => {
@@ -296,7 +266,7 @@
     els.modelPickerLabel.textContent = model.name;
     localStorage.setItem(MODEL_KEY, model.name);
     closeModelMenu();
-    setBoxHeightForModel();
+    applyBoxSize();
     renderModelMenu();
   }
 
@@ -319,20 +289,107 @@
     if (!els.modelMenu.hidden && !e.target.closest(".model-picker")) closeModelMenu();
   });
 
-  // ---- Calibration modal ----
-  function setBoxHeightForModel() {
-    const pxPerMM = state.pxPerInch / MM_PER_INCH;
-    const height = Math.min(
-      Math.max(pxPerMM * state.model.mm, 160),
-      window.innerHeight - 340
-    );
-    els.calibrateBox.style.height = height + "px";
+  // ---- Reference object (iPhone / credit card) ----
+  function currentRef() {
+    return REFERENCES[state.refType];
   }
 
+  function buildFrameDecoration() {
+    els.calibrateBox.innerHTML = "";
+    els.calibrateBox.classList.toggle("phone", state.refType === "iphone");
+    els.calibrateBox.classList.toggle("card", state.refType === "card");
+
+    if (state.refType === "iphone") {
+      const island = document.createElement("div");
+      island.className = "phone-island";
+      const camera = document.createElement("div");
+      camera.className = "phone-camera";
+      els.calibrateBox.append(island, camera);
+    } else {
+      const chip = document.createElement("div");
+      chip.className = "card-chip";
+      const stripe = document.createElement("div");
+      stripe.className = "card-stripe";
+      els.calibrateBox.append(stripe, chip);
+    }
+  }
+
+  function maxLengthPx() {
+    return state.orientation === "portrait"
+      ? window.innerHeight - 380
+      : window.innerWidth - 96;
+  }
+
+  function applyBoxSize() {
+    const ref = currentRef();
+    const pxPerMM = state.pxPerInch / MM_PER_INCH;
+    const lengthPx = Math.min(Math.max(pxPerMM * ref.getLengthMM(), 140), maxLengthPx());
+    const shortToLong = ref.shortMM() / ref.getLengthMM();
+
+    els.calibrateBox.style.width = "";
+    els.calibrateBox.style.height = "";
+
+    if (state.orientation === "portrait") {
+      els.calibrateBox.style.height = lengthPx + "px";
+      els.calibrateBox.style.aspectRatio = String(shortToLong);
+    } else {
+      els.calibrateBox.style.width = lengthPx + "px";
+      els.calibrateBox.style.aspectRatio = String(1 / shortToLong);
+    }
+  }
+
+  function updateOrientationUI() {
+    els.calibrateStage.classList.toggle("orientation-portrait", state.orientation === "portrait");
+    els.calibrateStage.classList.toggle("orientation-landscape", state.orientation === "landscape");
+    els.calibrateHandle.setAttribute("aria-orientation", state.orientation === "portrait" ? "vertical" : "horizontal");
+  }
+
+  function setRefType(refType) {
+    if (refType === state.refType) return;
+    state.refType = refType;
+    state.orientation = REFERENCES[refType].defaultOrientation;
+    localStorage.setItem(REF_TYPE_KEY, refType);
+
+    els.refTypeButtons.forEach((btn) => {
+      const active = btn.dataset.ref === refType;
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-selected", String(active));
+    });
+    els.modelPickerWrap.hidden = refType !== "iphone";
+    els.modalCopy.textContent = currentRef().copy;
+
+    buildFrameDecoration();
+    updateOrientationUI();
+    applyBoxSize();
+  }
+
+  function toggleOrientation() {
+    state.orientation = state.orientation === "portrait" ? "landscape" : "portrait";
+    updateOrientationUI();
+    applyBoxSize();
+  }
+
+  els.refTypeToggle.addEventListener("click", (e) => {
+    const btn = e.target.closest(".ref-type-btn");
+    if (btn) setRefType(btn.dataset.ref);
+  });
+
+  els.rotateBtn.addEventListener("click", toggleOrientation);
+
+  // ---- Calibration modal ----
   function openModal() {
     els.modelPickerLabel.textContent = state.model.name;
+    els.modelPickerWrap.hidden = state.refType !== "iphone";
+    els.refTypeButtons.forEach((btn) => {
+      const active = btn.dataset.ref === state.refType;
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-selected", String(active));
+    });
+    els.modalCopy.textContent = currentRef().copy;
     renderModelMenu();
-    setBoxHeightForModel();
+    buildFrameDecoration();
+    updateOrientationUI();
+    applyBoxSize();
     els.modal.hidden = false;
   }
 
@@ -348,8 +405,9 @@
   });
 
   els.saveCalibrate.addEventListener("click", () => {
-    const heightPx = els.calibrateBox.getBoundingClientRect().height;
-    const pxPerMM = heightPx / state.model.mm;
+    const rect = els.calibrateBox.getBoundingClientRect();
+    const lengthPx = state.orientation === "portrait" ? rect.height : rect.width;
+    const pxPerMM = lengthPx / currentRef().getLengthMM();
     const newPxPerInch = pxPerMM * MM_PER_INCH;
 
     if (newPxPerInch > 20 && newPxPerInch < 600) {
@@ -371,22 +429,24 @@
 
   // Drag-to-resize handle (pointer events unify mouse + touch)
   let dragging = false;
-  let dragStartY = 0;
-  let dragStartHeight = 0;
+  let dragStart = 0;
+  let dragStartLength = 0;
 
   els.calibrateHandle.addEventListener("pointerdown", (e) => {
     dragging = true;
-    dragStartY = e.clientY;
-    dragStartHeight = els.calibrateBox.getBoundingClientRect().height;
+    dragStart = state.orientation === "portrait" ? e.clientY : e.clientX;
+    const rect = els.calibrateBox.getBoundingClientRect();
+    dragStartLength = state.orientation === "portrait" ? rect.height : rect.width;
     els.calibrateHandle.setPointerCapture(e.pointerId);
   });
 
   els.calibrateHandle.addEventListener("pointermove", (e) => {
     if (!dragging) return;
-    const delta = e.clientY - dragStartY;
-    const maxHeight = window.innerHeight - 340;
-    const newHeight = Math.min(Math.max(dragStartHeight + delta, 120), maxHeight);
-    els.calibrateBox.style.height = newHeight + "px";
+    const current = state.orientation === "portrait" ? e.clientY : e.clientX;
+    const delta = current - dragStart;
+    const newLength = Math.min(Math.max(dragStartLength + delta, 120), maxLengthPx());
+    if (state.orientation === "portrait") els.calibrateBox.style.height = newLength + "px";
+    else els.calibrateBox.style.width = newLength + "px";
   });
 
   function endDrag() {
@@ -397,9 +457,19 @@
 
   // Keyboard support for the calibration handle
   els.calibrateHandle.addEventListener("keydown", (e) => {
-    const current = els.calibrateBox.getBoundingClientRect().height;
-    if (e.key === "ArrowDown") els.calibrateBox.style.height = current + 2 + "px";
-    else if (e.key === "ArrowUp") els.calibrateBox.style.height = Math.max(current - 2, 120) + "px";
+    const rect = els.calibrateBox.getBoundingClientRect();
+    const current = state.orientation === "portrait" ? rect.height : rect.width;
+    const grow = state.orientation === "portrait" ? e.key === "ArrowDown" : e.key === "ArrowRight";
+    const shrink = state.orientation === "portrait" ? e.key === "ArrowUp" : e.key === "ArrowLeft";
+    if (grow) {
+      const next = current + 2 + "px";
+      if (state.orientation === "portrait") els.calibrateBox.style.height = next;
+      else els.calibrateBox.style.width = next;
+    } else if (shrink) {
+      const next = Math.max(current - 2, 120) + "px";
+      if (state.orientation === "portrait") els.calibrateBox.style.height = next;
+      else els.calibrateBox.style.width = next;
+    }
   });
 
   // ---- Init ----

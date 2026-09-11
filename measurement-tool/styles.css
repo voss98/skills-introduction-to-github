@@ -221,12 +221,6 @@ body {
   user-select: none;
 }
 
-.tick-label.faint {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--tick-medium);
-}
-
 .cursor-line {
   position: absolute;
   top: 0;
@@ -349,7 +343,7 @@ body {
 
 .modal {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   max-height: 92vh;
   overflow-y: auto;
   background: var(--modal-bg);
@@ -377,10 +371,50 @@ body {
   line-height: 1.5;
 }
 
+/* Calibration controls row */
+.calibrate-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.ref-type-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--track-bg);
+  border-radius: 12px;
+  padding: 2px;
+}
+
+.ref-type-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.ref-type-btn.active {
+  background: var(--pill-bg);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-pill);
+}
+
 /* Model picker */
 .model-picker {
   position: relative;
-  margin-bottom: 6px;
+}
+
+.model-picker[hidden] {
+  display: none;
 }
 
 .model-picker-btn {
@@ -452,23 +486,43 @@ body {
   white-space: nowrap;
 }
 
-/* Phone silhouette calibration stage */
+/* Calibration stage: a reference object (iPhone or card) you resize to match */
 .calibrate-stage {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 14px;
   padding: 10px 0 22px;
 }
 
-.phone-frame {
+.calibrate-stage.orientation-portrait {
+  flex-direction: column;
+}
+
+.calibrate-stage.orientation-landscape {
+  flex-direction: row;
+}
+
+.ref-frame-wrap {
   position: relative;
-  width: auto;
-  aspect-ratio: 71.6 / 147.6;
   max-width: 100%;
+}
+
+.ref-frame {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35), inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.ref-frame.phone {
   background: linear-gradient(160deg, #3a3a3c, #17171a);
   border-radius: 15%/7%;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35), inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.ref-frame.card {
+  background: linear-gradient(145deg, var(--accent-2), var(--accent));
+  border-radius: 6.5%;
 }
 
 .phone-island {
@@ -493,24 +547,91 @@ body {
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.12);
 }
 
-.calibrate-handle {
-  width: 56px;
-  height: 26px;
+.card-chip {
+  position: absolute;
+  top: 16%;
+  left: 8%;
+  width: 16%;
+  height: 13%;
+  background: linear-gradient(160deg, #f4dfa0, #c9a24c);
+  border-radius: 18%;
+}
+
+.card-stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16%;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.rotate-btn {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
   background: var(--pill-bg);
-  border-radius: 13px;
+  color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 0 1px var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.rotate-btn:active {
+  transform: scale(0.92);
+}
+
+.calibrate-handle {
+  background: var(--pill-bg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--card-border);
-  cursor: ns-resize;
   display: flex;
   align-items: center;
   justify-content: center;
   touch-action: none;
+  flex: 0 0 auto;
+}
+
+.orientation-portrait .calibrate-handle {
+  width: 56px;
+  height: 26px;
+  border-radius: 13px;
+  cursor: ns-resize;
+}
+
+.orientation-landscape .calibrate-handle {
+  width: 26px;
+  height: 56px;
+  border-radius: 13px;
+  cursor: ew-resize;
 }
 
 .calibrate-handle::before {
   content: "";
+  border-radius: 2px;
+}
+
+.orientation-portrait .calibrate-handle::before {
   width: 22px;
   height: 3px;
-  border-radius: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--tick-weak) 0,
+    var(--tick-weak) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+}
+
+.orientation-landscape .calibrate-handle::before {
+  width: 3px;
+  height: 22px;
   background: repeating-linear-gradient(
     to bottom,
     var(--tick-weak) 0,

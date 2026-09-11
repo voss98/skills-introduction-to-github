@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Ruler</title>
-<meta name="description" content="A beautiful on-screen ruler with inches, feet, centimeters, millimeters, meters, points, and pixels." />
+<meta name="description" content="A beautiful on-screen ruler with inches, centimeters, millimeters, and meters." />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -37,12 +37,9 @@
   <main class="card">
     <div class="unit-chip-row" id="unitChipRow" role="tablist" aria-label="Units of measurement">
       <button class="unit-chip active" data-unit="in" role="tab" aria-selected="true">in</button>
-      <button class="unit-chip" data-unit="ft" role="tab" aria-selected="false">ft</button>
       <button class="unit-chip" data-unit="cm" role="tab" aria-selected="false">cm</button>
       <button class="unit-chip" data-unit="mm" role="tab" aria-selected="false">mm</button>
       <button class="unit-chip" data-unit="m" role="tab" aria-selected="false">m</button>
-      <button class="unit-chip" data-unit="pt" role="tab" aria-selected="false">pt</button>
-      <button class="unit-chip" data-unit="px" role="tab" aria-selected="false">px</button>
     </div>
 
     <div class="ruler-viewport" id="rulerViewport">
@@ -71,22 +68,34 @@
 <div class="modal-overlay" id="calibrateModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <h2 id="modalTitle">Calibrate your screen</h2>
-    <p class="modal-copy">Hold your iPhone flat against the screen. Drag the bottom edge until the outline matches its exact length — then every measurement here will be true to life.</p>
+    <p class="modal-copy" id="modalCopy">Hold your iPhone flat against the screen. Drag the bottom edge until the outline matches its exact length — then every measurement here will be true to life.</p>
 
-    <div class="model-picker">
-      <button class="model-picker-btn" id="modelPickerBtn" aria-haspopup="listbox" aria-expanded="false">
-        <span id="modelPickerLabel">iPhone 16</span>
-        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-          <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <div class="model-menu" id="modelMenu" role="listbox" hidden></div>
+    <div class="calibrate-controls">
+      <div class="ref-type-toggle" id="refTypeToggle" role="tablist" aria-label="Reference object">
+        <button class="ref-type-btn active" data-ref="iphone" role="tab" aria-selected="true">iPhone</button>
+        <button class="ref-type-btn" data-ref="card" role="tab" aria-selected="false">Credit Card</button>
+      </div>
+
+      <div class="model-picker" id="modelPickerWrap">
+        <button class="model-picker-btn" id="modelPickerBtn" aria-haspopup="listbox" aria-expanded="false">
+          <span id="modelPickerLabel">iPhone 16</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="model-menu" id="modelMenu" role="listbox" hidden></div>
+      </div>
     </div>
 
-    <div class="calibrate-stage">
-      <div class="phone-frame" id="calibrateBox" style="height: 320px;">
-        <div class="phone-island"></div>
-        <div class="phone-camera"></div>
+    <div class="calibrate-stage" id="calibrateStage">
+      <div class="ref-frame-wrap">
+        <div class="ref-frame phone" id="calibrateBox" style="height: 320px;"></div>
+        <button class="rotate-btn" id="rotateBtn" aria-label="Rotate the reference object">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 12a8 8 0 0114.5-4.6M20 12a8 8 0 01-14.5 4.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M19 3v4.4h-4.4M5 21v-4.4h4.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
       <div class="calibrate-handle" id="calibrateHandle" aria-label="Drag to resize" role="slider" aria-orientation="vertical" tabindex="0"></div>
     </div>
