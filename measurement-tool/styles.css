@@ -19,7 +19,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #000000;
     --card-bg: rgba(28, 28, 30, 0.72);
     --card-border: rgba(255, 255, 255, 0.08);
@@ -38,6 +38,26 @@
     --overlay: rgba(0, 0, 0, 0.55);
     --modal-bg: #1c1c1e;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --card-bg: rgba(28, 28, 30, 0.72);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f5f5f7;
+  --text-secondary: #98989d;
+  --accent: #0a84ff;
+  --accent-2: #7d7aff;
+  --track-bg: rgba(118, 118, 128, 0.24);
+  --pill-bg: #3a3a3c;
+  --tick-strong: #f5f5f7;
+  --tick-medium: #8e8e93;
+  --tick-weak: #48484a;
+  --ruler-surface: #1c1c1e;
+  --shadow-card: 0 20px 45px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-pill: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.04);
+  --overlay: rgba(0, 0, 0, 0.55);
+  --modal-bg: #1c1c1e;
 }
 
 * {
