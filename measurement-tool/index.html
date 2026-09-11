@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Ruler</title>
+<meta name="description" content="A beautiful on-screen ruler with inches, centimeters, and millimeters." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="app">
+  <header class="app-header">
+    <div class="app-icon" aria-hidden="true">
+      <svg viewBox="0 0 48 48" width="34" height="34">
+        <rect x="4" y="15" width="40" height="18" rx="5" fill="url(#g)"/>
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0A84FF"/>
+            <stop offset="1" stop-color="#5E5CE6"/>
+          </linearGradient>
+        </defs>
+        <g stroke="#fff" stroke-width="1.6" stroke-linecap="round">
+          <line x1="10" y1="15" x2="10" y2="23"/>
+          <line x1="16" y1="15" x2="16" y2="20"/>
+          <line x1="22" y1="15" x2="22" y2="23"/>
+          <line x1="28" y1="15" x2="28" y2="20"/>
+          <line x1="34" y1="15" x2="34" y2="23"/>
+          <line x1="40" y1="15" x2="40" y2="20"/>
+        </g>
+      </svg>
+    </div>
+    <h1>Ruler</h1>
+    <p class="subtitle">Measure anything, right on your screen.</p>
+  </header>
+
+  <main class="card">
+    <div class="segmented-control" id="segmentedControl" role="tablist" aria-label="Units of measurement">
+      <span class="segment-pill" id="segmentPill" aria-hidden="true"></span>
+      <button class="segment active" data-unit="in" role="tab" aria-selected="true">in</button>
+      <button class="segment" data-unit="cm" role="tab" aria-selected="false">cm</button>
+      <button class="segment" data-unit="mm" role="tab" aria-selected="false">mm</button>
+    </div>
+
+    <div class="ruler-viewport" id="rulerViewport">
+      <div class="ruler-track" id="rulerTrack"></div>
+      <div class="cursor-line" id="cursorLine">
+        <div class="cursor-badge" id="cursorBadge">0</div>
+      </div>
+      <div class="edge-fade edge-fade-left" aria-hidden="true"></div>
+      <div class="edge-fade edge-fade-right" aria-hidden="true"></div>
+    </div>
+
+    <div class="ruler-footer">
+      <button id="calibrateBtn" class="ghost-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 17.5L17.5 4a2.121 2.121 0 013 3L6.5 20.5H4v-3z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        </svg>
+        Calibrate to your screen
+      </button>
+      <span class="status" id="calibrationStatus">Standard scale</span>
+    </div>
+  </main>
+
+  <p class="hint">Drag your finger or mouse across the ruler to read a measurement.</p>
+</div>
+
+<div class="modal-overlay" id="calibrateModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Calibrate your screen</h2>
+    <p class="modal-copy">Hold a credit card, ID, or gift card flat against your screen. Drag the edge below until the box matches its width exactly — then every measurement on this ruler will be true to life.</p>
+
+    <div class="calibrate-stage">
+      <div class="calibrate-box" id="calibrateBox" style="width: 320px;">
+        <span class="calibrate-label">card width</span>
+        <div class="calibrate-handle" id="calibrateHandle" aria-label="Drag to resize" role="slider" tabindex="0"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="text-btn" id="resetCalibrate">Reset to default</button>
+      <div class="modal-actions-right">
+        <button class="ghost-btn" id="cancelCalibrate">Cancel</button>
+        <button class="primary-btn" id="saveCalibrate">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
