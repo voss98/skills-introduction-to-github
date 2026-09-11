@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Ruler</title>
-<meta name="description" content="A beautiful on-screen ruler with inches, centimeters, and millimeters." />
+<meta name="description" content="A beautiful on-screen ruler with inches, feet, centimeters, millimeters, meters, points, and pixels." />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -35,11 +35,14 @@
   </header>
 
   <main class="card">
-    <div class="segmented-control" id="segmentedControl" role="tablist" aria-label="Units of measurement">
-      <span class="segment-pill" id="segmentPill" aria-hidden="true"></span>
-      <button class="segment active" data-unit="in" role="tab" aria-selected="true">in</button>
-      <button class="segment" data-unit="cm" role="tab" aria-selected="false">cm</button>
-      <button class="segment" data-unit="mm" role="tab" aria-selected="false">mm</button>
+    <div class="unit-chip-row" id="unitChipRow" role="tablist" aria-label="Units of measurement">
+      <button class="unit-chip active" data-unit="in" role="tab" aria-selected="true">in</button>
+      <button class="unit-chip" data-unit="ft" role="tab" aria-selected="false">ft</button>
+      <button class="unit-chip" data-unit="cm" role="tab" aria-selected="false">cm</button>
+      <button class="unit-chip" data-unit="mm" role="tab" aria-selected="false">mm</button>
+      <button class="unit-chip" data-unit="m" role="tab" aria-selected="false">m</button>
+      <button class="unit-chip" data-unit="pt" role="tab" aria-selected="false">pt</button>
+      <button class="unit-chip" data-unit="px" role="tab" aria-selected="false">px</button>
     </div>
 
     <div class="ruler-viewport" id="rulerViewport">
@@ -68,13 +71,24 @@
 <div class="modal-overlay" id="calibrateModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <h2 id="modalTitle">Calibrate your screen</h2>
-    <p class="modal-copy">Hold a credit card, ID, or gift card flat against your screen. Drag the edge below until the box matches its width exactly — then every measurement on this ruler will be true to life.</p>
+    <p class="modal-copy">Hold your iPhone flat against the screen. Drag the bottom edge until the outline matches its exact length — then every measurement here will be true to life.</p>
+
+    <div class="model-picker">
+      <button class="model-picker-btn" id="modelPickerBtn" aria-haspopup="listbox" aria-expanded="false">
+        <span id="modelPickerLabel">iPhone 16</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+          <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="model-menu" id="modelMenu" role="listbox" hidden></div>
+    </div>
 
     <div class="calibrate-stage">
-      <div class="calibrate-box" id="calibrateBox" style="width: 320px;">
-        <span class="calibrate-label">card width</span>
-        <div class="calibrate-handle" id="calibrateHandle" aria-label="Drag to resize" role="slider" tabindex="0"></div>
+      <div class="phone-frame" id="calibrateBox" style="height: 320px;">
+        <div class="phone-island"></div>
+        <div class="phone-camera"></div>
       </div>
+      <div class="calibrate-handle" id="calibrateHandle" aria-label="Drag to resize" role="slider" aria-orientation="vertical" tabindex="0"></div>
     </div>
 
     <div class="modal-actions">
