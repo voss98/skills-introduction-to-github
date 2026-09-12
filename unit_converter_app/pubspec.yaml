@@ -1,0 +1,41 @@
+name: unit_converter_app
+description: >
+  Offline-first unit converter for iOS and Android covering Length, Weight,
+  Temperature, Volume, Area, Speed, Pressure, Energy, Power, Force, Density
+  and Flow Rate, with favorites, history and optional Firebase telemetry.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.19.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Local persistence for favorites, history and the "ads removed" flag.
+  shared_preferences: ^2.3.3
+
+  # Optional telemetry. All calls are guarded so the app runs fully
+  # offline when no Firebase project config files are present.
+  firebase_core: ^3.8.0
+  firebase_analytics: ^11.3.5
+  firebase_crashlytics: ^4.1.5
+  firebase_remote_config: ^5.1.5
+
+  # Monetization: bottom ad banner + one-time "remove ads" purchase.
+  google_mobile_ads: ^5.2.0
+  in_app_purchase: ^3.2.0
+
+  intl: ^0.19.0
+  package_info_plus: ^8.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
