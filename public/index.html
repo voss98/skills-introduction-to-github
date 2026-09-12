@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pomodoro Timer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="card">
+    <h1>Pomodoro Timer</h1>
+
+    <div class="presets" role="group" aria-label="Timer preset">
+      <button class="preset active" data-preset="pomodoro">Pomodoro (25m)</button>
+      <button class="preset" data-preset="short_break">Short break (5m)</button>
+      <button class="preset" data-preset="long_break">Long break (15m)</button>
+    </div>
+
+    <div class="clock" id="clock">25:00</div>
+
+    <button id="start-btn" class="primary">Start</button>
+
+    <hr />
+
+    <div class="tasks">
+      <span>Tasks completed: <strong id="task-count">0</strong></span>
+      <button id="task-btn">+ Complete task</button>
+    </div>
+
+    <hr />
+
+    <section>
+      <h2>Analytics events</h2>
+      <ul id="event-log" class="event-log"></ul>
+    </section>
+  </main>
+
+  <script src="analytics.js"></script>
+  <script src="timer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
