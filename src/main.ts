@@ -1,10 +1,14 @@
 import Phaser from 'phaser';
 import './style.css';
+import { BALANCE } from './core/balance';
 import { gamepad } from './input/InputManager';
 import { bindKeyboard, bindTouchButtons } from './input/bindings';
 import { PALETTE, SCREEN_H, SCREEN_W } from './gfx/palette';
 import { BootScene } from './scenes/BootScene';
+import { DialogScene } from './scenes/DialogScene';
 import { InputTestScene } from './scenes/InputTestScene';
+import { ShopScene } from './scenes/ShopScene';
+import { TitleScene } from './scenes/TitleScene';
 
 /** Largest whole-number zoom that fits the window (pixel-perfect scaling). */
 function integerZoom(): number {
@@ -31,9 +35,9 @@ const game = new Phaser.Game({
   },
   physics: {
     default: 'arcade',
-    arcade: { gravity: { x: 0, y: 420 }, debug: false },
+    arcade: { gravity: { x: 0, y: BALANCE.movement.gravity }, debug: false },
   },
-  scene: [BootScene, InputTestScene],
+  scene: [BootScene, TitleScene, ShopScene, InputTestScene, DialogScene],
 });
 
 // One input edge-detection tick per game step, before any scene updates.

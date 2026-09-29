@@ -1,0 +1,24 @@
+{
+  "_readme": "Every number is wrapped as { value, source }. source is \"placeholder\" unless it cites a real reference. None of these numbers come from real shop data yet.",
+  "startingState": {
+    "cash": { "value": 1500, "source": "placeholder" },
+    "reputation": { "value": 50, "source": "placeholder" },
+    "staffMorale": { "value": 60, "source": "placeholder" },
+    "inventoryHealth": { "value": 70, "source": "placeholder" },
+    "communityGoodwill": { "value": 40, "source": "placeholder" },
+    "stationSkill": { "value": 1, "source": "placeholder" },
+    "day": { "value": 1, "source": "placeholder" }
+  },
+  "limits": {
+    "statMin": { "value": 0, "source": "placeholder" },
+    "statMax": { "value": 100, "source": "placeholder" },
+    "skillMin": { "value": 1, "source": "placeholder" },
+    "skillMax": { "value": 5, "source": "placeholder" }
+  },
+  "movement": {
+    "walkSpeed": { "value": 60, "source": "placeholder" },
+    "climbSpeed": { "value": 45, "source": "placeholder" },
+    "jumpVelocity": { "value": 185, "source": "placeholder" },
+    "gravity": { "value": 420, "source": "placeholder" }
+  }
+}

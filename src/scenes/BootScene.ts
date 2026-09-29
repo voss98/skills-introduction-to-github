@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { createFontTextures } from '../gfx/textures';
+import { customerArt, playerArt, promptArt, stationArt, tileArt } from '../gfx/sprites';
+import { createFontTextures, createPixelTexture } from '../gfx/textures';
 
 /** Generates every texture procedurally (no image assets), then hands off. */
 export class BootScene extends Phaser.Scene {
@@ -9,8 +10,18 @@ export class BootScene extends Phaser.Scene {
 
   create(): void {
     createFontTextures(this);
-    const params = new URLSearchParams(window.location.search);
-    void params; // scene routing is added with the title screen
-    this.scene.start('InputTest');
+    createPixelTexture(this, 'tiles', tileArt());
+    createPixelTexture(this, 'player', playerArt());
+    createPixelTexture(this, 'customer', customerArt());
+    createPixelTexture(this, 'prompt', [promptArt()]);
+    for (const [key, rows] of Object.entries(stationArt())) createPixelTexture(this, key, [rows]);
+
+    // The text box scene runs permanently on top and shows itself when needed.
+    this.scene.launch('Dialog');
+
+    // ?scene=shop or ?scene=input-test jumps straight in (handy for testing).
+    const target = new URLSearchParams(window.location.search).get('scene');
+    const routes: Record<string, string> = { shop: 'Shop', 'input-test': 'InputTest' };
+    this.scene.start(routes[target ?? ''] ?? 'Title');
   }
 }

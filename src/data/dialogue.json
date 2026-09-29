@@ -1,0 +1,22 @@
+{
+  "title": {
+    "name": "TRAIL SHOP TYCOON",
+    "pressStart": "PRESS START",
+    "selectHint": "SELECT: INPUT TEST"
+  },
+  "stations": {
+    "front_counter": "The front counter. Customers drop off bikes here.",
+    "parts_wall": "The parts wall. Tires, pads, chains and cables.",
+    "frame_jig": "The frame jig. Nothing clamped in it yet.",
+    "wheel_stand": "The truing stand. No wheel to true right now.",
+    "drivetrain_bench": "The drivetrain bench. Chains, cassettes, brakes.",
+    "suspension_bench": "The suspension bench. Forks and shocks get serviced here.",
+    "training_door": "TRAINING CENTER. The door is locked. Coming soon!"
+  },
+  "pauseMenu": {
+    "title": "PAUSED",
+    "resume": "RESUME",
+    "stats": "SHOP STATS",
+    "inputTest": "INPUT TEST"
+  }
+}

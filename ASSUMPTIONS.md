@@ -22,3 +22,17 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
 - **Touch buttons** are HTML buttons under the canvas. They appear on touch
   (coarse-pointer) devices, or on any device with `?touch=1` in the URL.
 - **Input test scene:** hold Start+Select to leave it.
+
+## Phase 2 – Shop floor
+- **Jump is B, interact is A.** The brief assigns A to interact; B was the free
+  face button, so it jumps (B also cancels menus). While climbing, B jumps off.
+- **Climbing:** stand at a ladder and hold Up (or Down at the top of the ladder).
+  The mezzanine can also be reached by jumping across the two wall shelves.
+- **Interact range:** you must be standing on the same floor level inside a
+  station's footprint; a bouncing "A" marker and the bottom bar show what A will do.
+- **Movement and physics numbers** (walk speed, jump, gravity) live in
+  `src/data/balance.json` alongside other balance numbers and are placeholders.
+- **HUD** shows cash, reputation and day on the top bar, and a context hint on the
+  bottom bar. The full stat list is under Start > Shop Stats.
+- **Shop map** is an ASCII grid in `src/data/shopLayout.json` so it can be edited
+  without touching code.
