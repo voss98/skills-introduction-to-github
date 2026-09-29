@@ -3,6 +3,7 @@ import { BALANCE } from '../core/balance';
 import type { Rect } from '../core/layout';
 import { PLAYER_FRAMES } from '../gfx/sprites';
 import type { InputReader } from '../input/InputManager';
+import { sound } from '../audio/sound';
 
 const { walkSpeed, climbSpeed, jumpVelocity } = BALANCE.movement;
 /** How close (px) the player's centre must be to a ladder's centre to grab it. */
@@ -72,7 +73,10 @@ export class Player {
     this.body.setVelocityX(dir * walkSpeed);
     if (dir) this.sprite.setFlipX(dir < 0);
 
-    if (input.justPressed('B') && this.onGround) this.body.setVelocityY(-jumpVelocity);
+    if (input.justPressed('B') && this.onGround) {
+      this.body.setVelocityY(-jumpVelocity);
+      sound.play('jump');
+    }
 
     const ladder = this.ladderHere();
     if (ladder) {

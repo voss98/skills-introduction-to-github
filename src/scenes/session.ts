@@ -2,6 +2,7 @@ import { calendar } from '../core/calendar';
 import { DecisionEngine } from '../core/decisions';
 import type { RunEndReason } from '../core/endings';
 import { gameState } from '../core/gameState';
+import { makeSave, readSave, restore, writeSave } from '../core/save';
 import { ShopController, type Trigger } from '../core/shop';
 
 const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
@@ -24,6 +25,24 @@ export const session = {
   totalDays: Number.isFinite(runDaysParam) && runDaysParam > 0 ? runDaysParam : calendar.totalDays,
   lastEnd: null as RunEndReason | null,
 };
+
+/** Autosave the current run (end of each day, and on Save & Quit). */
+export function saveGame(): boolean {
+  return writeSave(makeSave(gameState, session.shop));
+}
+
+/** Load the saved run, if any. Returns false when there is no valid save. */
+export function continueGame(): boolean {
+  const data = readSave();
+  if (!data) return false;
+  session.shop = restore(data, gameState);
+  session.decisions = new DecisionEngine(gameState);
+  session.started = true;
+  session.spawnAt = undefined;
+  session.pendingTriggers = null;
+  session.lastEnd = null;
+  return true;
+}
 
 /** Throw away the current run and start fresh. */
 export function newGame(seed = newSeed()): void {

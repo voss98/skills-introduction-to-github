@@ -79,7 +79,21 @@ describe.skipIf(!exe)('end-to-end smoke test', () => {
     await page.waitForTimeout(150);
   };
 
-  it('starts a new game, completes a job, makes a decision and reaches an ending', async () => {
+  /** Open the Start menu and pick an item by label. */
+  const menu = async (label: string) => {
+    await page.waitForTimeout(300);
+    await tap('Enter');
+    await page.waitForFunction("!!game.scene.getScene('Dialog').opts?.choices");
+    await page.waitForTimeout(500);
+    for (let i = 0; i < 12; i++) {
+      const cur = await ev<string>("(()=>{const d=game.scene.getScene('Dialog'); return d.opts.choices[d.cursorIdx].label})()");
+      if (cur === label) break;
+      await tap('ArrowDown');
+    }
+    await tap('KeyX');
+  };
+
+  it('starts a new game, completes a job, makes a decision, saves, continues and reaches an ending', async () => {
     // Title -> New Game.
     await tap('Enter');
     await page.waitForFunction(() => (window as any).game.scene.getScene('Shop').sys.settings.status >= 5);
@@ -147,16 +161,18 @@ describe.skipIf(!exe)('end-to-end smoke test', () => {
     await advanceUntil("!game.scene.getScene('Shop').shop.activeJob && !game.scene.getScene('Dialog').isOpen");
     expect(await ev<number>("game.scene.getScene('Shop').shop.state.cash")).toBeGreaterThan(cashBefore);
 
+    // Save & Quit, then Continue from the title: the run comes back as it was.
+    const cashSaved = await ev<number>("game.scene.getScene('Shop').shop.state.cash");
+    await menu('SAVE & QUIT');
+    await advanceUntil("game.scene.getScene('Title').sys.isActive()");
+    await page.waitForTimeout(300);
+    expect(await ev<string>("game.scene.getScene('Title').items[0].label")).toBe('CONTINUE');
+    await tap('KeyX');
+    await page.waitForFunction("game.scene.getScene('Shop').sys.isActive()");
+    expect(await ev<number>("game.scene.getScene('Shop').shop.state.cash")).toBe(cashSaved);
+
     // Start menu -> END DAY -> YES, then through the end-of-day decision to the ending.
-    await tap('Enter');
-    await page.waitForFunction("!!game.scene.getScene('Dialog').opts?.choices");
-    for (let i = 0; i < 10; i++) {
-      const label = await ev<string>("(()=>{const d=game.scene.getScene('Dialog'); return d.opts.choices[d.cursorIdx].label})()");
-      if (label === 'END DAY') break;
-      await tap('ArrowDown');
-    }
-    await page.waitForTimeout(400);
-    await tap('KeyX'); // finish typing (if still typing) or select
+    await menu('END DAY');
     await advanceUntil("(()=>{const e=game.scene.getScene('Ending').sys; return e.isActive()||e.isPaused()})()");
     const endingId = await ev<string>("JSON.parse(localStorage.getItem('trail-shop-tycoon.gallery.v1'))[0]");
     expect(endingId).toBeTruthy();

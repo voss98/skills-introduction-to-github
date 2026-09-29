@@ -4,8 +4,9 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
 
 ## Phase 1 – Scaffold and controls
 - **Repo layout:** the game lives at the repository root (this repo was a GitHub
-  Skills template). The original `README.md` and `.github/` workflows are untouched;
-  game docs live in `GAME.md`.
+  Skills template). The Skills `.github/` workflows are untouched. In Phase 9 the
+  course README moved to `docs/github-skills-course-README.md` and `README.md`
+  became the game README (it replaced the Phase 1 `GAME.md`).
 - **Versions:** Phaser is pinned to the 3.x line (`^3.90.0`) because the brief says
   Phaser 3 (Phaser 4 is the npm `latest`). TypeScript is pinned to 5.9 rather than
   the new 7.x native compiler, for tooling stability.
@@ -175,3 +176,23 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
 - **CI:** `.github/workflows/test.yml` runs typecheck and `npm test` on every push
   and PR (free GitHub-hosted runner). It runs alongside the repo's original GitHub
   Skills workflows, which only react to their own branch names.
+
+## Phase 9 – Polish
+- **Title screen:** Continue (only when a save exists), New Game, Ending Gallery,
+  Settings. **Settings:** music and SFX volume, mute, a controls reference, and the
+  input test.
+- **Pause menu** (Start): Resume, Current Job, Shop Stats, Training, Shop Ledger,
+  End Day, Settings, Save & Quit.
+- **Audio** is synthesized with WebAudio (square/triangle oscillators): 9 sound
+  effects and an original 8-bar looping tune. Audio starts on your first key press
+  or tap (a browser rule). **Select** toggles mute in the shop.
+- **Save/load:** one localStorage slot, autosaved once each new day has started
+  (after the morning events) and on Save & Quit. It stores the full game state and
+  the shop (clock, queue, half-finished job). A finished run deletes its save. If
+  storage is blocked, the game still runs but can't save.
+- **Art:** customers now have their own helmet-and-goggles sprite, and a bike sits
+  on the counter while its owner waits. Everything else was already pixel art in
+  the 4 shades.
+- **Not deployed anywhere.** The README lists free hosting options for you to
+  choose from. The private claude.ai artifact from earlier was updated at your
+  request; it is only visible to you unless you share it.

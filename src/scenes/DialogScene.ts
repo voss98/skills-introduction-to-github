@@ -3,6 +3,7 @@ import { wrapText } from '../gfx/font';
 import { SCREEN_H, SCREEN_W } from '../gfx/palette';
 import { addText, drawWindow, setText } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
+import { sound } from '../audio/sound';
 
 export interface DialogChoice {
   label: string;
@@ -92,11 +93,15 @@ export class DialogScene extends Phaser.Scene {
       this.shown = Math.min(pageText.length, this.shown + (CHARS_PER_SEC * delta) / 1000);
       if (gamepad.justPressed('A') || gamepad.justPressed('B')) this.shown = pageText.length;
     } else if (lastPage && choices.length) {
-      if (gamepad.justPressed('UP')) this.cursorIdx = this.firstUnlocked(this.cursorIdx - 1, -1);
-      if (gamepad.justPressed('DOWN')) this.cursorIdx = this.firstUnlocked(this.cursorIdx + 1, 1);
-      if (gamepad.justPressed('A') && !choices[this.cursorIdx]?.locked) return this.close(this.cursorIdx);
+      if (gamepad.justPressed('UP')) this.moveCursor(this.firstUnlocked(this.cursorIdx - 1, -1));
+      if (gamepad.justPressed('DOWN')) this.moveCursor(this.firstUnlocked(this.cursorIdx + 1, 1));
+      if (gamepad.justPressed('A') && !choices[this.cursorIdx]?.locked) {
+        sound.play('select');
+        return this.close(this.cursorIdx);
+      }
       if (gamepad.justPressed('B') && this.opts.cancellable) return this.close(-1);
     } else if (gamepad.justPressed('A') || (gamepad.justPressed('B') && !lastPage)) {
+      sound.play('blip');
       if (lastPage) return this.close(-1);
       this.page++;
       this.shown = 0;
@@ -106,6 +111,11 @@ export class DialogScene extends Phaser.Scene {
     const done = this.shown >= pageText.length;
     this.more.setVisible(done && (!lastPage || !choices.length) && Math.floor(this.time.now / 300) % 2 === 0);
     this.drawChoices(done && lastPage ? choices : []);
+  }
+
+  private moveCursor(i: number): void {
+    if (i !== this.cursorIdx) sound.play('blip');
+    this.cursorIdx = i;
   }
 
   private firstUnlocked(start: number, dir: 1 | -1): number {

@@ -8,6 +8,7 @@ import {
   isJobDone,
   JOB_TEMPLATES,
   jobTemplate,
+  TASKS,
   nextTaskAt,
   scoreJob,
   type Job,
@@ -38,6 +39,25 @@ export type CounterAction =
   | { kind: 'offer'; customer: Customer }
   | { kind: 'busy'; job: Job }
   | { kind: 'empty' };
+
+export interface ShopSnapshot {
+  seed: number;
+  minute: number;
+  worked: number;
+  nextId: number;
+  day: { jobsDone: number; revenue: number; startCash: number; startRep: number };
+  customers: (Omit<Customer, 'template'> & { template: string })[];
+  activeJob: {
+    id: number;
+    template: string;
+    customer: string;
+    bike: Job['bike'];
+    tasks: { id: string; done: boolean; quality: number | null }[];
+    acceptedAt: number;
+    rush: boolean;
+    overtime: boolean;
+  } | null;
+}
 
 export interface HandoverResult extends JobOutcome {
   customer: string;
@@ -287,6 +307,50 @@ export class ShopController {
   nextDay(): Trigger[] {
     this.state.nextDay();
     return this.startDay();
+  }
+
+  /** Plain-data snapshot for saving (templates are stored by id). */
+  toJSON(): ShopSnapshot {
+    return {
+      seed: this.seed,
+      minute: this.minute,
+      worked: this.worked,
+      nextId: this.nextId,
+      day: { ...this.day },
+      customers: this.customers.map((c) => ({ ...c, template: c.template.id })),
+      activeJob: this.activeJob && {
+        id: this.activeJob.id,
+        template: this.activeJob.template.id,
+        customer: this.activeJob.customer,
+        bike: structuredClone(this.activeJob.bike),
+        tasks: this.activeJob.tasks.map((t) => ({ id: t.def.id, done: t.done, quality: t.quality })),
+        acceptedAt: this.activeJob.acceptedAt,
+        rush: this.activeJob.rush,
+        overtime: this.activeJob.overtime,
+      },
+    };
+  }
+
+  static fromJSON(state: GameState, snap: ShopSnapshot): ShopController {
+    const shop = new ShopController(state, snap.seed);
+    shop.minute = snap.minute;
+    shop.worked = snap.worked;
+    shop.nextId = snap.nextId;
+    shop.day = { ...snap.day };
+    shop.rng = createRng(snap.seed * 7919 + state.day + 104729);
+    shop.customers = snap.customers.map((c) => ({ ...c, template: jobTemplate(c.template) }));
+    const j = snap.activeJob;
+    shop.activeJob = j && {
+      id: j.id,
+      template: jobTemplate(j.template),
+      customer: j.customer,
+      bike: structuredClone(j.bike),
+      tasks: j.tasks.map((t) => ({ def: TASKS[t.id], done: t.done, quality: t.quality })),
+      acceptedAt: j.acceptedAt,
+      rush: j.rush,
+      overtime: j.overtime,
+    };
+    return shop;
   }
 
   /** Test helper: a specific customer for a given job template. */

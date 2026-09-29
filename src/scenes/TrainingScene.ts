@@ -20,6 +20,7 @@ import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
 import { PlatformWorld } from './platformWorld';
 import { session } from './session';
+import { sound } from '../audio/sound';
 import { runEndReason } from '../core/endings';
 
 const D = dialogue.training;
@@ -102,6 +103,7 @@ export class TrainingScene extends Phaser.Scene {
   private async takeCourse(p: TrainingProgram, station: StationDef): Promise<void> {
     const before = p.skill ? gameState.skill(p.skill) : 0;
     completeTraining(p, gameState);
+    sound.play('levelup');
     const text = p.skill
       ? fmt(D.skillUp, { skill: SKILL_NAMES[p.skill], from: before, to: gameState.skill(p.skill) })
       : D.workshopDone;
@@ -125,6 +127,7 @@ export class TrainingScene extends Phaser.Scene {
       answers.push(a);
     }
     const r = gradeExam(p, gameState, questions, answers);
+    sound.play(r.passed ? 'levelup' : 'bad');
     await showDialog(this, { speaker: station.short, pages: [fmt(r.passed ? D.examPass : D.examFail, { score: r.score, total: r.total })] });
   }
 
@@ -143,6 +146,7 @@ export class TrainingScene extends Phaser.Scene {
   }
 
   private backToShop(): void {
+    sound.play('door');
     session.spawnAt = 'training_door';
     this.scene.start('Shop');
   }

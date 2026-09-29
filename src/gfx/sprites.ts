@@ -167,11 +167,31 @@ export function playerArt(): string[][] {
   return [idle, walk1, walk2, jump, climb1, climb2];
 }
 
+/** Customers: a vented trail helmet, goggles on the brim, jersey and baggies. Two idle frames. */
 export function customerArt(): string[][] {
-  // Customers wear a helmet (light) and a dark jersey.
-  return playerArt()
-    .slice(0, 3)
-    .map((f) => recolor(f, { '1': '2', '2': '1' }));
+  const head = ['..0000..', '.022220.', '0232232.', '.000000.', '.033330.', '..0330..'];
+  const body = ['.011110.', '01111110', '01111110', '03111130', '..0000..', '..0..0..', '..0..0..', '.00..00.'];
+  const idle = [...head, ...body];
+  const wave = [...head.slice(0, 4), '.033330.', '..0330..', '.0111103', '0111110.', '01111110', '0311110.', '..0000..', '..0..0..', '..0..0..', '.00..00.'];
+  return [idle, wave];
+}
+
+/** A trail bike (18x12) leaning on the counter while its owner waits. */
+export function bikeArt(): string[] {
+  return new PixelGrid(18, 12)
+    .circle(4, 8, 3, 0)
+    .circle(13, 8, 3, 0)
+    .set(4, 8, 1)
+    .set(13, 8, 1)
+    .line(4, 8, 8, 4, 1)
+    .line(8, 4, 13, 8, 1)
+    .line(8, 4, 12, 4, 1)
+    .line(12, 4, 13, 8, 0)
+    .line(8, 4, 7, 2, 0)
+    .line(6, 2, 8, 2, 0)
+    .line(12, 4, 12, 1, 0)
+    .line(11, 1, 14, 1, 0)
+    .rows();
 }
 
 // ---------- Stations and decor ----------

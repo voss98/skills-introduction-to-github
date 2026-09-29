@@ -10,6 +10,7 @@ import { PALETTE_HEX, SCREEN_H, SCREEN_W } from '../gfx/palette';
 import { addText, setText } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
+import { sound } from '../audio/sound';
 import { playEvent, runDecision } from './decisionRunner';
 import type { LedgerData } from './LedgerScene';
 import { dayInMonth, monthName, monthOf } from '../core/calendar';
@@ -18,7 +19,8 @@ import { runEndReason } from '../core/endings';
 import type { MinigameData } from './MinigameScene';
 import type { Player } from './Player';
 import { PlatformWorld } from './platformWorld';
-import { session } from './session';
+import { saveGame, session } from './session';
+import { clearSave } from '../core/save';
 
 const HUD_H = 8;
 const D = dialogue;
@@ -32,11 +34,14 @@ export class ShopScene extends Phaser.Scene {
   private player!: Player;
   private prompt!: Phaser.GameObjects.Image;
   private customer!: Phaser.GameObjects.Sprite;
+  private bike!: Phaser.GameObjects.Image;
   private taskMarkers = new Map<string, Phaser.GameObjects.BitmapText>();
   private hudTop!: Phaser.GameObjects.BitmapText;
   private hudBottom!: Phaser.GameObjects.BitmapText;
   private nearby: StationDef | null = null;
   private busy = false;
+  /** >0: show MUTED, <0: show SOUND ON, for this many ms. */
+  private muteToast = 0;
 
   constructor() {
     super('Shop');
@@ -71,6 +76,7 @@ export class ShopScene extends Phaser.Scene {
           if (t === 'end_of_day' && this.checkRunEnd()) return;
         }
         await this.say([fmt(D.day.morning, { month: monthName(gameState.day), day: dayInMonth(gameState.day), n: monthOf(gameState.day) })]);
+        saveGame();
       });
     }
   }
@@ -88,6 +94,13 @@ export class ShopScene extends Phaser.Scene {
       const img = this.world.stationImages.get(s.id)!;
       this.taskMarkers.set(s.id, addText(this, (s.tx + s.w / 2) * ts - 2, img.y - img.height - 10, '!', 0).setDepth(19));
     }
+    // A waiting customer's bike sits up on the counter top.
+    const counterStation = SHOP_LAYOUT.stations.find((s) => s.id === 'front_counter')!;
+    this.bike = this.add
+      .image(counterStation.tx * ts - 1, (counterStation.ty + 1) * ts - 12, 'bike')
+      .setOrigin(0, 1)
+      .setDepth(3)
+      .setVisible(false);
     // Waiting customer stands just inside the door, at the counter.
     const counter = SHOP_LAYOUT.stations.find((s) => s.id === 'front_counter')!;
     this.customer = this.add
@@ -113,6 +126,8 @@ export class ShopScene extends Phaser.Scene {
   }
 
   private hudHint(): string {
+    if (this.muteToast > 0) return 'SOUND MUTED (SELECT)';
+    if (this.muteToast < 0) return 'SOUND ON (SELECT)';
     if (this.nearby) return `A: ${this.nearby.name}`;
     const job = this.shop.activeJob;
     if (job && isJobDone(job)) return 'BIKE READY: GO TO COUNTER';
@@ -129,11 +144,14 @@ export class ShopScene extends Phaser.Scene {
     for (const [id, marker] of this.taskMarkers) {
       marker.setVisible(blink && !!this.shop.taskAt(id as WorkStationId));
     }
-    this.customer.setVisible(this.shop.waiting.length > 0 || (!!this.shop.activeJob && isJobDone(this.shop.activeJob)));
+    const atCounter = this.shop.waiting.length > 0 || (!!this.shop.activeJob && isJobDone(this.shop.activeJob));
+    this.customer.setVisible(atCounter);
+    this.bike.setVisible(atCounter);
     this.customer.setFrame(Math.floor(time / 700) % 2 ? 0 : 1);
 
     if (this.busy) return;
     this.player.update(gamepad, delta);
+    this.muteToast = Math.sign(this.muteToast) * Math.max(0, Math.abs(this.muteToast) - delta);
     this.shop.advance((delta / 1000) * BALANCE.clock.shopMinutesPerRealSecond);
     this.refreshHud();
 
@@ -147,6 +165,8 @@ export class ShopScene extends Phaser.Scene {
       void this.run(() => this.interact(station));
     } else if (gamepad.justPressed('START')) {
       void this.run(() => this.pauseMenu());
+    } else if (gamepad.justPressed('SELECT')) {
+      this.muteToast = sound.toggleMute() ? 1500 : -1500;
     }
   }
 
@@ -184,13 +204,17 @@ export class ShopScene extends Phaser.Scene {
       choices: [{ label: D.training.enter }, { label: D.training.notNow }],
       cancellable: true,
     });
-    if (c === 0) this.scene.start('Training');
+    if (c === 0) {
+      sound.play('door');
+      this.scene.start('Training');
+    }
   }
 
   private async frontCounter(): Promise<void> {
     const action = this.shop.counter();
     if (action.kind === 'handover') {
       const r = this.shop.handOver();
+      sound.play('coin');
       await this.say([r.reaction], r.customer);
       await this.say(
         [
@@ -336,7 +360,8 @@ export class ShopScene extends Phaser.Scene {
       { label: m.training, run: () => this.showTraining() },
       { label: m.ledger, run: () => this.openLedger() },
       { label: m.endDay, run: () => this.confirmEndDay() },
-      { label: m.inputTest, run: () => void this.scene.start('InputTest') },
+      { label: m.settings, run: () => void this.scene.start('Settings', { back: 'Shop' }) },
+      { label: m.saveQuit, run: () => this.saveAndQuit() },
     ];
     const choice = await showDialog(this, {
       pages: [`${m.title}  ${monthName(gameState.day)} DAY ${dayInMonth(gameState.day)}  ${this.shop.clockText}`],
@@ -363,6 +388,12 @@ export class ShopScene extends Phaser.Scene {
       ],
       'TRAINING',
     );
+  }
+
+  private async saveAndQuit(): Promise<void> {
+    const ok = saveGame();
+    await this.say([ok ? D.saved : D.saveFailed]);
+    this.scene.start('Title');
   }
 
   private async confirmEndDay(): Promise<void> {
@@ -440,6 +471,7 @@ export class ShopScene extends Phaser.Scene {
     const reason = runEndReason(gameState, session.totalDays);
     if (!reason) return false;
     session.lastEnd = reason;
+    clearSave(); // a finished run can't be continued
     this.scene.start('Ending', { reason });
     return true;
   }
@@ -447,6 +479,7 @@ export class ShopScene extends Phaser.Scene {
   private async morning(triggers: Trigger[]): Promise<void> {
     await this.say([fmt(D.day.morning, { month: monthName(gameState.day), day: dayInMonth(gameState.day), n: monthOf(gameState.day) })]);
     for (const t of triggers) await this.onTrigger(t);
+    saveGame(); // autosave once the new day has started
   }
 
   private async onTrigger(trigger: Trigger): Promise<void> {

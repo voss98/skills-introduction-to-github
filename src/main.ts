@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import './style.css';
 import { BALANCE } from './core/balance';
 import { gamepad } from './input/InputManager';
+import { sound } from './audio/sound';
 import { bindKeyboard, bindTouchButtons } from './input/bindings';
 import { PALETTE, SCREEN_H, SCREEN_W } from './gfx/palette';
 import { BootScene } from './scenes/BootScene';
@@ -11,6 +12,7 @@ import { GalleryScene } from './scenes/GalleryScene';
 import { InputTestScene } from './scenes/InputTestScene';
 import { LedgerScene } from './scenes/LedgerScene';
 import { MinigameScene } from './scenes/MinigameScene';
+import { SettingsScene } from './scenes/SettingsScene';
 import { ShopScene } from './scenes/ShopScene';
 import { TitleScene } from './scenes/TitleScene';
 import { TrainingScene } from './scenes/TrainingScene';
@@ -25,6 +27,13 @@ function integerZoom(): number {
 }
 
 bindKeyboard(gamepad);
+// Audio may only start after a user gesture.
+const unlockAudio = () => {
+  sound.unlock();
+  sound.startMusic();
+};
+window.addEventListener('keydown', unlockAudio);
+window.addEventListener('pointerdown', unlockAudio);
 bindTouchButtons(gamepad, document.getElementById('touch-controls')!);
 
 const game = new Phaser.Game({
@@ -43,7 +52,7 @@ const game = new Phaser.Game({
     default: 'arcade',
     arcade: { gravity: { x: 0, y: BALANCE.movement.gravity }, debug: false },
   },
-  scene: [BootScene, TitleScene, ShopScene, TrainingScene, InputTestScene, MinigameScene, LedgerScene, EndingScene, GalleryScene, DialogScene],
+  scene: [BootScene, TitleScene, ShopScene, TrainingScene, InputTestScene, MinigameScene, LedgerScene, EndingScene, GalleryScene, SettingsScene, DialogScene],
 });
 
 // One input edge-detection tick per game step, before any scene updates.

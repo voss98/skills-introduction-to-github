@@ -18,9 +18,10 @@
     "job": "CURRENT JOB",
     "stats": "SHOP STATS",
     "endDay": "END DAY",
-    "inputTest": "INPUT TEST",
     "ledger": "SHOP LEDGER",
-    "training": "TRAINING"
+    "training": "TRAINING",
+    "settings": "SETTINGS",
+    "saveQuit": "SAVE & QUIT"
   },
   "idle": "Nothing to do here right now. Take a job at the front counter.",
   "counter": {
@@ -75,5 +76,7 @@
     "examPass": "SCORE {score}/{total}. PASSED! You are a certified mechanic.",
     "examFail": "SCORE {score}/{total}. Not this time. You can retake it later.",
     "exitHint": "Back to the shop floor?"
-  }
+  },
+  "saved": "Game saved. See you soon!",
+  "saveFailed": "Could not save: this browser is blocking storage."
 }

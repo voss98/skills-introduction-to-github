@@ -5,6 +5,7 @@ import { wrapText } from '../gfx/font';
 import { PALETTE_HEX, SCREEN_H, SCREEN_W } from '../gfx/palette';
 import { addText, drawMeter, drawWindow, setText } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
+import { sound } from '../audio/sound';
 import type { GBInput } from '../input/keymap';
 
 export interface MinigameData {
@@ -69,7 +70,9 @@ export class MinigameScene extends Phaser.Scene {
       }
       return;
     }
+    const before = this.progress(game);
     game.update(delta, gamepad);
+    if (this.progress(game) !== before) sound.play('blip');
     this.g.clear();
     if (game instanceof TimingBarGame) this.drawTiming(game);
     else if (game instanceof ButtonSequenceGame) this.drawSequence(game, delta);
@@ -79,8 +82,16 @@ export class MinigameScene extends Phaser.Scene {
       this.finished = true;
       const q = game.quality;
       const word = q >= 85 ? 'GREAT!' : q >= 60 ? 'GOOD' : q >= 30 ? 'SLOPPY' : 'BOTCHED';
+      sound.play(q >= 60 ? 'good' : 'bad');
       setText(this.status, `QUALITY ${q} ${word}\nPRESS A`);
     }
+  }
+
+  private progress(game: Minigame): number {
+    if (game instanceof TimingBarGame) return game.scores.length;
+    if (game instanceof ButtonSequenceGame) return game.index * 100 + game.mistakes;
+    if (game instanceof TorqueMeterGame) return game.scores.length;
+    return 0;
   }
 
   private drawTiming(game: TimingBarGame): void {

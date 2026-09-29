@@ -3,7 +3,9 @@ import dialogue from '../data/dialogue.json';
 import { PALETTE_HEX, SCREEN_W } from '../gfx/palette';
 import { addText, drawWindow } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
-import { newGame, session } from './session';
+import { readSave } from '../core/save';
+import { sound } from '../audio/sound';
+import { continueGame, newGame } from './session';
 
 interface MenuItem {
   label: string;
@@ -15,16 +17,25 @@ export class TitleScene extends Phaser.Scene {
   private items: MenuItem[] = [];
   private cursor = 0;
   private cursorText!: Phaser.GameObjects.BitmapText;
-  private menuY = 84;
+  private menuY = 82;
 
   constructor() {
     super('Title');
   }
 
-  /** Menu entries; later phases add Continue and Settings. */
+  /** Menu entries. Continue appears only when a save exists. */
   protected menu(): MenuItem[] {
     return [
-      ...(session.started ? [{ label: 'RESUME RUN', run: () => this.scene.start('Shop') }] : []),
+      ...(readSave()
+        ? [
+            {
+              label: 'CONTINUE',
+              run: () => {
+                if (continueGame()) this.scene.start('Shop');
+              },
+            },
+          ]
+        : []),
       {
         label: 'NEW GAME',
         run: () => {
@@ -33,7 +44,7 @@ export class TitleScene extends Phaser.Scene {
         },
       },
       { label: 'ENDING GALLERY', run: () => this.scene.start('Gallery', { back: 'Title' }) },
-      { label: 'INPUT TEST', run: () => this.scene.start('InputTest') },
+      { label: 'SETTINGS', run: () => this.scene.start('Settings', { back: 'Title' }) },
     ];
   }
 
@@ -55,12 +66,19 @@ export class TitleScene extends Phaser.Scene {
 
   update(time: number): void {
     const n = this.items.length;
-    if (gamepad.justPressed('DOWN') || gamepad.justPressed('SELECT')) this.cursor = (this.cursor + 1) % n;
-    if (gamepad.justPressed('UP')) this.cursor = (this.cursor - 1 + n) % n;
+    if (gamepad.justPressed('DOWN') || gamepad.justPressed('SELECT')) {
+      this.cursor = (this.cursor + 1) % n;
+      sound.play('blip');
+    }
+    if (gamepad.justPressed('UP')) {
+      this.cursor = (this.cursor - 1 + n) % n;
+      sound.play('blip');
+    }
     this.cursorText.setY(this.menuY + this.cursor * 10).setVisible(Math.floor(time / 400) % 4 !== 0);
     if (gamepad.justPressed('START') || gamepad.justPressed('A')) {
       gamepad.consume('A');
       gamepad.consume('START');
+      sound.play('select');
       this.items[this.cursor].run();
     }
   }

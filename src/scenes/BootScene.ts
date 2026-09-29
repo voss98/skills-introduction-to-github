@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { customerArt, playerArt, promptArt, stationArt, tileArt, trainingArt, vignetteArt } from '../gfx/sprites';
+import { bikeArt, customerArt, playerArt, promptArt, stationArt, tileArt, trainingArt, vignetteArt } from '../gfx/sprites';
 import { createFontTextures, createPixelTexture } from '../gfx/textures';
 import { setPublishers } from '../core/reports';
 import { publisherShortNames } from './LedgerScene';
@@ -16,6 +16,7 @@ export class BootScene extends Phaser.Scene {
     createPixelTexture(this, 'player', playerArt());
     createPixelTexture(this, 'customer', customerArt());
     createPixelTexture(this, 'prompt', [promptArt()]);
+    createPixelTexture(this, 'bike', [bikeArt()]);
     for (const [key, rows] of Object.entries({ ...stationArt(), ...trainingArt(), ...vignetteArt() })) createPixelTexture(this, key, [rows]);
 
     setPublishers(publisherShortNames());
