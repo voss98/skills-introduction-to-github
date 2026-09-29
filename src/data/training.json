@@ -1,0 +1,101 @@
+{
+  "_readme": "Training programs at the Training Center. Cost is charged per enrollment and rises with the level you are training toward. Days are shop days spent away (staff or a closed sign keep the shop). Effects are permanent.",
+  "programs": [
+    {
+      "id": "wheel_academy",
+      "name": "Wheel Building Academy",
+      "station": "wheel_academy",
+      "kind": "skill",
+      "skill": "wheel_stand",
+      "blurb": "Lacing, tension, dish and true. +1 Wheel Truing Stand skill.",
+      "cost": {
+        "value": 250,
+        "source": "estimate: course fee scaled to the game economy; no survey of course prices used"
+      },
+      "costPerLevel": {
+        "value": 100,
+        "source": "estimate: later levels cost more; game rule"
+      },
+      "days": {
+        "value": 1,
+        "source": "estimate: game days away from the shop"
+      }
+    },
+    {
+      "id": "suspension_lab",
+      "name": "Suspension Lab",
+      "station": "suspension_lab",
+      "kind": "skill",
+      "skill": "suspension_bench",
+      "blurb": "Seals, damper oil, air springs, sag. +1 Suspension Bench skill.",
+      "cost": {
+        "value": 350,
+        "source": "estimate: course fee scaled to the game economy; no survey of course prices used"
+      },
+      "costPerLevel": {
+        "value": 100,
+        "source": "estimate: later levels cost more; game rule"
+      },
+      "days": {
+        "value": 1,
+        "source": "estimate: game days away from the shop"
+      }
+    },
+    {
+      "id": "cert_exam",
+      "name": "Mechanic Certification Exam",
+      "station": "cert_exam",
+      "kind": "exam",
+      "blurb": "10 questions. Score 7 or more to earn your certification.",
+      "cost": {
+        "value": 150,
+        "source": "estimate: exam fee scaled to the game economy"
+      },
+      "costPerLevel": {
+        "value": 0,
+        "source": "estimate: flat fee"
+      },
+      "days": {
+        "value": 1,
+        "source": "estimate: game days away from the shop"
+      },
+      "questions": {
+        "value": 10,
+        "source": "estimate: set by the brief"
+      },
+      "passScore": {
+        "value": 7,
+        "source": "estimate: 70% pass mark; game rule"
+      }
+    },
+    {
+      "id": "cs_workshop",
+      "name": "Customer Service Workshop",
+      "station": "cs_workshop",
+      "kind": "workshop",
+      "blurb": "Listening, estimates, follow-ups. Happy customers raise reputation 25% more, and new dialogue opens up.",
+      "cost": {
+        "value": 200,
+        "source": "estimate: workshop fee scaled to the game economy"
+      },
+      "costPerLevel": {
+        "value": 0,
+        "source": "estimate: one-time workshop"
+      },
+      "days": {
+        "value": 1,
+        "source": "estimate: game days away from the shop"
+      },
+      "effects": [
+        {
+          "var": "reputationGainMultiplier",
+          "delta": 0.25,
+          "source": "estimate: game effect size, not a real-world statistic"
+        }
+      ],
+      "sets_flags": [
+        "cs_trained"
+      ]
+    }
+  ]
+}

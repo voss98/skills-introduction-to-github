@@ -11,6 +11,7 @@ import { LedgerScene } from './scenes/LedgerScene';
 import { MinigameScene } from './scenes/MinigameScene';
 import { ShopScene } from './scenes/ShopScene';
 import { TitleScene } from './scenes/TitleScene';
+import { TrainingScene } from './scenes/TrainingScene';
 
 /** Largest whole-number zoom that fits the window (pixel-perfect scaling). */
 function integerZoom(): number {
@@ -40,7 +41,7 @@ const game = new Phaser.Game({
     default: 'arcade',
     arcade: { gravity: { x: 0, y: BALANCE.movement.gravity }, debug: false },
   },
-  scene: [BootScene, TitleScene, ShopScene, InputTestScene, MinigameScene, LedgerScene, DialogScene],
+  scene: [BootScene, TitleScene, ShopScene, TrainingScene, InputTestScene, MinigameScene, LedgerScene, DialogScene],
 });
 
 // One input edge-detection tick per game step, before any scene updates.

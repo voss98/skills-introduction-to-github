@@ -10,6 +10,10 @@ export const session = {
   shop: new ShopController(gameState, Number.isFinite(seedParam) && seedParam > 0 ? seedParam : Math.floor(Math.random() * 1e6)),
   decisions: new DecisionEngine(gameState),
   started: false,
+  /** Station to spawn next to when the shop scene next starts (e.g. back from training). */
+  spawnAt: undefined as string | undefined,
+  /** Morning triggers still to play after days spent away at training. */
+  pendingTriggers: null as import('../core/shop').Trigger[] | null,
   /** Dev/testing: ?job=trail_build puts that customer first in line on day 1. */
   debugJob: params.get('job'),
 };

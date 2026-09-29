@@ -1,0 +1,293 @@
+{
+  "_readme": "Mechanic certification question bank. Written from general bike-mechanic knowledge (no statistics). Answer order is shuffled at runtime. Choice labels are at most 21 characters to fit the Game Boy choice box.",
+  "questions": [
+    {
+      "id": "q01",
+      "topic": "drivetrain",
+      "question": "Which tool measures chain wear?",
+      "choices": [
+        "CHAIN CHECKER",
+        "SPOKE WRENCH",
+        "TORQUE WRENCH",
+        "TIRE LEVER"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q02",
+      "topic": "brakes",
+      "question": "Shimano hydraulic brakes use what fluid?",
+      "choices": [
+        "MINERAL OIL",
+        "DOT FLUID",
+        "WATER",
+        "CHAIN LUBE"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q03",
+      "topic": "brakes",
+      "question": "SRAM hydraulic brakes use what fluid?",
+      "choices": [
+        "DOT FLUID",
+        "MINERAL OIL",
+        "FORK OIL",
+        "GREASE"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q04",
+      "topic": "brakes",
+      "question": "Oil or grease on disc pads usually means you should:",
+      "choices": [
+        "REPLACE THE PADS",
+        "RIDE IT OFF",
+        "ADD MORE LUBE",
+        "LOOSEN THE CALIPER"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q05",
+      "topic": "drivetrain",
+      "question": "To loosen a LEFT pedal, turn the wrench:",
+      "choices": [
+        "CLOCKWISE",
+        "COUNTER-CLOCKWISE",
+        "EITHER WAY",
+        "ONLY BY HAND"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q06",
+      "topic": "wheels",
+      "question": "Wheel 'dish' means centring the rim:",
+      "choices": [
+        "OVER THE HUB",
+        "ON THE TIRE",
+        "IN THE FRAME",
+        "ON THE BRAKE"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q07",
+      "topic": "wheels",
+      "question": "Sealant in a tubeless tire is used to:",
+      "choices": [
+        "SEAL SMALL PUNCTURES",
+        "LUBE THE CHAIN",
+        "COOL THE BRAKES",
+        "GLUE THE RIM TAPE"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q08",
+      "topic": "suspension",
+      "question": "Suspension sag is the travel used when:",
+      "choices": [
+        "RIDER SITS ON BIKE",
+        "BIKE IS UPSIDE DOWN",
+        "FULLY BOTTOMED OUT",
+        "TIRES ARE FLAT"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q09",
+      "topic": "tools",
+      "question": "Before tightening bolts to a spec you need:",
+      "choices": [
+        "A TORQUE WRENCH",
+        "A HAMMER",
+        "A CHAIN WHIP",
+        "A TIRE LEVER"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q10",
+      "topic": "frame",
+      "question": "Carbon parts clamped too tight can:",
+      "choices": [
+        "CRACK",
+        "GET LIGHTER",
+        "SHIFT BETTER",
+        "NEVER BE HARMED"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q11",
+      "topic": "drivetrain",
+      "question": "A bent derailleur hanger often causes:",
+      "choices": [
+        "GHOST SHIFTING",
+        "A FLAT TIRE",
+        "SQUEAKY PEDALS",
+        "LOOSE HEADSET"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q12",
+      "topic": "drivetrain",
+      "question": "Barrel adjuster turns change:",
+      "choices": [
+        "CABLE TENSION",
+        "TIRE PRESSURE",
+        "CHAIN LENGTH",
+        "SADDLE HEIGHT"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q13",
+      "topic": "wheels",
+      "question": "A 'pinch flat' is caused by:",
+      "choices": [
+        "TUBE HITS RIM",
+        "A THORN",
+        "OLD SEALANT",
+        "HOT WEATHER"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q14",
+      "topic": "brakes",
+      "question": "Why bed in new disc brake pads?",
+      "choices": [
+        "TRANSFER PAD MATERIAL",
+        "TO COOL THEM",
+        "TO CLEAN THE CHAIN",
+        "TO TRUE THE ROTOR"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q15",
+      "topic": "suspension",
+      "question": "Air fork lower leg service mainly renews:",
+      "choices": [
+        "OIL AND SEALS",
+        "SPOKES",
+        "BRAKE PADS",
+        "CABLES"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q16",
+      "topic": "suspension",
+      "question": "Rebound damping controls how fast suspension:",
+      "choices": [
+        "RETURNS AFTER A HIT",
+        "COMPRESSES",
+        "HEATS UP",
+        "WEARS OUT"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q17",
+      "topic": "tools",
+      "question": "Which tool removes a cassette lockring?",
+      "choices": [
+        "LOCKRING TOOL",
+        "SPOKE KEY",
+        "CABLE CUTTER",
+        "PEDAL WRENCH"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q18",
+      "topic": "wheels",
+      "question": "Spoke tension is adjusted by turning the:",
+      "choices": [
+        "NIPPLE",
+        "HUB",
+        "VALVE",
+        "ROTOR"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q19",
+      "topic": "tools",
+      "question": "Threadlocker on a bolt is used to:",
+      "choices": [
+        "STOP IT LOOSENING",
+        "MAKE IT LIGHTER",
+        "LUBRICATE IT",
+        "MARK THE SIZE"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q20",
+      "topic": "wheels",
+      "question": "A Presta valve must be ___ before pumping.",
+      "choices": [
+        "UNSCREWED AT TIP",
+        "REMOVED",
+        "TAPED",
+        "HEATED"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q21",
+      "topic": "drivetrain",
+      "question": "Too little chain lube leads to:",
+      "choices": [
+        "FASTER WEAR",
+        "BETTER SHIFTING",
+        "LIGHTER BIKE",
+        "MORE GRIP"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q22",
+      "topic": "frame",
+      "question": "Thru-axles are tightened by hand or to:",
+      "choices": [
+        "THE STATED TORQUE",
+        "MAXIMUM FORCE",
+        "HALF A TURN",
+        "NO TENSION"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q23",
+      "topic": "frame",
+      "question": "After a crash, check a carbon frame for:",
+      "choices": [
+        "CRACKS AND DAMAGE",
+        "TIRE BRAND",
+        "SADDLE COLOR",
+        "BELL VOLUME"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "q24",
+      "topic": "drivetrain",
+      "question": "A worn chain left on too long wears the:",
+      "choices": [
+        "CASSETTE",
+        "SADDLE",
+        "GRIPS",
+        "TIRES"
+      ],
+      "answer": 0
+    }
+  ]
+}

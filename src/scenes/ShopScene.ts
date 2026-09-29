@@ -3,11 +3,10 @@ import dialogue from '../data/dialogue.json';
 import { BALANCE } from '../core/balance';
 import { gameState, WORK_STATIONS, type WorkStationId } from '../core/gameState';
 import { basePrice, estimatedMinutes, isJobDone, pendingTasks, TASKS, type JobTask } from '../core/jobs';
-import { ladderRects, runsOf, SHOP_LAYOUT, type StationDef } from '../core/layout';
+import { SHOP_LAYOUT, type StationDef } from '../core/layout';
 import type { Customer, Trigger } from '../core/shop';
 import { fmt, signed, signedMoney } from '../core/text';
 import { PALETTE_HEX, SCREEN_H, SCREEN_W } from '../gfx/palette';
-import { TILE_FRAMES } from '../gfx/sprites';
 import { addText, setText } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
@@ -16,7 +15,8 @@ import type { LedgerData } from './LedgerScene';
 import { dayInMonth, monthName, monthOf } from '../core/calendar';
 import { reportForMonth, reportText } from '../core/reports';
 import type { MinigameData } from './MinigameScene';
-import { Player } from './Player';
+import type { Player } from './Player';
+import { PlatformWorld } from './platformWorld';
 import { session } from './session';
 
 const HUD_H = 8;
@@ -27,6 +27,7 @@ const isWorkStation = (id: string): id is WorkStationId => (WORK_STATIONS as rea
 
 /** The shop floor: platforming, stations, customers, the clock and the HUD. */
 export class ShopScene extends Phaser.Scene {
+  private world!: PlatformWorld;
   private player!: Player;
   private prompt!: Phaser.GameObjects.Image;
   private customer!: Phaser.GameObjects.Sprite;
@@ -45,6 +46,9 @@ export class ShopScene extends Phaser.Scene {
   }
 
   create(): void {
+    // Scene instances are reused across restarts (e.g. returning from training).
+    this.busy = false;
+    this.taskMarkers = new Map();
     this.buildWorld();
     this.createHud();
     const unsubscribe = gameState.subscribe(() => this.refreshHud());
@@ -56,80 +60,37 @@ export class ShopScene extends Phaser.Scene {
       const triggers = this.shop.startDay();
       if (session.debugJob) this.shop.walkIn(session.debugJob);
       void this.run(() => this.morning(triggers));
+    } else if (session.pendingTriggers) {
+      // Back from training: play the end-of-day and morning events we missed.
+      const pending = session.pendingTriggers;
+      session.pendingTriggers = null;
+      void this.run(async () => {
+        for (const t of pending) await this.onTrigger(t);
+        await this.say([fmt(D.day.morning, { month: monthName(gameState.day), day: dayInMonth(gameState.day), n: monthOf(gameState.day) })]);
+      });
     }
   }
 
   // ------------------------------------------------------------ world
 
   private buildWorld(): void {
-    const L = SHOP_LAYOUT;
-    const ts = L.tileSize;
-    const worldW = L.cols * ts;
-    const worldH = L.rows * ts;
-    this.physics.world.setBounds(0, 0, worldW, worldH);
-    this.physics.world.gravity.y = BALANCE.movement.gravity;
-    this.cameras.main.setBackgroundColor(PALETTE_HEX[3]);
-
-    const blit = this.add.blitter(0, 0, 'tiles');
-    for (let y = 0; y < L.rows; y++) {
-      for (let x = 0; x < L.cols; x++) {
-        const t = L.tiles[y][x];
-        if (t !== 'solid') blit.create(x * ts, y * ts, y === L.rows - 2 ? TILE_FRAMES.wallTrim : TILE_FRAMES.wall);
-        if (t === 'solid') blit.create(x * ts, y * ts, TILE_FRAMES.solid);
-        if (t === 'oneway' || t === 'ladderTop') blit.create(x * ts, y * ts, TILE_FRAMES.oneway);
-      }
+    this.world = new PlatformWorld(this, SHOP_LAYOUT, session.spawnAt);
+    session.spawnAt = undefined;
+    this.player = this.world.player;
+    this.prompt = this.world.prompt;
+    const ts = SHOP_LAYOUT.tileSize;
+    for (const s of SHOP_LAYOUT.stations) {
+      if (!isWorkStation(s.id)) continue;
+      const img = this.world.stationImages.get(s.id)!;
+      this.taskMarkers.set(s.id, addText(this, (s.tx + s.w / 2) * ts - 2, img.y - img.height - 10, '!', 0).setDepth(19));
     }
-
-    const place = (sprite: string, tx: number, ty: number) =>
-      this.add.image(tx * ts, (ty + 1) * ts, sprite).setOrigin(0, 1);
-    for (const d of L.decor) place(d.sprite, d.tx, d.ty);
-    for (const s of L.stations) {
-      const img = place(s.id, s.tx, s.ty).setDepth(1);
-      if (isWorkStation(s.id)) {
-        const marker = addText(this, (s.tx + s.w / 2) * ts - 2, img.y - img.height - 10, '!', 0).setDepth(19);
-        this.taskMarkers.set(s.id, marker);
-      }
-    }
-
-    const ladders = ladderRects(L);
-    for (const l of ladders) {
-      for (let y = l.y - ts; y < l.y + l.h; y += ts) blit.create(l.x, y, TILE_FRAMES.ladder);
-    }
-
-    const solids = this.physics.add.staticGroup();
-    for (const r of runsOf(L, ['solid'])) solids.add(this.add.zone(r.x + r.w / 2, r.y + r.h / 2, r.w, r.h));
-    const oneways = this.physics.add.staticGroup();
-    for (const r of runsOf(L, ['oneway', 'ladderTop'])) {
-      const z = this.add.zone(r.x + r.w / 2, r.y + r.h / 2, r.w, r.h);
-      oneways.add(z);
-      const body = z.body as Phaser.Physics.Arcade.StaticBody;
-      body.checkCollision.down = false;
-      body.checkCollision.left = false;
-      body.checkCollision.right = false;
-    }
-
     // Waiting customer stands just inside the door, at the counter.
-    const counter = L.stations.find((s) => s.id === 'front_counter')!;
+    const counter = SHOP_LAYOUT.stations.find((s) => s.id === 'front_counter')!;
     this.customer = this.add
       .sprite(counter.tx * ts - 3, (counter.ty + 1) * ts, 'customer', 0)
       .setOrigin(0.5, 1)
       .setDepth(2)
       .setVisible(false);
-
-    this.player = new Player(this, (L.playerStart.tx + 0.5) * ts, (L.playerStart.ty + 1) * ts, ladders);
-    this.physics.add.collider(this.player.sprite, solids);
-    this.physics.add.collider(this.player.sprite, oneways, undefined, (_p, platform) => {
-      if (this.player.climbing) return false;
-      const top = (platform as Phaser.GameObjects.Zone).body!.position.y;
-      const b = this.player.body;
-      return b.velocity.y >= 0 && b.prev.y + b.height <= top + 1;
-    });
-
-    this.prompt = this.add.image(0, 0, 'prompt').setOrigin(0.5, 1).setDepth(20).setVisible(false);
-
-    this.cameras.main.setBounds(0, 0, worldW, worldH);
-    this.cameras.main.startFollow(this.player.sprite, true, 1, 0);
-    this.cameras.main.setRoundPixels(true);
   }
 
   // ------------------------------------------------------------ HUD
@@ -158,19 +119,6 @@ export class ShopScene extends Phaser.Scene {
 
   // ------------------------------------------------------------ loop
 
-  private findNearby(): StationDef | null {
-    if (!this.player.onGround || this.player.climbing) return null;
-    const ts = SHOP_LAYOUT.tileSize;
-    const x = this.player.centerX;
-    const feet = this.player.feetY;
-    return (
-      SHOP_LAYOUT.stations.find((s) => {
-        const floor = (s.ty + 1) * ts;
-        return x >= s.tx * ts - 2 && x <= (s.tx + s.w) * ts + 2 && Math.abs(feet - floor) <= 2;
-      }) ?? null
-    );
-  }
-
   update(time: number, delta: number): void {
     // Visuals that reflect shop state
     const blink = Math.floor(time / 400) % 2 === 0;
@@ -185,14 +133,7 @@ export class ShopScene extends Phaser.Scene {
     this.shop.advance((delta / 1000) * BALANCE.clock.shopMinutesPerRealSecond);
     this.refreshHud();
 
-    this.nearby = this.findNearby();
-    if (this.nearby) {
-      const ts = SHOP_LAYOUT.tileSize;
-      const bob = Math.floor(time / 300) % 2;
-      const top = this.textures.getFrame(this.nearby.id).height;
-      this.prompt.setPosition((this.nearby.tx + this.nearby.w / 2) * ts, (this.nearby.ty + 1) * ts - top - 1 - bob);
-    }
-    this.prompt.setVisible(!!this.nearby);
+    this.nearby = this.world.updateNearby(time);
     setText(this.hudBottom, this.hudHint());
 
     if (this.shop.closed) {
@@ -228,7 +169,18 @@ export class ShopScene extends Phaser.Scene {
     if (station.id === 'front_counter') return this.frontCounter();
     if (station.id === 'parts_wall') return this.partsWall();
     if (isWorkStation(station.id)) return this.workStation(station.id);
+    if (station.id === 'training_door') return this.trainingDoor();
     await this.say([(D.stations as Record<string, string>)[station.id]], station.name);
+  }
+
+  private async trainingDoor(): Promise<void> {
+    const c = await showDialog(this, {
+      speaker: 'TRAINING CENTER',
+      pages: [D.stations.training_door],
+      choices: [{ label: D.training.enter }, { label: D.training.notNow }],
+      cancellable: true,
+    });
+    if (c === 0) this.scene.start('Training');
   }
 
   private async frontCounter(): Promise<void> {
@@ -327,7 +279,7 @@ export class ShopScene extends Phaser.Scene {
     if (choice !== 0) return;
     const quality = await this.playMinigame(task, name);
     const result = this.shop.finishTask(task, quality);
-    const pages = [fmt(D.work.done, { quality, minutes: result.minutes })];
+    const pages = [fmt(D.work.done, { quality: result.quality, minutes: result.minutes })];
     if (result.rushOrdered) {
       pages.push(fmt(D.work.rushOrdered, { cost: this.shop.rushOrderCost(task) }));
     }
@@ -377,6 +329,7 @@ export class ShopScene extends Phaser.Scene {
       { label: m.resume, run: () => {} },
       { label: m.job, run: () => this.showJob() },
       { label: m.stats, run: () => this.showStats() },
+      { label: m.training, run: () => this.showTraining() },
       { label: m.ledger, run: () => this.openLedger() },
       { label: m.endDay, run: () => this.confirmEndDay() },
       { label: m.inputTest, run: () => void this.scene.start('InputTest') },
@@ -387,6 +340,25 @@ export class ShopScene extends Phaser.Scene {
       cancellable: true,
     });
     if (choice >= 0) await items[choice].run();
+  }
+
+  /** Training progress: a bar per station skill, plus certifications. */
+  private async showTraining(): Promise<void> {
+    const s = gameState;
+    const bar = (n: number) => '|'.repeat(n) + '-'.repeat(5 - n);
+    const rows: [string, WorkStationId][] = [
+      ['FRAME     ', 'frame_jig'],
+      ['WHEELS    ', 'wheel_stand'],
+      ['DRIVETRAIN', 'drivetrain_bench'],
+      ['SUSPENSION', 'suspension_bench'],
+    ];
+    await this.say(
+      [
+        rows.map(([label, id]) => `${label} ${bar(s.skill(id))} ${s.skill(id)}/5`).join('\n'),
+        `CERTIFIED: ${s.hasFlag('certified_mechanic') ? 'YES' : s.hasFlag('exam_failed') ? 'NOT YET (RETAKE)' : 'NO'}\nCS WORKSHOP: ${s.hasFlag('cs_trained') ? 'DONE' : 'NO'}\nCOURSES TAKEN: ${s.snapshot.trainingDone.length}`,
+      ],
+      'TRAINING',
+    );
   }
 
   private async confirmEndDay(): Promise<void> {

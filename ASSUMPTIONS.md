@@ -117,3 +117,27 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
   its publisher and year, then a decision that stat makes attractive (if eligible).
 - **Calendar:** one game month = 2 shop days (a labelled estimate), so a 12-month
   run is 24 days.
+
+## Phase 6 – Training Center
+- **The door opens a separate scene** with the same platformer controls, map format
+  and `PlatformWorld` builder as the shop. The shop clock stops while you are inside.
+- **Training costs cash and 1 day per course.** Course fees are labelled estimates
+  scaled to the game economy (real course prices would bankrupt a game shop).
+  Skill courses cost $100 more per level.
+- **Days away:** the shop is closed (or staff run it if hired). Overhead and wages
+  are still paid, waiting customers leave without a reputation penalty, and the
+  missed end-of-day and morning events play when you return.
+- **Only two stations have courses** (Wheels, Suspension), as the brief lists.
+  Frame and Drivetrain skill still come from decisions.
+- **Exam:** 10 questions drawn at random from a 24-question bank, answers
+  shuffled. 7/10 passes and sets `certified_mechanic`; a fail sets `exam_failed`
+  and can be retaken for the fee. Questions are written from general bike-mechanic
+  knowledge (no statistics) and are worth a review by a working mechanic.
+- **Skill effects:** besides easier minigames and +10% pay per level (Phase 3),
+  each level above 1 adds +3 quality to every task at that station and cuts its time
+  by 8%. Both are labelled estimates in balance.json.
+- **Customer Service Workshop** multiplies reputation gains by 1.25 and sets
+  `cs_trained`. That unlocks new choices ("Explain our value", "Fix + loyalty card").
+  Wheel skill 2 unlocks "Host a wheel clinic", average skill 2 unlocks "Expert
+  rush", and certification unlocks "Mentor them".
+- **Choice lists can have up to 5 entries** (was 4) to fit the new options.

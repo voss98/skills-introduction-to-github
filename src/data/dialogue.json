@@ -11,7 +11,7 @@
     "wheel_stand": "The truing stand. No wheel to true right now.",
     "drivetrain_bench": "The drivetrain bench. Chains, cassettes, brakes.",
     "suspension_bench": "The suspension bench. Forks and shocks get serviced here.",
-    "training_door": "TRAINING CENTER. The door is locked. Coming soon!"
+    "training_door": "TRAINING CENTER. Courses and the certification exam are inside. Go in? (The shop clock stops while you browse.)"
   },
   "pauseMenu": {
     "title": "PAUSED",
@@ -20,7 +20,8 @@
     "stats": "SHOP STATS",
     "endDay": "END DAY",
     "inputTest": "INPUT TEST",
-    "ledger": "SHOP LEDGER"
+    "ledger": "SHOP LEDGER",
+    "training": "TRAINING"
   },
   "idle": "Nothing to do here right now. Take a job at the front counter.",
   "counter": {
@@ -57,5 +58,23 @@
   },
   "noJob": "No active job. Take one at the front counter.",
   "yes": "YES",
-  "no": "NO"
+  "no": "NO",
+  "training": {
+    "enter": "GO INSIDE",
+    "notNow": "NOT NOW",
+    "enroll": "ENROLL ${cost}",
+    "leave": "LEAVE",
+    "details": "COST ${cost}\nTAKES {days} DAY(S) AWAY\n{cover}",
+    "coverStaff": "YOUR STAFF RUN THE SHOP.",
+    "coverClosed": "THE SHOP IS CLOSED.",
+    "skillUp": "{skill} SKILL {from} -> {to}!",
+    "workshopDone": "Workshop done! Happy customers now boost your reputation more, and new dialogue options open up.",
+    "awayDay": "DAY AWAY: OVERHEAD -${overhead}  WAGES -${wages}\nSTAFF WORK +${staffIncome}",
+    "backToShop": "You head back to the shop.",
+    "examIntro": "10 questions. Score 7 or more to pass. Good luck!",
+    "examQ": "QUESTION {n} OF {total}\n{question}",
+    "examPass": "SCORE {score}/{total}. PASSED! You are a certified mechanic.",
+    "examFail": "SCORE {score}/{total}. Not this time. You can retake it later.",
+    "exitHint": "Back to the shop floor?"
+  }
 }

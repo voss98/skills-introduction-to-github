@@ -1,9 +1,10 @@
 import layoutData from '../data/shopLayout.json';
+import trainingData from '../data/trainingLayout.json';
 
 export type TileKind = 'solid' | 'oneway' | 'ladder' | 'ladderTop' | 'empty';
 
 export interface StationDef {
-  id: StationId;
+  id: string;
   name: string;
   /** Short label for tight text boxes. */
   short: string;
@@ -46,7 +47,15 @@ const CHAR_TO_TILE: Record<string, TileKind> = {
   '.': 'empty',
 };
 
-export function parseLayout(data: typeof layoutData): ShopLayout {
+export interface LayoutData {
+  tileSize: number;
+  rows: string[];
+  playerStart: { tx: number; ty: number };
+  stations: StationDef[];
+  decor: { sprite: string; tx: number; ty: number; w: number }[];
+}
+
+export function parseLayout(data: LayoutData): ShopLayout {
   const tiles = data.rows.map((row, y) =>
     [...row].map((c, x) => {
       const t = CHAR_TO_TILE[c];
@@ -60,12 +69,13 @@ export function parseLayout(data: typeof layoutData): ShopLayout {
     rows: tiles.length,
     tiles,
     playerStart: data.playerStart,
-    stations: data.stations as StationDef[],
+    stations: data.stations,
     decor: data.decor,
   };
 }
 
 export const SHOP_LAYOUT = parseLayout(layoutData);
+export const TRAINING_LAYOUT = parseLayout(trainingData as LayoutData);
 
 export const tileAt = (l: ShopLayout, tx: number, ty: number): TileKind =>
   tx < 0 || ty < 0 || tx >= l.cols || ty >= l.rows ? 'solid' : l.tiles[ty][tx];

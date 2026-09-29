@@ -171,10 +171,17 @@ export class ShopController {
   }
 
   /** Record a finished minigame. Uses parts; if the wall is empty, parts are rush-ordered. */
-  finishTask(task: JobTask, quality: number): { rushOrdered: boolean; minutes: number } {
+  /**
+   * Record a finished minigame. Station skill raises the recorded quality and
+   * shortens the task. Uses parts; if the wall is empty, parts are rush-ordered.
+   */
+  finishTask(task: JobTask, quality: number): { rushOrdered: boolean; minutes: number; quality: number } {
     if (!this.activeJob) throw new Error('No active job');
     const e = BALANCE.economy;
-    let minutes = task.def.minutes;
+    const sc = BALANCE.scoring;
+    const lvl = this.state.skill(task.def.station) - 1;
+    const finalQuality = Math.min(100, Math.round(quality + sc.skillQualityPerLevel * lvl));
+    let minutes = Math.round(task.def.minutes * (1 - sc.skillTimeSavingPerLevel * lvl));
     let rushOrdered = false;
     if (this.state.inventoryHealth >= task.def.partsUse) {
       this.state.adjust('inventoryHealth', -task.def.partsUse);
@@ -183,9 +190,9 @@ export class ShopController {
       minutes += e.rushOrderMinutes;
       this.state.addCash(-this.rushOrderCost(task));
     }
-    completeTask(this.activeJob, task, quality);
+    completeTask(this.activeJob, task, finalQuality);
     this.advance(minutes);
-    return { rushOrdered, minutes };
+    return { rushOrdered, minutes, quality: finalQuality };
   }
 
   /** Give the finished bike back: pay, reputation, morale. */
@@ -235,7 +242,7 @@ export class ShopController {
   }
 
   /** Close up: pay costs, count unserved customers. Does not advance the day (see nextDay). */
-  endDay(): DaySummary {
+  endDay(opts: { away?: boolean } = {}): DaySummary {
     const s = this.state;
     const e = BALANCE.economy;
     const staff = s.modifier('staffCount');
@@ -245,8 +252,10 @@ export class ShopController {
     const staffIncome = Math.round(staff * e.staffJobsPerDay * e.staffEarningsPerJob * moraleFactor);
     s.addCash(staffIncome - overhead - wages);
 
-    const unserved = this.waiting.length;
+    // Away at training: a "closed" sign turns people away without upsetting them.
+    const unserved = opts.away ? 0 : this.waiting.length;
     if (unserved) s.adjust('reputation', -unserved * e.unservedReputationPenalty);
+    if (opts.away) this.customers = this.customers.filter((c) => c.arrivesAt > C.dayEndMinute);
     // Customers who never got served go elsewhere; those not yet arrived come back tomorrow.
     this.customers = this.customers.filter((c) => c.arrivesAt > this.minute);
     s.adjust('inventoryHealth', -e.inventoryDecayPerDay);

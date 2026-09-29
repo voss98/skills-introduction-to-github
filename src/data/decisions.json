@@ -576,6 +576,29 @@
           "next": "big_rush_overtime"
         },
         {
+          "text": "EXPERT RUSH",
+          "requires": {
+            "min": {
+              "skill": {
+                "value": 2,
+                "source": "estimate: skill level needed; game rule"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": 2,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "rush_current_job",
+            "overtime_current_job"
+          ],
+          "next": "big_rush_expert"
+        },
+        {
           "text": "DECLINE ORDER",
           "effects": [
             {
@@ -819,6 +842,32 @@
             }
           ],
           "next": "warranty_claim_charge"
+        },
+        {
+          "text": "FIX + LOYALTY CARD",
+          "requires": {
+            "flags": [
+              "cs_trained"
+            ]
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -40,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "reputation",
+              "delta": 4,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 4,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "next": "warranty_claim_loyal"
         }
       ]
     },
@@ -1078,6 +1127,38 @@
           "next": "marketing_ride"
         },
         {
+          "text": "HOST A WHEEL CLINIC",
+          "requires": {
+            "min": {
+              "skill:wheel_stand": {
+                "value": 2,
+                "source": "estimate: skill level needed; game rule"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "communityGoodwill",
+              "delta": 6,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "reputation",
+              "delta": 3,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "wheel_clinic"
+          ],
+          "next": "marketing_clinic"
+        },
+        {
           "text": "WORD OF MOUTH",
           "effects": [],
           "next": "marketing_none"
@@ -1138,6 +1219,28 @@
             }
           ],
           "next": "staff_training_paid"
+        },
+        {
+          "text": "MENTOR THEM (CERT)",
+          "requires": {
+            "flags": [
+              "certified_mechanic"
+            ]
+          },
+          "effects": [
+            {
+              "var": "skill",
+              "station": "suspension_bench",
+              "delta": 1,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 8,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "next": "staff_training_mentor"
         },
         {
           "text": "TEACH THEM MYSELF",
@@ -1228,6 +1331,27 @@
             }
           ],
           "next": "price_value"
+        },
+        {
+          "text": "EXPLAIN OUR VALUE",
+          "requires": {
+            "flags": [
+              "cs_trained"
+            ]
+          },
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": 3,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 2,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "next": "price_explained"
         }
       ]
     },
@@ -1733,6 +1857,31 @@
     "report_kids_no": {
       "id": "report_kids_no",
       "text": "The kids' corner stays small.",
+      "next": "END"
+    },
+    "price_explained": {
+      "id": "price_explained",
+      "text": "You walk them through the work behind each price. They leave nodding.",
+      "next": "END"
+    },
+    "warranty_claim_loyal": {
+      "id": "warranty_claim_loyal",
+      "text": "Fixed free, plus a loyalty card. They become your biggest fan.",
+      "next": "END"
+    },
+    "big_rush_expert": {
+      "id": "big_rush_expert",
+      "text": "Your skills make it look easy: rush pay, and the normal deadline is plenty.",
+      "next": "END"
+    },
+    "marketing_clinic": {
+      "id": "marketing_clinic",
+      "text": "Riders watch you true a wheel in two minutes flat. They book tune-ups on the spot.",
+      "next": "END"
+    },
+    "staff_training_mentor": {
+      "id": "staff_training_mentor",
+      "text": "Your certification pays off: you teach them everything, free. Suspension skill up!",
       "next": "END"
     }
   }

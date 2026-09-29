@@ -6,6 +6,7 @@ import { GameState, MODIFIER_KEYS, STAT_KEYS, WORK_STATIONS } from '../src/core/
 import { createRng } from '../src/core/rng';
 import type { Trigger } from '../src/core/shop';
 import { reportForMonth } from '../src/core/reports';
+import { CERT_FLAG, completeTraining, PROGRAMS, trainingBlocker } from '../src/core/training';
 
 const nodes = DECISIONS.nodes;
 const ids = Object.keys(nodes);
@@ -20,7 +21,7 @@ describe('decision data shape', () => {
       if (!n.choices) expect(n.next, `${key} needs choices or next`).toBeDefined();
       if (n.choices) {
         expect(n.choices.length).toBeGreaterThanOrEqual(2);
-        expect(n.choices.length).toBeLessThanOrEqual(4);
+        expect(n.choices.length).toBeLessThanOrEqual(5);
       }
     }
   });
@@ -104,7 +105,8 @@ describe('reachability', () => {
    * those flags allow. The random playthrough test below confirms it for real.
    */
   it('every node is reachable from some event', () => {
-    const flags = new Set<string>();
+    // Flags that gameplay (training) can set outside the decision tree.
+    const flags = new Set<string>([CERT_FLAG, ...PROGRAMS.flatMap((p) => p.sets_flags ?? [])]);
     const possible = (req?: { flags?: string[]; any_flags?: string[] }) =>
       !req || ((req.flags ?? []).every((f) => flags.has(f)) && (!req.any_flags || req.any_flags.some((f) => flags.has(f))));
 
@@ -140,6 +142,12 @@ describe('reachability', () => {
       state.applyEffect({ var: 'cash', set: Math.floor(rng() * 2000) });
       const engine = new DecisionEngine(state);
       for (let day = 1; day <= 24; day++) {
+        // Sometimes spend the day training (skill, workshop, or passing the exam).
+        if (rng() < 0.25) {
+          const p = PROGRAMS[Math.floor(rng() * PROGRAMS.length)];
+          if (p.kind === 'exam') state.setFlag(CERT_FLAG);
+          else if (!trainingBlocker(p, state)) completeTraining(p, state);
+        }
         const report = reportForMonth(Math.ceil(day / 2));
         if (day % 2 === 1 && report.event) {
           const ev = engine.beginEvent(report.event);
@@ -325,5 +333,25 @@ describe('event scheduling', () => {
     s.nextDay();
     run('end_of_day'); // day 3
     expect(seen.size).toBeGreaterThanOrEqual(5);
+  });
+});
+
+describe('training unlocks decision options via requires', () => {
+  it('cs_trained unlocks new dialogue; wheel skill 2 unlocks the wheel clinic; certification unlocks mentoring', () => {
+    const s = new GameState();
+    const e = new DecisionEngine(s);
+    const locked = (node: string, text: string) => e.view(node).choices.find((c) => c.text === text)!.locked;
+    expect(locked('price_complaints', 'EXPLAIN OUR VALUE')).toBe(true);
+    expect(locked('marketing_start', 'HOST A WHEEL CLINIC')).toBe(true);
+    expect(locked('staff_training', 'MENTOR THEM (CERT)')).toBe(true);
+    expect(locked('big_rush', 'EXPERT RUSH')).toBe(true);
+    s.setFlag('cs_trained');
+    s.applyEffect({ var: 'skill', station: 'wheel_stand', set: 2 });
+    s.setFlag('certified_mechanic');
+    expect(locked('price_complaints', 'EXPLAIN OUR VALUE')).toBe(false);
+    expect(locked('marketing_start', 'HOST A WHEEL CLINIC')).toBe(false);
+    expect(locked('staff_training', 'MENTOR THEM (CERT)')).toBe(false);
+    s.applyEffect({ var: 'skill', station: 'all', set: 2 });
+    expect(locked('big_rush', 'EXPERT RUSH')).toBe(false);
   });
 });

@@ -282,6 +282,23 @@ export function stationArt(): Record<string, string[]> {
   };
 }
 
+export function trainingArt(): Record<string, string[]> {
+  // Wheel Building Academy: a wheel on a truing stand beside a spoke rack.
+  const academy = new PixelGrid(24, 24).rect(0, 22, 24, 2, 0).rect(2, 8, 2, 14, 1).rect(10, 8, 2, 14, 1);
+  academy.circle(7, 12, 5, 0).circle(7, 12, 4, 1).rect(6, 11, 3, 3, 0);
+  for (let x = 15; x < 23; x += 2) academy.line(x, 4, x, 21, x % 4 === 3 ? 0 : 1);
+  academy.rect(14, 2, 10, 3, 0, 2);
+  // Suspension Lab: a fork on a dyno stand with an oil jug.
+  const lab = bench(24, 16).rect(3, 0, 7, 1, 0).line(4, 0, 4, 5, 0).line(8, 0, 8, 5, 0).rect(13, 1, 5, 5, 0, 3).rect(14, 0, 3, 1, 0).line(19, 0, 22, 5, 1);
+  // Certification Exam: a desk with a test paper and a pencil.
+  const exam = bench(24, 16).rect(4, 1, 9, 5, 0, 3).line(6, 3, 11, 3, 1).line(6, 5, 9, 5, 1).line(15, 5, 20, 0, 0).set(20, 0, 1);
+  // Customer Service Workshop: a counter with two speech bubbles.
+  const cs = new PixelGrid(24, 24).rect(0, 12, 24, 12, 0, 1).rect(0, 11, 24, 2, 0).rect(1, 0, 10, 7, 0, 3).set(4, 7, 0).set(3, 8, 0);
+  cs.rect(13, 2, 10, 6, 0, 3).set(19, 8, 0).set(20, 9, 0).line(3, 3, 8, 3, 1).line(15, 5, 20, 5, 1).line(2, 17, 21, 17, 2);
+  const exit = new PixelGrid(16, 24).rect(0, 0, 16, 24, 0, 2).rect(3, 3, 10, 8, 1, 3).line(5, 7, 10, 7, 0).line(8, 5, 10, 7, 0).line(8, 9, 10, 7, 0).set(12, 15, 0);
+  return { wheel_academy: academy.rows(), suspension_lab: lab.rows(), cert_exam: exam.rows(), cs_workshop: cs.rows(), exit_door: exit.rows() };
+}
+
 /** Small bouncing "A" prompt shown over interactable stations. */
 export function promptArt(): string[] {
   return ['.00000.', '0333330', '0330330', '0303030', '0300030', '0303030', '0333330', '.00000.', '...0...'];

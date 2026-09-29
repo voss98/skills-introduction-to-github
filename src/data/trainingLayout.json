@@ -1,0 +1,71 @@
+{
+  "_readme": "Training Center map, same tile legend as shopLayout.json.",
+  "tileSize": 8,
+  "rows": [
+    "####################",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#..................#",
+    "#=======L..........#",
+    "#.......H..........#",
+    "#.......H..........#",
+    "#.......H...===....#",
+    "#.......H..........#",
+    "#.......H..........#",
+    "#.......H..........#",
+    "#.......H..........#",
+    "#.......H..........#",
+    "####################"
+  ],
+  "playerStart": {
+    "tx": 3,
+    "ty": 16
+  },
+  "stations": [
+    {
+      "id": "exit_door",
+      "name": "Back to the Shop",
+      "short": "EXIT",
+      "tx": 1,
+      "ty": 16,
+      "w": 2
+    },
+    {
+      "id": "wheel_academy",
+      "name": "Wheel Building Academy",
+      "short": "WHEEL ACADEMY",
+      "tx": 10,
+      "ty": 16,
+      "w": 3
+    },
+    {
+      "id": "cs_workshop",
+      "name": "Customer Service Workshop",
+      "short": "CS WORKSHOP",
+      "tx": 15,
+      "ty": 16,
+      "w": 3
+    },
+    {
+      "id": "suspension_lab",
+      "name": "Suspension Lab",
+      "short": "SUSP LAB",
+      "tx": 1,
+      "ty": 7,
+      "w": 3
+    },
+    {
+      "id": "cert_exam",
+      "name": "Mechanic Certification Exam",
+      "short": "EXAM",
+      "tx": 4,
+      "ty": 7,
+      "w": 3
+    }
+  ],
+  "decor": []
+}

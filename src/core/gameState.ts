@@ -55,6 +55,8 @@ export interface GameStateData {
   decisionsSeen: string[];
   /** Ids of one-off decision events already fired. */
   eventsFired: string[];
+  /** Training programs completed (one entry per enrollment). */
+  trainingDone: string[];
 }
 
 export type StateListener = (state: Readonly<GameStateData>) => void;
@@ -76,6 +78,7 @@ export function initialState(): GameStateData {
     flags: [],
     decisionsSeen: [],
     eventsFired: [],
+    trainingDone: [],
   };
 }
 
@@ -113,7 +116,8 @@ export class GameState {
   }
 
   /** Read any effect variable by name (skill = overall average). */
-  get(v: EffectVar): number {
+  get(v: EffectVar | `skill:${WorkStationId}`): number {
+    if (v.startsWith('skill:')) return this.data.skills[v.slice(6) as WorkStationId];
     if (v === 'cash') return this.data.cash;
     if (v === 'skill') return this.skillLevel;
     if ((STAT_KEYS as readonly string[]).includes(v)) return this.data[v as StatKey];
@@ -175,6 +179,11 @@ export class GameState {
 
   markDecisionSeen(nodeId: string): void {
     this.data.decisionsSeen.push(nodeId);
+  }
+
+  markTraining(programId: string): void {
+    this.data.trainingDone.push(programId);
+    this.emit();
   }
 
   markEventFired(eventId: string): void {
