@@ -101,3 +101,5 @@ effect sizes, starting cash, and the calendar are game design, labelled
   - The big-box buyout offer now requires reputation ≤ 75 (decisions.json).
   - Result over 300 random runs: steady 22%, sold 22%, barely 21%,
     bankrupt 14%, thriving 13%, burned out 8%, secret <1%.
+- **Phase 8 (1,000-run simulation):** passed without further tuning. Max share
+  28.3% (sold), and every non-secret ending occurs.

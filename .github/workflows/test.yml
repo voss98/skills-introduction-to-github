@@ -1,0 +1,26 @@
+name: Tests
+
+# Runs typecheck and the full Vitest suite (unit, data, simulation and the
+# headless end-to-end smoke test) on every push and pull request.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install headless Chromium for the smoke test
+        run: npx playwright-core install --with-deps chromium
+      - run: npm run typecheck
+      - run: npm test

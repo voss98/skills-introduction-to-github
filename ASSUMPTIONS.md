@@ -161,3 +161,17 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
 - **Ending gallery** is saved in this browser's localStorage. If storage is blocked
   it still works for the session.
 - **`npm run simulate`** runs the scripted-choice simulations that reach every ending.
+
+## Phase 8 – Automated tests
+- **Schemas use zod** (MIT, free). Every JSON file in `src/data` has a strict
+  schema, and a test fails if a new JSON file is added without one.
+- **The simulation test plays 1,000 seeded random runs.** The random player's
+  minigame skill (25–100%), training rate, pickiness and choices are drawn per
+  seed. Last run: steady 22.8%, sold 28.3%, barely 15.5%, bankrupt 13.9%,
+  thriving 13.2%, burned out 5.6%, secret 0.7%.
+- **The end-to-end smoke test** starts the Vite dev server in-process and drives
+  headless Chromium (playwright-core, Apache-2.0) with real key events. It skips
+  with a warning if no Chromium is installed; CI installs one.
+- **CI:** `.github/workflows/test.yml` runs typecheck and `npm test` on every push
+  and PR (free GitHub-hosted runner). It runs alongside the repo's original GitHub
+  Skills workflows, which only react to their own branch names.
