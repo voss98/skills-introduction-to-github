@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0f380f" />
+    <title>Trail Shop Tycoon</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 4 4%27%3E%3Crect width=%274%27 height=%274%27 fill=%27%230f380f%27/%3E%3Crect x=%271%27 y=%271%27 width=%272%27 height=%272%27 fill=%27%239bbc0f%27/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main id="shell">
+      <div id="game"></div>
+      <div id="touch-controls" aria-label="On-screen Game Boy controls">
+        <div class="dpad">
+          <button data-input="UP" class="up" aria-label="Up">&#9650;</button>
+          <button data-input="LEFT" class="left" aria-label="Left">&#9664;</button>
+          <button data-input="RIGHT" class="right" aria-label="Right">&#9654;</button>
+          <button data-input="DOWN" class="down" aria-label="Down">&#9660;</button>
+        </div>
+        <div class="meta">
+          <button data-input="SELECT" aria-label="Select">SELECT</button>
+          <button data-input="START" aria-label="Start">START</button>
+        </div>
+        <div class="ab">
+          <button data-input="B" class="b" aria-label="B">B</button>
+          <button data-input="A" class="a" aria-label="A">A</button>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
