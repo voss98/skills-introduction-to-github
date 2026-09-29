@@ -1,0 +1,508 @@
+{
+  "_readme": "Real-world figures used by the game. confidence is 'sourced' (a published figure, see sources.md) or 'estimate' (no verifiable source; note says why). Displayed in the Shop Ledger.",
+  "stats": [
+    {
+      "id": "us_bike_market_total",
+      "label": "US bike market: bikes, parts, service",
+      "value": 7.0,
+      "unit": "billion USD (12 mo to Apr 2023)",
+      "year": 2023,
+      "source_id": "seso_circana_2023",
+      "confidence": "sourced",
+      "short": "US BIKE MARKET"
+    },
+    {
+      "id": "us_bike_market_prior",
+      "label": "US bike market a year earlier",
+      "value": 7.8,
+      "unit": "billion USD",
+      "year": 2022,
+      "source_id": "seso_circana_2023",
+      "confidence": "sourced",
+      "short": "MARKET PRIOR YEAR"
+    },
+    {
+      "id": "ebike_dollar_share",
+      "label": "E-bike share of US bike dollar sales",
+      "value": 20,
+      "unit": "%",
+      "year": 2023,
+      "source_id": "pfb_ebike_2024",
+      "confidence": "sourced",
+      "short": "E-BIKE $ SHARE"
+    },
+    {
+      "id": "ebike_unit_share",
+      "label": "E-bike share of US bike units sold",
+      "value": 4,
+      "unit": "%",
+      "year": 2023,
+      "source_id": "pfb_ebike_2024",
+      "confidence": "sourced",
+      "short": "E-BIKE UNIT SHARE"
+    },
+    {
+      "id": "ebike_growth_share",
+      "label": "Share of 2019-2023 bike sales growth from e-bikes",
+      "value": 63,
+      "unit": "%",
+      "year": 2023,
+      "source_id": "pfb_ebike_2024",
+      "confidence": "sourced",
+      "short": "E-BIKE GROWTH SHR"
+    },
+    {
+      "id": "ebike_ibd_asp",
+      "label": "Average e-bike price at bike shops",
+      "value": 3055,
+      "unit": "USD",
+      "year": 2024,
+      "source_id": "pfb_ebike_2024",
+      "confidence": "sourced",
+      "short": "E-BIKE AVG PRICE"
+    },
+    {
+      "id": "ebike_unit_growth_2024",
+      "label": "E-bike unit sales growth, Jan-Apr 2024 vs 2023",
+      "value": 13,
+      "unit": "%",
+      "year": 2024,
+      "source_id": "pfb_ebike_2024",
+      "confidence": "sourced",
+      "short": "E-BIKE GROWTH 24"
+    },
+    {
+      "id": "ebike_rider_share",
+      "label": "Bike riders who used an e-bike",
+      "value": 19.4,
+      "unit": "%",
+      "year": 2023,
+      "source_id": "pfb_ebike_2024",
+      "confidence": "sourced",
+      "short": "E-BIKE RIDERS 23"
+    },
+    {
+      "id": "ebike_rider_share_2021",
+      "label": "Bike riders who used an e-bike (2021)",
+      "value": 7.8,
+      "unit": "%",
+      "year": 2021,
+      "source_id": "pfb_ebike_2024",
+      "confidence": "sourced",
+      "short": "E-BIKE RIDERS 21"
+    },
+    {
+      "id": "kids_bike_unit_share",
+      "label": "Kids' bikes share of US bike units",
+      "value": 57,
+      "unit": "%",
+      "year": 2023,
+      "source_id": "pfb_kids_2024",
+      "confidence": "sourced",
+      "short": "KIDS BIKE SHARE"
+    },
+    {
+      "id": "us_cyclists",
+      "label": "Americans 6+ who rode any bike",
+      "value": 54,
+      "unit": "million people",
+      "year": 2024,
+      "source_id": "oia_2025",
+      "confidence": "sourced",
+      "short": "US CYCLISTS"
+    },
+    {
+      "id": "road_cyclists",
+      "label": "Americans who rode road/paved",
+      "value": 42.5,
+      "unit": "million people",
+      "year": 2024,
+      "source_id": "oia_2025",
+      "confidence": "sourced",
+      "short": "ROAD CYCLISTS"
+    },
+    {
+      "id": "mtb_participants",
+      "label": "US mountain bikers (ages 6+)",
+      "value": 8.7,
+      "unit": "million people",
+      "year": 2021,
+      "source_id": "tpl_2025",
+      "confidence": "sourced",
+      "short": "MTB RIDERS"
+    },
+    {
+      "id": "mtb_core_share",
+      "label": "Mountain/gravel riders who ride 13+ times a year",
+      "value": 41.5,
+      "unit": "%",
+      "year": 2025,
+      "source_id": "tpl_2025",
+      "confidence": "sourced",
+      "short": "MTB CORE RIDERS"
+    },
+    {
+      "id": "mtb_trip_spend",
+      "label": "Average spend per mountain bike tourism visit",
+      "value": 416,
+      "unit": "USD per visit",
+      "year": 2025,
+      "source_id": "tpl_2025",
+      "confidence": "sourced",
+      "short": "MTB TRIP SPEND"
+    },
+    {
+      "id": "store_pretax_profit",
+      "label": "Average bike store pre-tax profit",
+      "value": 5.5,
+      "unit": "% of sales",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "PRETAX PROFIT"
+    },
+    {
+      "id": "store_profit_dollars",
+      "label": "Average bike store annual profit",
+      "value": 46000,
+      "unit": "USD",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "AVG SHOP PROFIT"
+    },
+    {
+      "id": "store_profit_top",
+      "label": "High-profit bike store annual profit",
+      "value": 123000,
+      "unit": "USD",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "TOP SHOP PROFIT"
+    },
+    {
+      "id": "bike_margin",
+      "label": "Average margin on bicycle sales",
+      "value": 36,
+      "unit": "%",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "BIKE MARGIN"
+    },
+    {
+      "id": "pa_margin",
+      "label": "Average margin on parts and accessories",
+      "value": 48,
+      "unit": "%",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "PARTS MARGIN"
+    },
+    {
+      "id": "service_share_avg",
+      "label": "Revenue from repair parts and labor (avg store)",
+      "value": 6.5,
+      "unit": "% of revenue",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "SERVICE SHARE AVG"
+    },
+    {
+      "id": "service_share_top",
+      "label": "Revenue from repair parts and labor (top stores)",
+      "value": 11.4,
+      "unit": "% of revenue",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "SERVICE SHARE TOP"
+    },
+    {
+      "id": "expense_share",
+      "label": "Average store total expenses",
+      "value": 42.2,
+      "unit": "% of sales",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "SHOP EXPENSES"
+    },
+    {
+      "id": "payroll_share",
+      "label": "Average store owner and staff salaries",
+      "value": 25.4,
+      "unit": "% of sales",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "SHOP PAYROLL"
+    },
+    {
+      "id": "rent_share",
+      "label": "Average store rent, maintenance, utilities",
+      "value": 8.3,
+      "unit": "% of sales",
+      "year": 2013,
+      "source_id": "brain_nbda_2013",
+      "confidence": "sourced",
+      "short": "SHOP RENT"
+    },
+    {
+      "id": "rei_flat_fix",
+      "label": "Flat fix (REI, non-member)",
+      "value": 25,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "FLAT FIX"
+    },
+    {
+      "id": "rei_tubeless",
+      "label": "Tubeless tire install (REI)",
+      "value": 30,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "TUBELESS SETUP"
+    },
+    {
+      "id": "rei_precision_true",
+      "label": "Precision wheel true (REI)",
+      "value": 55,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "WHEEL TRUE"
+    },
+    {
+      "id": "rei_derailleur_adjust",
+      "label": "Derailleur adjustment (REI)",
+      "value": 35,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "DERAILLEUR ADJUST"
+    },
+    {
+      "id": "rei_brake_adjust",
+      "label": "Brake adjustment (REI)",
+      "value": 35,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "BRAKE ADJUST"
+    },
+    {
+      "id": "rei_brake_bleed",
+      "label": "Hydraulic brake bleed (REI)",
+      "value": 45,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "BRAKE BLEED"
+    },
+    {
+      "id": "rei_bike_tune",
+      "label": "Bike tune (REI)",
+      "value": 155,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "BIKE TUNE"
+    },
+    {
+      "id": "rei_fs_mtb_tune",
+      "label": "Full suspension MTB tune (REI)",
+      "value": 460,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "FULL SUS TUNE"
+    },
+    {
+      "id": "rei_emtb_tune",
+      "label": "E-MTB tune (REI)",
+      "value": 490,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "rei_tulsa_2026",
+      "confidence": "sourced",
+      "short": "E-MTB TUNE"
+    },
+    {
+      "id": "helens_pad_install",
+      "label": "Brake pad install, pair (Helen's)",
+      "value": 20,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "helens_2026",
+      "confidence": "sourced",
+      "short": "PAD INSTALL"
+    },
+    {
+      "id": "helens_fork_overhaul",
+      "label": "Suspension fork overhaul (Helen's)",
+      "value": 120,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "helens_2026",
+      "confidence": "sourced",
+      "short": "FORK OVERHAUL"
+    },
+    {
+      "id": "helens_frame_up",
+      "label": "Frame-up pro build (Helen's)",
+      "value": 400,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "helens_2026",
+      "confidence": "sourced",
+      "short": "FRAME-UP BUILD"
+    },
+    {
+      "id": "stbg_fork_lower",
+      "label": "Fork lower leg service (Steve the Bike Guy)",
+      "value": 80,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "stbg_2026",
+      "confidence": "sourced",
+      "short": "FORK LOWERS"
+    },
+    {
+      "id": "stbg_fork_aircan_combo",
+      "label": "Fork lowers + rear air can (Steve the Bike Guy)",
+      "value": 120,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "stbg_2026",
+      "confidence": "sourced",
+      "short": "LOWERS+AIR CAN"
+    },
+    {
+      "id": "bls_mechanic_wage",
+      "label": "Bike mechanic mean hourly wage",
+      "value": 18.92,
+      "unit": "USD per hour",
+      "year": 2023,
+      "source_id": "bls_oews_2023",
+      "confidence": "sourced",
+      "short": "MECHANIC WAGE"
+    },
+    {
+      "id": "bls_mechanic_median",
+      "label": "Bike mechanic median hourly wage",
+      "value": 18.42,
+      "unit": "USD per hour",
+      "year": 2023,
+      "source_id": "bls_oews_2023",
+      "confidence": "sourced",
+      "short": "MECHANIC MEDIAN"
+    },
+    {
+      "id": "bls_mechanic_jobs",
+      "label": "US bike mechanic jobs",
+      "value": 13980,
+      "unit": "jobs",
+      "year": 2023,
+      "source_id": "bls_oews_2023",
+      "confidence": "sourced",
+      "short": "MECHANIC JOBS"
+    },
+    {
+      "id": "mtb_fractures_ed",
+      "label": "MTB fractures seen in US ERs, 2013-2022",
+      "value": 35260,
+      "unit": "injuries (national estimate)",
+      "year": 2024,
+      "source_id": "injury_mtb_2024",
+      "confidence": "sourced",
+      "short": "MTB FRACTURES"
+    },
+    {
+      "id": "mtb_fracture_jump",
+      "label": "Rise in MTB fractures, 2019 to 2020",
+      "value": 247,
+      "unit": "%",
+      "year": 2024,
+      "source_id": "injury_mtb_2024",
+      "confidence": "sourced",
+      "short": "FRACTURE JUMP"
+    },
+    {
+      "id": "mtb_upper_limb_share",
+      "label": "MTB fractures that were upper limb",
+      "value": 32.8,
+      "unit": "%",
+      "year": 2024,
+      "source_id": "injury_mtb_2024",
+      "confidence": "sourced",
+      "short": "UPPER LIMB SHARE"
+    },
+    {
+      "id": "mtb_injury_decline",
+      "label": "Drop in US MTB ER injuries, 1994-2007",
+      "value": 56,
+      "unit": "%",
+      "year": 2011,
+      "source_id": "nch_mtb_2011",
+      "confidence": "sourced",
+      "short": "MTB INJURY DROP"
+    },
+    {
+      "id": "bike_tbi_ed",
+      "label": "Bike brain-injury ER visits over 10 years",
+      "value": 596972,
+      "unit": "ER visits",
+      "year": 2021,
+      "source_id": "cdc_mmwr_2021",
+      "confidence": "sourced",
+      "short": "BIKE HEAD INJURY"
+    },
+    {
+      "id": "repair_mix_flats",
+      "label": "Flats as a share of walk-in repairs",
+      "value": 33,
+      "unit": "%",
+      "year": 2026,
+      "source_id": "estimate_repair_mix",
+      "confidence": "estimate",
+      "note": "No public dataset of bike shop repair-ticket mix was found; flats are assumed most common.",
+      "short": "FLATS SHARE"
+    },
+    {
+      "id": "open_days",
+      "label": "Days a bike shop is open per year",
+      "value": 310,
+      "unit": "days",
+      "year": 2026,
+      "source_id": "estimate_open_days",
+      "confidence": "estimate",
+      "note": "No survey found; assumes 6 days a week minus holidays.",
+      "short": "SHOP OPEN DAYS"
+    },
+    {
+      "id": "parts_point_value",
+      "label": "Retail value of one game parts point",
+      "value": 10,
+      "unit": "USD",
+      "year": 2026,
+      "source_id": "estimate_parts_point",
+      "confidence": "estimate",
+      "note": "Abstract game unit, set near the price of one inner tube; not measured.",
+      "short": "PARTS POINT VALUE"
+    }
+  ]
+}

@@ -20,6 +20,8 @@ export const MODIFIER_DEFAULTS = {
   partsQualityBonus: 0,
   extraCustomersPerDay: 0,
   staffCount: 0,
+  /** Multiplies reputation gained from happy customers (Customer Service Workshop). */
+  reputationGainMultiplier: 1,
 };
 export type ModifierKey = keyof typeof MODIFIER_DEFAULTS;
 export const MODIFIER_KEYS = Object.keys(MODIFIER_DEFAULTS) as ModifierKey[];

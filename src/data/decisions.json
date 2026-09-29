@@ -1,5 +1,5 @@
 {
-  "_readme": "Decision tree. events pick an entry node for a gameplay trigger (end_of_day, big_customer, supplier_offer). Nodes: id, speaker, text, choices, effects, requires, sets_flags, next. A node with no choices uses next. next \"END\" closes the conversation. requires: flags (all), any_flags, not_flags, min/max stat thresholds. Every effect number is a placeholder, not real data. minDay/priority are scheduling, not balance.",
+  "_readme": "Decision tree. events pick an entry node for a gameplay trigger (end_of_day, big_customer, supplier_offer). Nodes: id, speaker, text, choices, effects, requires, sets_flags, next. A node with no choices uses next. next \"END\" closes the conversation. requires: flags (all), any_flags, not_flags, min/max stat thresholds. Effect sizes are labelled estimates (game design, not statistics). minDay/priority are scheduling, not balance.",
   "events": [
     {
       "id": "ev_pricing",
@@ -156,6 +156,88 @@
       "minDay": 1,
       "priority": 100,
       "once": false
+    },
+    {
+      "id": "ev_report_market",
+      "trigger": "industry_report",
+      "entry": "report_market",
+      "minDay": 1,
+      "priority": 0,
+      "once": true
+    },
+    {
+      "id": "ev_report_service",
+      "trigger": "industry_report",
+      "entry": "report_service",
+      "minDay": 1,
+      "priority": 0,
+      "once": true
+    },
+    {
+      "id": "ev_report_ebike",
+      "trigger": "industry_report",
+      "entry": "report_ebike",
+      "minDay": 1,
+      "priority": 0,
+      "once": true
+    },
+    {
+      "id": "ev_report_safety",
+      "trigger": "industry_report",
+      "entry": "report_safety",
+      "minDay": 1,
+      "priority": 0,
+      "once": true
+    },
+    {
+      "id": "ev_report_wages",
+      "trigger": "industry_report",
+      "entry": "report_wages",
+      "minDay": 1,
+      "priority": 0,
+      "once": true,
+      "requires": {
+        "flags": [
+          "hired_staff"
+        ]
+      }
+    },
+    {
+      "id": "ev_report_tourism",
+      "trigger": "industry_report",
+      "entry": "report_tourism",
+      "minDay": 1,
+      "priority": 0,
+      "once": true
+    },
+    {
+      "id": "ev_report_parts",
+      "trigger": "industry_report",
+      "entry": "report_parts",
+      "minDay": 1,
+      "priority": 0,
+      "once": true
+    },
+    {
+      "id": "ev_report_ebike2",
+      "trigger": "industry_report",
+      "entry": "report_ebike2",
+      "minDay": 1,
+      "priority": 0,
+      "once": true,
+      "requires": {
+        "not_flags": [
+          "ebike_center"
+        ]
+      }
+    },
+    {
+      "id": "ev_report_kids",
+      "trigger": "industry_report",
+      "entry": "report_kids",
+      "minDay": 1,
+      "priority": 0,
+      "once": true
     }
   ],
   "nodes": {
@@ -170,12 +252,12 @@
             {
               "var": "priceMultiplier",
               "delta": 0.2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "reputation",
               "delta": -2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -194,17 +276,17 @@
             {
               "var": "priceMultiplier",
               "delta": -0.1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": 5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "extraCustomersPerDay",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -240,7 +322,7 @@
             "min": {
               "cash": {
                 "value": 400,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -248,17 +330,17 @@
             {
               "var": "cash",
               "delta": -400,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "inventoryHealth",
               "delta": 40,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "partsQualityBonus",
               "delta": 5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -272,17 +354,17 @@
             {
               "var": "cash",
               "delta": -150,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "inventoryHealth",
               "delta": 40,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "partsQualityBonus",
               "delta": -5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -326,7 +408,7 @@
             "min": {
               "cash": {
                 "value": 200,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -334,12 +416,12 @@
             {
               "var": "cash",
               "delta": -200,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "partsQualityBonus",
               "delta": 10,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -356,7 +438,7 @@
             {
               "var": "reputation",
               "delta": -3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "supplier_stuck"
@@ -386,7 +468,7 @@
             {
               "var": "partsCostMultiplier",
               "delta": -0.15,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -418,7 +500,7 @@
             "min": {
               "cash": {
                 "value": 100,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -426,12 +508,12 @@
             {
               "var": "cash",
               "delta": -100,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "inventoryHealth",
               "delta": 20,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "supplier_bought"
@@ -468,7 +550,7 @@
             {
               "var": "reputation",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "big_rush_quality"
@@ -484,7 +566,7 @@
             {
               "var": "staffMorale",
               "delta": -8,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -499,7 +581,7 @@
             {
               "var": "reputation",
               "delta": -2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -540,7 +622,7 @@
             "min": {
               "cash": {
                 "value": 200,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -548,17 +630,17 @@
             {
               "var": "cash",
               "delta": -200,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "staffCount",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "staffMorale",
               "delta": 5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -573,17 +655,17 @@
             {
               "var": "staffCount",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "staffMorale",
               "delta": 10,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "partsQualityBonus",
               "delta": -2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -598,7 +680,7 @@
             {
               "var": "staffMorale",
               "delta": -5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -634,12 +716,12 @@
             {
               "var": "reputation",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -661,7 +743,7 @@
             {
               "var": "reputation",
               "delta": -3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -697,17 +779,17 @@
             {
               "var": "cash",
               "delta": -40,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "reputation",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": 2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "warranty_claim_free"
@@ -723,17 +805,17 @@
             {
               "var": "cash",
               "delta": 30,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "reputation",
               "delta": -4,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": -3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "warranty_claim_charge"
@@ -761,7 +843,7 @@
             "min": {
               "cash": {
                 "value": 300,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -769,17 +851,17 @@
             {
               "var": "cash",
               "delta": -300,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": 15,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "reputation",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -793,12 +875,12 @@
             {
               "var": "communityGoodwill",
               "delta": 8,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "staffMorale",
               "delta": 5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "sets_flags": [
@@ -812,7 +894,7 @@
             {
               "var": "communityGoodwill",
               "delta": -2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "sponsor_no"
@@ -849,12 +931,12 @@
               "var": "skill",
               "station": "wheel_stand",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": 8,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "trail_day_clinic"
@@ -865,7 +947,7 @@
             "min": {
               "cash": {
                 "value": 50,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -873,17 +955,17 @@
             {
               "var": "cash",
               "delta": -50,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "extraCustomersPerDay",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "reputation",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "trail_day_demo"
@@ -916,7 +998,7 @@
             "min": {
               "cash": {
                 "value": 200,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -924,12 +1006,12 @@
             {
               "var": "cash",
               "delta": -200,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "extraCustomersPerDay",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "marketing_ads"
@@ -940,7 +1022,7 @@
             "min": {
               "cash": {
                 "value": 60,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -948,17 +1030,17 @@
             {
               "var": "cash",
               "delta": -60,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "extraCustomersPerDay",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "marketing_flyers"
@@ -975,22 +1057,22 @@
             {
               "var": "communityGoodwill",
               "delta": 10,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "reputation",
               "delta": 4,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "staffMorale",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "extraCustomersPerDay",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "marketing_ride"
@@ -1033,7 +1115,7 @@
             "min": {
               "cash": {
                 "value": 250,
-                "source": "placeholder"
+                "source": "estimate: game effect size, not a real-world statistic"
               }
             }
           },
@@ -1041,18 +1123,18 @@
             {
               "var": "cash",
               "delta": -250,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "skill",
               "station": "suspension_bench",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "staffMorale",
               "delta": 10,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "staff_training_paid"
@@ -1063,7 +1145,7 @@
             {
               "var": "staffMorale",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "staff_training_self"
@@ -1074,7 +1156,7 @@
             {
               "var": "staffMorale",
               "delta": -8,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "staff_training_no"
@@ -1107,7 +1189,7 @@
             {
               "var": "reputation",
               "delta": -2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "price_keep"
@@ -1118,12 +1200,12 @@
             {
               "var": "priceMultiplier",
               "delta": -0.2,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "communityGoodwill",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "clears_flags": [
@@ -1137,12 +1219,12 @@
             {
               "var": "communityGoodwill",
               "delta": 5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             },
             {
               "var": "staffMorale",
               "delta": -3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "price_value"
@@ -1175,7 +1257,7 @@
             {
               "var": "inventoryHealth",
               "delta": 3,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "quiet_tidy"
@@ -1186,7 +1268,7 @@
             {
               "var": "staffMorale",
               "delta": 5,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "quiet_ride"
@@ -1206,7 +1288,7 @@
               "var": "skill",
               "station": "wheel_stand",
               "delta": 1,
-              "source": "placeholder"
+              "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
           "next": "quiet_practice",
@@ -1229,6 +1311,428 @@
     "quiet_practice": {
       "id": "quiet_practice",
       "text": "Hours of spoke-by-spoke practice. Wheel truing skill up!",
+      "next": "END"
+    },
+    "report_market": {
+      "id": "report_market",
+      "speaker": "YOU",
+      "text": "Money is tight around town. Run a tune-up special to keep bikes coming in?",
+      "choices": [
+        {
+          "text": "TUNE-UP SPECIAL",
+          "effects": [
+            {
+              "var": "priceMultiplier",
+              "delta": -0.05,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "next": "report_market_sale"
+        },
+        {
+          "text": "HOLD PRICES",
+          "effects": [],
+          "next": "report_market_hold"
+        }
+      ]
+    },
+    "report_market_sale": {
+      "id": "report_market_sale",
+      "text": "The sale sign goes up. Slimmer margins, busier stands.",
+      "next": "END"
+    },
+    "report_market_hold": {
+      "id": "report_market_hold",
+      "text": "You hold steady and wait it out.",
+      "next": "END"
+    },
+    "report_service": {
+      "id": "report_service",
+      "speaker": "YOU",
+      "text": "Service is where the money is. Add a second repair stand for $300?",
+      "choices": [
+        {
+          "text": "ADD A STAND $300",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 300,
+                "source": "estimate: game effect size, not a real-world statistic"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -300,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "service_focus"
+          ],
+          "next": "report_service_yes"
+        },
+        {
+          "text": "NOT YET",
+          "effects": [],
+          "next": "report_service_no"
+        }
+      ]
+    },
+    "report_service_yes": {
+      "id": "report_service_yes",
+      "text": "A second stand is bolted to the floor. You can take more tickets.",
+      "next": "END"
+    },
+    "report_service_no": {
+      "id": "report_service_no",
+      "text": "One stand will do for now.",
+      "next": "END"
+    },
+    "report_ebike": {
+      "id": "report_ebike",
+      "speaker": "YOU",
+      "text": "E-bikes are a fifth of bike spending. Buy diagnostic tools and become an e-bike service center for $600?",
+      "choices": [
+        {
+          "text": "E-BIKE CENTER $600",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 600,
+                "source": "estimate: game effect size, not a real-world statistic"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -600,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "reputation",
+              "delta": 2,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "ebike_center"
+          ],
+          "next": "report_ebike_yes"
+        },
+        {
+          "text": "SKIP E-BIKES",
+          "effects": [],
+          "sets_flags": [
+            "ebike_skeptic"
+          ],
+          "next": "report_ebike_no"
+        }
+      ]
+    },
+    "report_ebike_yes": {
+      "id": "report_ebike_yes",
+      "text": "New tools, new sign. E-MTB owners start showing up with big service tickets.",
+      "next": "END"
+    },
+    "report_ebike_no": {
+      "id": "report_ebike_no",
+      "text": "You stick to analog bikes for now.",
+      "next": "END"
+    },
+    "report_safety": {
+      "id": "report_safety",
+      "speaker": "YOU",
+      "text": "Crashes are up. Host a free skills and safety clinic?",
+      "choices": [
+        {
+          "text": "HOST THE CLINIC",
+          "effects": [
+            {
+              "var": "communityGoodwill",
+              "delta": 8,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "reputation",
+              "delta": 2,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "staffMorale",
+              "delta": -2,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "safety_clinic"
+          ],
+          "next": "report_safety_yes"
+        },
+        {
+          "text": "NOT NOW",
+          "effects": [],
+          "next": "report_safety_no"
+        }
+      ]
+    },
+    "report_safety_yes": {
+      "id": "report_safety_yes",
+      "text": "Twenty riders learn to fall better. Parents love you.",
+      "next": "END"
+    },
+    "report_safety_no": {
+      "id": "report_safety_no",
+      "text": "Maybe next season.",
+      "next": "END"
+    },
+    "report_wages": {
+      "id": "report_wages",
+      "speaker": "MECHANIC",
+      "text": "Your mechanic saw the same numbers. Pay them above average?",
+      "choices": [
+        {
+          "text": "GIVE A RAISE",
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -150,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 12,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "next": "report_wages_yes"
+        },
+        {
+          "text": "KEEP PAY AS IS",
+          "effects": [
+            {
+              "var": "staffMorale",
+              "delta": -4,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "next": "report_wages_no"
+        }
+      ]
+    },
+    "report_wages_yes": {
+      "id": "report_wages_yes",
+      "text": "They grin and get back to work faster.",
+      "next": "END"
+    },
+    "report_wages_no": {
+      "id": "report_wages_no",
+      "text": "They shrug. Morale dips a little.",
+      "next": "END"
+    },
+    "report_tourism": {
+      "id": "report_tourism",
+      "speaker": "YOU",
+      "text": "Trail visitors need bikes. Start a rental fleet for $800?",
+      "choices": [
+        {
+          "text": "RENTAL FLEET $800",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 800,
+                "source": "estimate: game effect size, not a real-world statistic"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -800,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 3,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "rental_fleet"
+          ],
+          "next": "report_tourism_yes"
+        },
+        {
+          "text": "NO FLEET",
+          "effects": [],
+          "next": "report_tourism_no"
+        }
+      ]
+    },
+    "report_tourism_yes": {
+      "id": "report_tourism_yes",
+      "text": "Six shiny rentals line the wall. Visitors stop in all weekend.",
+      "next": "END"
+    },
+    "report_tourism_no": {
+      "id": "report_tourism_no",
+      "text": "Visitors ride past to the next town.",
+      "next": "END"
+    },
+    "report_parts": {
+      "id": "report_parts",
+      "speaker": "YOU",
+      "text": "Parts are your best margin. Stock more upgrade parts for $200?",
+      "choices": [
+        {
+          "text": "STOCK UPGRADES $200",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 200,
+                "source": "estimate: game effect size, not a real-world statistic"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -200,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "inventoryHealth",
+              "delta": 20,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "partsQualityBonus",
+              "delta": 3,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "next": "report_parts_yes"
+        },
+        {
+          "text": "KEEP IT LEAN",
+          "effects": [],
+          "next": "report_parts_no"
+        }
+      ]
+    },
+    "report_parts_yes": {
+      "id": "report_parts_yes",
+      "text": "Fresh upgrade parts. Every job looks a bit better.",
+      "next": "END"
+    },
+    "report_parts_no": {
+      "id": "report_parts_no",
+      "text": "The parts wall stays lean.",
+      "next": "END"
+    },
+    "report_ebike2": {
+      "id": "report_ebike2",
+      "speaker": "YOU",
+      "text": "E-bikes are still growing. Last chance this year: become an e-bike service center for $600?",
+      "choices": [
+        {
+          "text": "E-BIKE CENTER $600",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 600,
+                "source": "estimate: game effect size, not a real-world statistic"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -600,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "reputation",
+              "delta": 2,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "ebike_center"
+          ],
+          "next": "report_ebike_yes"
+        },
+        {
+          "text": "STILL NO",
+          "effects": [],
+          "next": "report_ebike_no"
+        }
+      ]
+    },
+    "report_kids": {
+      "id": "report_kids",
+      "speaker": "YOU",
+      "text": "Start a kids' bike trade-in program? It costs $100 to set up.",
+      "choices": [
+        {
+          "text": "START TRADE-INS",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 100,
+                "source": "estimate: game effect size, not a real-world statistic"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -100,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 6,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "kids_program"
+          ],
+          "next": "report_kids_yes"
+        },
+        {
+          "text": "SKIP IT",
+          "effects": [],
+          "next": "report_kids_no"
+        }
+      ]
+    },
+    "report_kids_yes": {
+      "id": "report_kids_yes",
+      "text": "Families trade up every season, and they get their tune-ups here.",
+      "next": "END"
+    },
+    "report_kids_no": {
+      "id": "report_kids_no",
+      "text": "The kids' corner stays small.",
       "next": "END"
     }
   }

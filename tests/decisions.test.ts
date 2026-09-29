@@ -5,6 +5,7 @@ import { DECISIONS, DecisionEngine, describeDiff, END, meets, type DecisionNode 
 import { GameState, MODIFIER_KEYS, STAT_KEYS, WORK_STATIONS } from '../src/core/gameState';
 import { createRng } from '../src/core/rng';
 import type { Trigger } from '../src/core/shop';
+import { reportForMonth } from '../src/core/reports';
 
 const nodes = DECISIONS.nodes;
 const ids = Object.keys(nodes);
@@ -33,17 +34,17 @@ describe('decision data shape', () => {
     for (const e of DECISIONS.events) expect(e.entry in nodes, e.id).toBe(true);
   });
 
-  it('effects target real variables and every number is labelled placeholder', () => {
+  it('effects target real variables and every number is labelled', () => {
     for (const n of Object.values(nodes)) {
       const effects = [...(n.effects ?? []), ...(n.choices ?? []).flatMap((c) => c.effects ?? [])];
       for (const e of effects) {
         expect(VALID_VARS.has(e.var), `${n.id}: ${e.var}`).toBe(true);
-        expect(e.source, `${n.id}: ${e.var}`).toBe('placeholder');
+        expect(e.source, `${n.id}: ${e.var}`).toMatch(/^(stat|derived|estimate): /);
         if (e.var === 'skill') expect([...WORK_STATIONS, 'all']).toContain(e.station);
       }
       for (const c of n.choices ?? []) {
         for (const bound of [c.requires?.min, c.requires?.max]) {
-          for (const v of Object.values(bound ?? {})) expect(isSourced(v) && v.source === 'placeholder').toBe(true);
+          for (const v of Object.values(bound ?? {})) expect(isSourced(v) && /^(stat|derived|estimate): /.test(v.source)).toBe(true);
         }
       }
     }
@@ -64,7 +65,7 @@ describe('decision data shape', () => {
       expect(nodes[id], id).toBeDefined();
     }
     const triggers = new Set(DECISIONS.events.map((e) => e.trigger));
-    expect([...triggers].sort()).toEqual(['big_customer', 'end_of_day', 'supplier_offer']);
+    expect([...triggers].sort()).toEqual(['big_customer', 'end_of_day', 'industry_report', 'supplier_offer']);
   });
 });
 
@@ -138,7 +139,15 @@ describe('reachability', () => {
       const state = new GameState();
       state.applyEffect({ var: 'cash', set: Math.floor(rng() * 2000) });
       const engine = new DecisionEngine(state);
-      for (let day = 1; day <= 8; day++) {
+      for (let day = 1; day <= 24; day++) {
+        const report = reportForMonth(Math.ceil(day / 2));
+        if (day % 2 === 1 && report.event) {
+          const ev = engine.beginEvent(report.event);
+          if (ev) {
+            seenEvents.add(ev.id);
+            walk(ev.entry);
+          }
+        }
         const triggers: Trigger[] = ['end_of_day'];
         if (day >= 2 && day % 2 === 0) triggers.unshift('supplier_offer');
         if (day >= 2 && rng() < 0.5) triggers.unshift('big_customer');
@@ -146,7 +155,13 @@ describe('reachability', () => {
           const ev = engine.begin(t);
           expect(ev, `no event for ${t} on day ${day}`).not.toBeNull();
           seenEvents.add(ev!.id);
-          let id = ev!.entry;
+          walk(ev!.entry);
+          for (const f of ['rush_current_job', 'overtime_current_job', 'decline_current_job']) state.clearFlag(f);
+        }
+        state.nextDay();
+      }
+      function walk(entry: string) {
+          let id = entry;
           for (let steps = 0; id !== END; steps++) {
             expect(steps).toBeLessThan(50);
             const view = engine.enter(id);
@@ -159,9 +174,6 @@ describe('reachability', () => {
               id = engine.advance(id);
             }
           }
-          for (const f of ['rush_current_job', 'overtime_current_job', 'decline_current_job']) state.clearFlag(f);
-        }
-        state.nextDay();
       }
     }
     expect(ids.filter((id) => !seenNodes.has(id))).toEqual([]);

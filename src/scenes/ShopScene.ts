@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import dialogue from '../data/dialogue.json';
 import { BALANCE } from '../core/balance';
 import { gameState, WORK_STATIONS, type WorkStationId } from '../core/gameState';
-import { estimatedMinutes, isJobDone, pendingTasks, TASKS, type JobTask } from '../core/jobs';
+import { basePrice, estimatedMinutes, isJobDone, pendingTasks, TASKS, type JobTask } from '../core/jobs';
 import { ladderRects, runsOf, SHOP_LAYOUT, type StationDef } from '../core/layout';
 import type { Customer, Trigger } from '../core/shop';
 import { fmt, signed, signedMoney } from '../core/text';
@@ -11,7 +11,10 @@ import { TILE_FRAMES } from '../gfx/sprites';
 import { addText, setText } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
-import { runDecision } from './decisionRunner';
+import { playEvent, runDecision } from './decisionRunner';
+import type { LedgerData } from './LedgerScene';
+import { dayInMonth, monthName, monthOf } from '../core/calendar';
+import { reportForMonth, reportText } from '../core/reports';
 import type { MinigameData } from './MinigameScene';
 import { Player } from './Player';
 import { session } from './session';
@@ -141,7 +144,7 @@ export class ShopScene extends Phaser.Scene {
 
   private refreshHud(): void {
     const s = gameState;
-    setText(this.hudTop, `$${s.cash} REP${s.reputation} D${s.day} ${this.shop.clockText}`);
+    setText(this.hudTop, `$${s.cash} R${s.reputation} ${monthName(s.day)}${dayInMonth(s.day)} ${this.shop.clockText}`);
   }
 
   private hudHint(): string {
@@ -290,7 +293,7 @@ export class ShopScene extends Phaser.Scene {
     const t = customer.template;
     const stations = [...new Set(t.tasks.map((id) => stationShort(TASKS[id].station)))];
     const price = Math.round(
-      t.price * gameState.modifier('priceMultiplier') * (rush ? BALANCE.scoring.rushPriceFactor : 1),
+      basePrice(t) * gameState.modifier('priceMultiplier') * (rush ? BALANCE.scoring.rushPriceFactor : 1),
     );
     const summary = fmt(D.counter.offerSummary, { job: t.name, price, stations: stations.join(', ') });
     const choice = await showDialog(this, {
@@ -326,7 +329,7 @@ export class ShopScene extends Phaser.Scene {
     const result = this.shop.finishTask(task, quality);
     const pages = [fmt(D.work.done, { quality, minutes: result.minutes })];
     if (result.rushOrdered) {
-      pages.push(fmt(D.work.rushOrdered, { cost: Math.round(BALANCE.economy.rushOrderPartsCost * gameState.modifier('partsCostMultiplier')) }));
+      pages.push(fmt(D.work.rushOrdered, { cost: this.shop.rushOrderCost(task) }));
     }
     if (this.shop.activeJob && isJobDone(this.shop.activeJob)) pages.push(D.work.bikeReady);
     await this.say(pages, name);
@@ -370,22 +373,41 @@ export class ShopScene extends Phaser.Scene {
 
   private async pauseMenu(): Promise<void> {
     const m = D.pauseMenu;
+    const items: { label: string; run: () => Promise<void> | void }[] = [
+      { label: m.resume, run: () => {} },
+      { label: m.job, run: () => this.showJob() },
+      { label: m.stats, run: () => this.showStats() },
+      { label: m.ledger, run: () => this.openLedger() },
+      { label: m.endDay, run: () => this.confirmEndDay() },
+      { label: m.inputTest, run: () => void this.scene.start('InputTest') },
+    ];
     const choice = await showDialog(this, {
-      pages: [`${m.title}  DAY ${gameState.day}  ${this.shop.clockText}`],
-      choices: [{ label: m.resume }, { label: m.job }, { label: m.stats }, { label: m.endDay }, { label: m.inputTest }],
+      pages: [`${m.title}  ${monthName(gameState.day)} DAY ${dayInMonth(gameState.day)}  ${this.shop.clockText}`],
+      choices: items.map((i) => ({ label: i.label })),
       cancellable: true,
     });
-    if (choice === 1) await this.showJob();
-    if (choice === 2) await this.showStats();
-    if (choice === 3) {
-      const sure = await showDialog(this, {
-        pages: [D.day.endDayConfirm],
-        choices: [{ label: D.yes }, { label: D.no }],
-        cancellable: true,
-      });
-      if (sure === 0) await this.endOfDay(false);
-    }
-    if (choice === 4) this.scene.start('InputTest');
+    if (choice >= 0) await items[choice].run();
+  }
+
+  private async confirmEndDay(): Promise<void> {
+    const sure = await showDialog(this, {
+      pages: [D.day.endDayConfirm],
+      choices: [{ label: D.yes }, { label: D.no }],
+      cancellable: true,
+    });
+    if (sure === 0) await this.endOfDay(false);
+  }
+
+  private openLedger(): Promise<void> {
+    return new Promise((resolve) => {
+      this.scene.pause();
+      this.scene.launch('Ledger', {
+        onClose: () => {
+          this.scene.resume();
+          resolve();
+        },
+      } satisfies LedgerData);
+    });
   }
 
   private async showJob(): Promise<void> {
@@ -421,7 +443,7 @@ export class ShopScene extends Phaser.Scene {
         day: sum.day,
         jobs: sum.jobsDone,
         revenue: sum.revenue,
-        rent: sum.rent,
+        overhead: sum.overhead,
         wages: sum.wages,
         staffIncome: sum.staffIncome,
         net: signedMoney(sum.cashChange),
@@ -436,11 +458,21 @@ export class ShopScene extends Phaser.Scene {
   }
 
   private async morning(triggers: Trigger[]): Promise<void> {
-    await this.say([fmt(D.day.morning, { day: gameState.day })]);
+    await this.say([fmt(D.day.morning, { month: monthName(gameState.day), day: dayInMonth(gameState.day), n: monthOf(gameState.day) })]);
     for (const t of triggers) await this.onTrigger(t);
   }
 
   private async onTrigger(trigger: Trigger): Promise<void> {
+    if (trigger === 'industry_report') return this.industryReport();
     await runDecision(this, session.decisions, trigger);
+  }
+
+  /** Once a month: a real stat as a news item, then the decision it nudges (if eligible). */
+  private async industryReport(): Promise<void> {
+    const report = reportForMonth(monthOf(gameState.day));
+    const text = reportText(report);
+    await this.say([`${text.headline}\n${text.body}`, text.source], 'INDUSTRY REPORT');
+    const ev = report.event ? session.decisions.beginEvent(report.event) : null;
+    if (ev) await playEvent(this, session.decisions, ev);
   }
 }

@@ -121,6 +121,16 @@ export class DecisionEngine {
     return ev;
   }
 
+  /** Start a specific event if it is eligible (used by Industry Reports). */
+  beginEvent(id: string): DecisionEvent | null {
+    const ev = this.data.events.find((e) => e.id === id);
+    if (!ev) throw new Error(`Unknown decision event: ${id}`);
+    const fired = this.state.snapshot.eventsFired.includes(ev.id);
+    if ((ev.once && fired) || this.state.day < ev.minDay || !meets(ev.requires, this.state)) return null;
+    this.state.markEventFired(ev.id);
+    return ev;
+  }
+
   /** Enter a node: apply its own effects and flags, return what to display. */
   enter(id: string): NodeView {
     const n = this.node(id);

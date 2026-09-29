@@ -94,3 +94,26 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
 - **Decision effects are placeholders.** Every effect carries
   `"source": "placeholder"`. `minDay` and `priority` are scheduling fields, not
   balance numbers.
+
+## Phase 5 – Real-world stats
+- **Labels replace "placeholder".** Every balance number is now `stat: <id>`,
+  `derived: <ids>` (formula in `docs/balance.md`, checked by a test), or
+  `estimate: <reason>`. Game-feel values (jump height, minigame speed) and game
+  rules (0–100 scales, calendar) are labelled estimates with that reason, because
+  they are not statistics.
+- **Service-department scale.** The game shop is a service business, so volume and
+  overhead come from the service share of an average NBDA store (6.5% of about
+  $836K revenue), not the whole store's sales.
+- **The NBDA ratios are from 2013.** They are the newest cost-of-doing-business
+  figures I could read for free; the 2025/26 studies are paywalled.
+- **Repair prices come from specific shops** (REI Tulsa, Helen's Cycles, Steve the
+  Bike Guy). Prices vary by region; these are real published examples, not national
+  averages.
+- **Repair-type frequency is an estimate.** No public repair-mix data was found. The
+  e-MTB job weight does come from a real stat (e-bike rider share).
+- **A few figures were read from search-result excerpts** rather than the full page
+  (noted in `sources.md`).
+- **Industry Report** appears on the first day of each game month. It shows a stat,
+  its publisher and year, then a decision that stat makes attractive (if eligible).
+- **Calendar:** one game month = 2 shop days (a labelled estimate), so a 12-month
+  run is 24 days.

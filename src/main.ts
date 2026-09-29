@@ -7,6 +7,7 @@ import { PALETTE, SCREEN_H, SCREEN_W } from './gfx/palette';
 import { BootScene } from './scenes/BootScene';
 import { DialogScene } from './scenes/DialogScene';
 import { InputTestScene } from './scenes/InputTestScene';
+import { LedgerScene } from './scenes/LedgerScene';
 import { MinigameScene } from './scenes/MinigameScene';
 import { ShopScene } from './scenes/ShopScene';
 import { TitleScene } from './scenes/TitleScene';
@@ -39,7 +40,7 @@ const game = new Phaser.Game({
     default: 'arcade',
     arcade: { gravity: { x: 0, y: BALANCE.movement.gravity }, debug: false },
   },
-  scene: [BootScene, TitleScene, ShopScene, InputTestScene, MinigameScene, DialogScene],
+  scene: [BootScene, TitleScene, ShopScene, InputTestScene, MinigameScene, LedgerScene, DialogScene],
 });
 
 // One input edge-detection tick per game step, before any scene updates.

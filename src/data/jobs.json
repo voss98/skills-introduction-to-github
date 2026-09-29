@@ -1,124 +1,495 @@
 {
-  "_readme": "Tasks are single minigame steps at one station. Jobs are customer tickets made of tasks. Every number is a placeholder: prices, minutes and torque targets are invented for gameplay and are NOT real shop rates or manufacturer specs.",
+  "_readme": "Tasks are single minigame steps at one station. Jobs are customer tickets. price = labor from a real shop price list (see stats.json / sources.md); the customer also pays retail for parts used (partsUse x parts point value). Torque targets are typical values for gameplay, not manufacturer specs: always use the component manual.",
   "tasks": {
     "prep_frame": {
-      "name": "Prep frame + BB", "station": "frame_jig", "slot": "frame", "minigame": "torque",
+      "name": "Prep frame + BB",
+      "station": "frame_jig",
+      "slot": "frame",
+      "minigame": "torque",
       "hint": "Hold A to torque the bottom bracket. Let go on the target.",
-      "minutes": { "value": 40, "source": "placeholder" }, "partsUse": { "value": 4, "source": "placeholder" },
-      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 40, "source": "placeholder" }
+      "minutes": {
+        "value": 40,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 4,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 1,
+        "source": "estimate: game difficulty tier"
+      },
+      "targetNm": {
+        "value": 40,
+        "source": "estimate: typical torque value for gameplay; not a manufacturer spec"
+      }
     },
     "install_cockpit": {
-      "name": "Fit cockpit", "station": "frame_jig", "slot": "cockpit", "minigame": "torque",
+      "name": "Fit cockpit",
+      "station": "frame_jig",
+      "slot": "cockpit",
+      "minigame": "torque",
       "hint": "Hold A to torque the stem bolts. Let go on the target.",
-      "minutes": { "value": 25, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
-      "difficulty": { "value": 0, "source": "placeholder" }, "targetNm": { "value": 5, "source": "placeholder" }
+      "minutes": {
+        "value": 25,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 3,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 0,
+        "source": "estimate: game difficulty tier"
+      },
+      "targetNm": {
+        "value": 5,
+        "source": "estimate: typical torque value for gameplay; not a manufacturer spec"
+      }
     },
     "install_fork": {
-      "name": "Install fork", "station": "suspension_bench", "slot": "fork", "minigame": "sequence",
+      "name": "Install fork",
+      "station": "suspension_bench",
+      "slot": "fork",
+      "minigame": "sequence",
       "hint": "Follow the steps: press each button as it lights up.",
-      "minutes": { "value": 35, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
-      "difficulty": { "value": 1, "source": "placeholder" }
+      "minutes": {
+        "value": 35,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 3,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 1,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "install_shock": {
-      "name": "Mount shock", "station": "suspension_bench", "slot": "shock", "minigame": "torque",
+      "name": "Mount shock",
+      "station": "suspension_bench",
+      "slot": "shock",
+      "minigame": "torque",
       "hint": "Hold A to torque the shock mount bolts.",
-      "minutes": { "value": 25, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
-      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 12, "source": "placeholder" }
+      "minutes": {
+        "value": 25,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 3,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 1,
+        "source": "estimate: game difficulty tier"
+      },
+      "targetNm": {
+        "value": 12,
+        "source": "estimate: typical torque value for gameplay; not a manufacturer spec"
+      }
     },
     "true_wheels": {
-      "name": "True wheels", "station": "wheel_stand", "slot": "wheels", "minigame": "timing",
+      "name": "True wheels",
+      "station": "wheel_stand",
+      "slot": "wheels",
+      "minigame": "timing",
       "hint": "Press A when the marker is in the zone to tension a spoke.",
-      "minutes": { "value": 40, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
-      "difficulty": { "value": 1, "source": "placeholder" }
+      "minutes": {
+        "value": 40,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 3,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 1,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "mount_tires": {
-      "name": "Mount tires", "station": "wheel_stand", "slot": "tires", "minigame": "timing",
+      "name": "Mount tires",
+      "station": "wheel_stand",
+      "slot": "tires",
+      "minigame": "timing",
       "hint": "Press A in the zone to seat the bead.",
-      "minutes": { "value": 20, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
-      "difficulty": { "value": 0, "source": "placeholder" }
+      "minutes": {
+        "value": 20,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 3,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 0,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "install_drivetrain": {
-      "name": "Fit drivetrain", "station": "drivetrain_bench", "slot": "drivetrain", "minigame": "sequence",
+      "name": "Fit drivetrain",
+      "station": "drivetrain_bench",
+      "slot": "drivetrain",
+      "minigame": "sequence",
       "hint": "Follow the steps: chain, cassette, derailleur, cable.",
-      "minutes": { "value": 45, "source": "placeholder" }, "partsUse": { "value": 5, "source": "placeholder" },
-      "difficulty": { "value": 2, "source": "placeholder" }
+      "minutes": {
+        "value": 45,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 5,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 2,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "install_brakes": {
-      "name": "Fit brakes", "station": "drivetrain_bench", "slot": "brakes", "minigame": "torque",
+      "name": "Fit brakes",
+      "station": "drivetrain_bench",
+      "slot": "brakes",
+      "minigame": "torque",
       "hint": "Hold A to torque the rotor bolts.",
-      "minutes": { "value": 30, "source": "placeholder" }, "partsUse": { "value": 4, "source": "placeholder" },
-      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 6, "source": "placeholder" }
+      "minutes": {
+        "value": 30,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 4,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 1,
+        "source": "estimate: game difficulty tier"
+      },
+      "targetNm": {
+        "value": 6,
+        "source": "estimate: typical torque value for gameplay; not a manufacturer spec"
+      }
     },
     "fix_flat": {
-      "name": "Fix flat", "station": "wheel_stand", "slot": "tires", "minigame": "timing",
+      "name": "Fix flat",
+      "station": "wheel_stand",
+      "slot": "tires",
+      "minigame": "timing",
       "hint": "Press A in the zone to seat the new tube.",
-      "minutes": { "value": 15, "source": "placeholder" }, "partsUse": { "value": 1, "source": "placeholder" },
-      "difficulty": { "value": 0, "source": "placeholder" }
+      "minutes": {
+        "value": 15,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 1,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 0,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "align_hanger": {
-      "name": "Align hanger", "station": "drivetrain_bench", "slot": "drivetrain", "minigame": "timing",
+      "name": "Align hanger",
+      "station": "drivetrain_bench",
+      "slot": "drivetrain",
+      "minigame": "timing",
       "hint": "Press A when the hanger lines up with the gauge.",
-      "minutes": { "value": 20, "source": "placeholder" }, "partsUse": { "value": 1, "source": "placeholder" },
-      "difficulty": { "value": 1, "source": "placeholder" }
+      "minutes": {
+        "value": 20,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 1,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 1,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "index_shifting": {
-      "name": "Index gears", "station": "drivetrain_bench", "slot": "drivetrain", "minigame": "sequence",
+      "name": "Index gears",
+      "station": "drivetrain_bench",
+      "slot": "drivetrain",
+      "minigame": "sequence",
       "hint": "Click through the gears: press each button as it lights up.",
-      "minutes": { "value": 15, "source": "placeholder" }, "partsUse": { "value": 0, "source": "placeholder" },
-      "difficulty": { "value": 0, "source": "placeholder" }
+      "minutes": {
+        "value": 15,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 0,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 0,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "replace_pads": {
-      "name": "Replace pads", "station": "drivetrain_bench", "slot": "brakes", "minigame": "sequence",
+      "name": "Replace pads",
+      "station": "drivetrain_bench",
+      "slot": "brakes",
+      "minigame": "sequence",
       "hint": "Pads out, clean, pads in, bed in. Follow the steps.",
-      "minutes": { "value": 20, "source": "placeholder" }, "partsUse": { "value": 2, "source": "placeholder" },
-      "difficulty": { "value": 0, "source": "placeholder" }
+      "minutes": {
+        "value": 20,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 2,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 0,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "service_fork": {
-      "name": "Service fork", "station": "suspension_bench", "slot": "fork", "minigame": "sequence",
+      "name": "Service fork",
+      "station": "suspension_bench",
+      "slot": "fork",
+      "minigame": "sequence",
       "hint": "Strip, clean, new seals, oil, rebuild. Follow the steps.",
-      "minutes": { "value": 50, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
-      "difficulty": { "value": 2, "source": "placeholder" }
+      "minutes": {
+        "value": 50,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 3,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 2,
+        "source": "estimate: game difficulty tier"
+      }
     },
     "service_shock": {
-      "name": "Service shock", "station": "suspension_bench", "slot": "shock", "minigame": "torque",
+      "name": "Service shock",
+      "station": "suspension_bench",
+      "slot": "shock",
+      "minigame": "torque",
       "hint": "Hold A to torque the air can. Let go on the target.",
-      "minutes": { "value": 30, "source": "placeholder" }, "partsUse": { "value": 2, "source": "placeholder" },
-      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 10, "source": "placeholder" }
+      "minutes": {
+        "value": 30,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 2,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 1,
+        "source": "estimate: game difficulty tier"
+      },
+      "targetNm": {
+        "value": 10,
+        "source": "estimate: typical torque value for gameplay; not a manufacturer spec"
+      }
+    },
+    "tune_emtb": {
+      "name": "E-MTB tune",
+      "station": "drivetrain_bench",
+      "slot": "drivetrain",
+      "minigame": "sequence",
+      "hint": "Firmware check, motor mounts, drivetrain, brakes. Follow the steps.",
+      "minutes": {
+        "value": 45,
+        "source": "estimate: bench time; no published labor-time data used"
+      },
+      "partsUse": {
+        "value": 3,
+        "source": "estimate: parts points used; abstract game unit"
+      },
+      "difficulty": {
+        "value": 2,
+        "source": "estimate: game difficulty tier"
+      }
     }
   },
   "jobs": [
     {
-      "id": "flat_tire", "kind": "repair", "name": "Flat tire",
-      "tasks": ["fix_flat"], "price": { "value": 25, "source": "placeholder" }, "weight": { "value": 4, "source": "placeholder" },
-      "issues": [{ "slot": "tires", "condition": { "value": 10, "source": "placeholder" } }]
-    },
-    {
-      "id": "bent_hanger", "kind": "repair", "name": "Bent derailleur hanger",
-      "tasks": ["align_hanger", "index_shifting"], "price": { "value": 45, "source": "placeholder" }, "weight": { "value": 3, "source": "placeholder" },
-      "issues": [{ "slot": "drivetrain", "condition": { "value": 30, "source": "placeholder" } }]
-    },
-    {
-      "id": "worn_pads", "kind": "repair", "name": "Worn brake pads",
-      "tasks": ["replace_pads"], "price": { "value": 50, "source": "placeholder" }, "weight": { "value": 3, "source": "placeholder" },
-      "issues": [{ "slot": "brakes", "condition": { "value": 20, "source": "placeholder" } }]
-    },
-    {
-      "id": "suspension_service", "kind": "repair", "name": "Suspension service",
-      "tasks": ["service_fork", "service_shock"], "price": { "value": 160, "source": "placeholder" }, "weight": { "value": 2, "source": "placeholder" },
+      "id": "flat_tire",
+      "kind": "repair",
+      "name": "Flat tire",
+      "tasks": [
+        "fix_flat"
+      ],
+      "price": {
+        "value": 25,
+        "source": "stat: rei_flat_fix"
+      },
+      "weight": {
+        "value": 4,
+        "source": "estimate: see repair_mix_flats in stats.json (estimate: no public repair-mix data)"
+      },
       "issues": [
-        { "slot": "fork", "condition": { "value": 40, "source": "placeholder" } },
-        { "slot": "shock", "condition": { "value": 45, "source": "placeholder" } }
+        {
+          "slot": "tires",
+          "condition": {
+            "value": 10,
+            "source": "estimate: game condition scale"
+          }
+        }
       ]
     },
     {
-      "id": "trail_build", "kind": "build", "name": "Trail bike build",
-      "tasks": ["prep_frame", "install_fork", "install_shock", "true_wheels", "mount_tires", "install_drivetrain", "install_brakes", "install_cockpit"],
-      "price": { "value": 380, "source": "placeholder" }, "weight": { "value": 1, "source": "placeholder" }
+      "id": "bent_hanger",
+      "kind": "repair",
+      "name": "Bent derailleur hanger",
+      "tasks": [
+        "align_hanger",
+        "index_shifting"
+      ],
+      "price": {
+        "value": 35,
+        "source": "stat: rei_derailleur_adjust"
+      },
+      "weight": {
+        "value": 3,
+        "source": "estimate: see repair_mix_flats in stats.json (estimate: no public repair-mix data)"
+      },
+      "issues": [
+        {
+          "slot": "drivetrain",
+          "condition": {
+            "value": 30,
+            "source": "estimate: game condition scale"
+          }
+        }
+      ]
     },
     {
-      "id": "team_build", "kind": "build", "name": "Race team build", "big": true,
-      "tasks": ["prep_frame", "install_fork", "install_shock", "true_wheels", "mount_tires", "install_drivetrain", "install_brakes", "install_cockpit"],
-      "price": { "value": 900, "source": "placeholder" }, "weight": { "value": 0, "source": "placeholder" }
+      "id": "worn_pads",
+      "kind": "repair",
+      "name": "Worn brake pads",
+      "tasks": [
+        "replace_pads"
+      ],
+      "price": {
+        "value": 20,
+        "source": "stat: helens_pad_install"
+      },
+      "weight": {
+        "value": 3,
+        "source": "estimate: see repair_mix_flats in stats.json (estimate: no public repair-mix data)"
+      },
+      "issues": [
+        {
+          "slot": "brakes",
+          "condition": {
+            "value": 20,
+            "source": "estimate: game condition scale"
+          }
+        }
+      ]
+    },
+    {
+      "id": "suspension_service",
+      "kind": "repair",
+      "name": "Suspension service",
+      "tasks": [
+        "service_fork",
+        "service_shock"
+      ],
+      "price": {
+        "value": 160,
+        "source": "derived: helens_fork_overhaul,stbg_fork_aircan_combo,stbg_fork_lower"
+      },
+      "weight": {
+        "value": 2,
+        "source": "estimate: see repair_mix_flats in stats.json (estimate: no public repair-mix data)"
+      },
+      "issues": [
+        {
+          "slot": "fork",
+          "condition": {
+            "value": 40,
+            "source": "estimate: game condition scale"
+          }
+        },
+        {
+          "slot": "shock",
+          "condition": {
+            "value": 45,
+            "source": "estimate: game condition scale"
+          }
+        }
+      ]
+    },
+    {
+      "id": "trail_build",
+      "kind": "build",
+      "name": "Trail bike build",
+      "tasks": [
+        "prep_frame",
+        "install_fork",
+        "install_shock",
+        "true_wheels",
+        "mount_tires",
+        "install_drivetrain",
+        "install_brakes",
+        "install_cockpit"
+      ],
+      "price": {
+        "value": 400,
+        "source": "stat: helens_frame_up"
+      },
+      "weight": {
+        "value": 1,
+        "source": "estimate: see repair_mix_flats in stats.json (estimate: no public repair-mix data)"
+      }
+    },
+    {
+      "id": "team_build",
+      "kind": "build",
+      "name": "Race team build",
+      "big": true,
+      "tasks": [
+        "prep_frame",
+        "install_fork",
+        "install_shock",
+        "true_wheels",
+        "mount_tires",
+        "install_drivetrain",
+        "install_brakes",
+        "install_cockpit"
+      ],
+      "price": {
+        "value": 600,
+        "source": "derived: helens_frame_up,rei_precision_true,rei_brake_bleed"
+      },
+      "weight": {
+        "value": 0,
+        "source": "estimate: see repair_mix_flats in stats.json (estimate: no public repair-mix data)"
+      }
+    },
+    {
+      "id": "emtb_service",
+      "kind": "repair",
+      "name": "E-MTB service",
+      "requiresFlag": "ebike_center",
+      "tasks": [
+        "tune_emtb",
+        "service_fork"
+      ],
+      "price": {
+        "value": 490,
+        "source": "stat: rei_emtb_tune"
+      },
+      "weight": {
+        "value": 2.3,
+        "source": "derived: ebike_rider_share"
+      },
+      "issues": [
+        {
+          "slot": "drivetrain",
+          "condition": {
+            "value": 35,
+            "source": "estimate: game condition scale"
+          }
+        }
+      ]
     }
   ]
 }

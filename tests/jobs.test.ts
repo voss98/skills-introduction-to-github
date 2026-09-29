@@ -19,7 +19,7 @@ function runJob(shop: ShopController, accuracy = 1) {
 }
 
 describe('job data', () => {
-  it('labels every number as a placeholder', () => {
+  it('labels every number with a source', () => {
     expect(findUnlabelledNumbers(jobsRaw)).toEqual([]);
   });
 
@@ -174,7 +174,7 @@ describe('shop day', () => {
     shop.startDay();
     shop.advance(10000);
     const summary = shop.endDay();
-    expect(summary.rent).toBeGreaterThan(0);
+    expect(summary.overhead).toBeGreaterThan(0);
     expect(summary.unserved).toBeGreaterThan(0);
     expect(summary.reputationChange).toBeLessThan(0);
     shop.nextDay();

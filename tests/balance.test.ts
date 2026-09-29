@@ -15,10 +15,10 @@ describe('balance data', () => {
     expect(findUnlabelledNumbers(balanceRaw)).toEqual([]);
   });
 
-  it('uses "placeholder" for every source (no real data sources yet)', () => {
+  it('every source is a stat, a derivation, or an explained estimate', () => {
     const all = sourced(balanceRaw);
     expect(all.length).toBeGreaterThan(0);
-    for (const s of all) expect(s.source).toBe('placeholder');
+    for (const s of all) expect(s.source).toMatch(/^(stat|derived|estimate): .+/);
   });
 
   it('unwraps nested values', () => {

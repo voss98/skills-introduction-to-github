@@ -1,5 +1,6 @@
 import customersData from '../data/customers.json';
 import { BALANCE } from './balance';
+import { isMonthStart } from './calendar';
 import type { GameState, WorkStationId } from './gameState';
 import {
   completeTask,
@@ -30,7 +31,7 @@ export interface Customer {
 }
 
 /** Gameplay moments that can trigger a decision. */
-export type Trigger = 'end_of_day' | 'big_customer' | 'supplier_offer';
+export type Trigger = 'end_of_day' | 'big_customer' | 'supplier_offer' | 'industry_report';
 
 export type CounterAction =
   | { kind: 'handover'; job: Job }
@@ -48,7 +49,7 @@ export interface DaySummary {
   day: number;
   jobsDone: number;
   revenue: number;
-  rent: number;
+  overhead: number;
   wages: number;
   staffIncome: number;
   unserved: number;
@@ -105,7 +106,7 @@ export class ShopController {
       cfg.basePerDay + Math.floor(s.reputation / cfg.reputationPerExtraCustomer) + s.modifier('extraCustomersPerDay'),
     );
     const lastArrival = C.dayEndMinute - cfg.lastArrivalBeforeCloseMinutes;
-    const walkIns = JOB_TEMPLATES.filter((t) => !t.big && t.weight > 0);
+    const walkIns = JOB_TEMPLATES.filter((t) => !t.big && t.weight > 0 && (!t.requiresFlag || s.hasFlag(t.requiresFlag)));
     const fresh: Customer[] = [];
     for (let i = 0; i < count; i++) {
       const template = weightedPick(this.rng, walkIns, (t) => t.weight);
@@ -121,6 +122,7 @@ export class ShopController {
     this.customers = [...this.customers.map((c) => ({ ...c, arrivesAt: C.dayStartMinute })), ...fresh.sort((a, b) => a.arrivesAt - b.arrivesAt)];
 
     const triggers: Trigger[] = [];
+    if (isMonthStart(s.day)) triggers.push('industry_report');
     if (s.day >= BALANCE.events.supplierFirstDay && (s.day - BALANCE.events.supplierFirstDay) % BALANCE.events.supplierEveryDays === 0) {
       triggers.push('supplier_offer');
     }
@@ -179,7 +181,7 @@ export class ShopController {
     } else {
       rushOrdered = true;
       minutes += e.rushOrderMinutes;
-      this.state.addCash(-Math.round(e.rushOrderPartsCost * this.state.modifier('partsCostMultiplier')));
+      this.state.addCash(-this.rushOrderCost(task));
     }
     completeTask(this.activeJob, task, quality);
     this.advance(minutes);
@@ -197,7 +199,9 @@ export class ShopController {
       skillFor: (st) => s.skill(st),
     });
     s.addCash(outcome.payment);
-    s.adjust('reputation', outcome.reputationDelta);
+    const gain = outcome.reputationDelta > 0 ? Math.round(outcome.reputationDelta * s.modifier('reputationGainMultiplier')) : outcome.reputationDelta;
+    outcome.reputationDelta = gain;
+    s.adjust('reputation', gain);
     if (outcome.rating === 'great') s.adjust('staffMorale', BALANCE.scoring.moraleFromGreatJob);
     if (outcome.rating === 'bad' && s.hasFlag('warranty_generous')) {
       // Generous warranty: redo costs money but protects reputation.
@@ -211,8 +215,15 @@ export class ShopController {
     return { ...outcome, customer: job.customer, jobName: job.template.name, reaction };
   }
 
+  /** Restocking pays wholesale: retail value minus the parts margin. */
   restockCost(): number {
-    return Math.round(BALANCE.economy.restockCost * this.state.modifier('partsCostMultiplier'));
+    const e = BALANCE.economy;
+    return Math.round(e.restockAmount * e.partsPointRetail * (1 - e.partsMargin) * this.state.modifier('partsCostMultiplier'));
+  }
+
+  /** A same-day parts run pays full retail (no margin). */
+  rushOrderCost(task: JobTask): number {
+    return Math.round(Math.max(1, task.def.partsUse) * BALANCE.economy.partsPointRetail * this.state.modifier('partsCostMultiplier'));
   }
 
   restock(): boolean {
@@ -228,11 +239,11 @@ export class ShopController {
     const s = this.state;
     const e = BALANCE.economy;
     const staff = s.modifier('staffCount');
-    const rent = e.rentPerDay;
+    const overhead = e.overheadPerDay;
     const wages = Math.round(staff * e.wagePerStaffPerDay);
     const moraleFactor = 0.5 + s.staffMorale / 100;
     const staffIncome = Math.round(staff * e.staffJobsPerDay * e.staffEarningsPerJob * moraleFactor);
-    s.addCash(staffIncome - rent - wages);
+    s.addCash(staffIncome - overhead - wages);
 
     const unserved = this.waiting.length;
     if (unserved) s.adjust('reputation', -unserved * e.unservedReputationPenalty);
@@ -245,7 +256,7 @@ export class ShopController {
       day: s.day,
       jobsDone: this.day.jobsDone,
       revenue: this.day.revenue,
-      rent,
+      overhead,
       wages,
       staffIncome,
       unserved,

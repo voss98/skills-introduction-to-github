@@ -26,6 +26,8 @@ export interface JobTemplate {
   price: number;
   weight: number;
   big?: boolean;
+  /** Only offered once this flag is set (e.g. ebike_center). */
+  requiresFlag?: string;
   issues?: { slot: ComponentSlot; condition: number }[];
 }
 
@@ -80,6 +82,13 @@ export function createJob(
     overtime,
   };
 }
+
+/** Retail value of the parts a job uses. */
+export const partsRetail = (t: JobTemplate) =>
+  t.tasks.reduce((s, id) => s + TASKS[id].partsUse, 0) * BALANCE.economy.partsPointRetail;
+
+/** What the customer pays at 100% satisfaction before modifiers: labor (real price list) + parts at retail. */
+export const basePrice = (t: JobTemplate) => t.price + partsRetail(t);
 
 export const estimatedMinutes = (t: JobTemplate) =>
   t.tasks.reduce((s, id) => s + TASKS[id].minutes, 0) + BALANCE.scoring.walkAllowanceMinutes;
@@ -136,7 +145,7 @@ export function scoreJob(job: Job, finishedAt: number, ctx: ScoreContext): JobOu
   const avgSkill = stations.reduce((a, st) => a + ctx.skillFor(st), 0) / stations.length;
   const skillReward = 1 + s.skillRewardPerLevel * (avgSkill - 1);
   const payment = Math.round(
-    job.template.price * ctx.priceMultiplier * (job.rush ? s.rushPriceFactor : 1) * payFactor * skillReward,
+    basePrice(job.template) * ctx.priceMultiplier * (job.rush ? s.rushPriceFactor : 1) * payFactor * skillReward,
   );
   const reputationDelta = Math.round((satisfaction - s.reputationPivot) / s.satisfactionPerReputationPoint);
   const rating: Rating = satisfaction >= s.greatJobSatisfaction ? 'great' : satisfaction >= s.reputationPivot ? 'ok' : 'bad';

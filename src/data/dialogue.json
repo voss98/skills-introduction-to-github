@@ -19,7 +19,8 @@
     "job": "CURRENT JOB",
     "stats": "SHOP STATS",
     "endDay": "END DAY",
-    "inputTest": "INPUT TEST"
+    "inputTest": "INPUT TEST",
+    "ledger": "SHOP LEDGER"
   },
   "idle": "Nothing to do here right now. Take a job at the front counter.",
   "counter": {
@@ -49,9 +50,9 @@
   },
   "day": {
     "closing": "Closing time! The shop is closed for the day.",
-    "summary": "DAY {day} DONE\nJOBS {jobs}  REVENUE ${revenue}\nRENT -${rent}  WAGES -${wages}\nSTAFF WORK +${staffIncome}\nNET {net}  REP {rep}",
+    "summary": "DAY {day} DONE\nJOBS {jobs}  REVENUE ${revenue}\nOVERHEAD -${overhead}\nWAGES -${wages} STAFF +${staffIncome}\nNET {net}  REP {rep}",
     "unserved": "{count} customer(s) left without being served.",
-    "morning": "DAY {day}. The shop is open!",
+    "morning": "{month} DAY {day} (MONTH {n} OF 12). THE SHOP IS OPEN!",
     "endDayConfirm": "Close up early and end the day?"
   },
   "noJob": "No active job. Take one at the front counter.",

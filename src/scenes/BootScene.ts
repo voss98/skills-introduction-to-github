@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { customerArt, playerArt, promptArt, stationArt, tileArt } from '../gfx/sprites';
 import { createFontTextures, createPixelTexture } from '../gfx/textures';
+import { setPublishers } from '../core/reports';
+import { publisherShortNames } from './LedgerScene';
 
 /** Generates every texture procedurally (no image assets), then hands off. */
 export class BootScene extends Phaser.Scene {
@@ -15,6 +17,8 @@ export class BootScene extends Phaser.Scene {
     createPixelTexture(this, 'customer', customerArt());
     createPixelTexture(this, 'prompt', [promptArt()]);
     for (const [key, rows] of Object.entries(stationArt())) createPixelTexture(this, key, [rows]);
+
+    setPublishers(publisherShortNames());
 
     // The text box scene runs permanently on top and shows itself when needed.
     this.scene.launch('Dialog');

@@ -1,341 +1,367 @@
 {
-  "_readme": "Every number is wrapped as { value, source }. source is \"placeholder\" unless it cites a real reference. None of these numbers come from real shop data yet.",
+  "_readme": "Every number is { value, source }. source is 'stat: <id>' (a figure in stats.json), 'derived: <ids>' (computed from those stats; formula in docs/balance.md), or 'estimate: <why>' when no real figure applies.",
   "startingState": {
     "cash": {
       "value": 1500,
-      "source": "placeholder"
+      "source": "estimate: starting working capital; no data on new service-shop capital"
     },
     "reputation": {
       "value": 50,
-      "source": "placeholder"
+      "source": "estimate: midpoint of the game's 0-100 scale"
     },
     "staffMorale": {
       "value": 60,
-      "source": "placeholder"
+      "source": "estimate: game scale 0-100"
     },
     "inventoryHealth": {
       "value": 70,
-      "source": "placeholder"
+      "source": "estimate: game scale 0-100"
     },
     "communityGoodwill": {
       "value": 40,
-      "source": "placeholder"
+      "source": "estimate: game scale 0-100"
     },
     "stationSkill": {
       "value": 1,
-      "source": "placeholder"
+      "source": "estimate: skill levels are a game scale 1-5"
     },
     "day": {
       "value": 1,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     }
   },
   "limits": {
     "statMin": {
       "value": 0,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     },
     "statMax": {
       "value": 100,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     },
     "skillMin": {
       "value": 1,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     },
     "skillMax": {
       "value": 5,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     },
     "modifierMin": {
       "priceMultiplier": {
         "value": 0.5,
-        "source": "placeholder"
+        "source": "estimate: game rule, not a real-world statistic"
       },
       "partsCostMultiplier": {
         "value": 0.5,
-        "source": "placeholder"
+        "source": "estimate: game rule, not a real-world statistic"
       },
       "partsQualityBonus": {
         "value": -30,
-        "source": "placeholder"
+        "source": "estimate: game rule, not a real-world statistic"
       },
       "extraCustomersPerDay": {
         "value": 0,
-        "source": "placeholder"
+        "source": "estimate: game rule, not a real-world statistic"
       },
       "staffCount": {
         "value": 0,
-        "source": "placeholder"
+        "source": "estimate: game rule, not a real-world statistic"
+      },
+      "reputationGainMultiplier": {
+        "value": 0.5,
+        "source": "estimate: game rule, not a real-world statistic"
       }
     }
   },
   "movement": {
     "walkSpeed": {
       "value": 60,
-      "source": "placeholder"
+      "source": "estimate: game-feel tuning, not a real-world statistic"
     },
     "climbSpeed": {
       "value": 45,
-      "source": "placeholder"
+      "source": "estimate: game-feel tuning, not a real-world statistic"
     },
     "jumpVelocity": {
       "value": 185,
-      "source": "placeholder"
+      "source": "estimate: game-feel tuning, not a real-world statistic"
     },
     "gravity": {
       "value": 420,
-      "source": "placeholder"
+      "source": "estimate: game-feel tuning, not a real-world statistic"
     }
   },
   "clock": {
     "dayStartMinute": {
       "value": 540,
-      "source": "placeholder"
+      "source": "estimate: 9:00 opening time"
     },
     "dayEndMinute": {
       "value": 1020,
-      "source": "placeholder"
+      "source": "estimate: 17:00 closing time"
     },
     "shopMinutesPerRealSecond": {
+      "value": 3,
+      "source": "estimate: game-feel tuning, not a real-world statistic"
+    }
+  },
+  "calendar": {
+    "daysPerMonth": {
       "value": 2,
-      "source": "placeholder"
+      "source": "estimate: each game month is compressed to 2 shop days so a 12-month run fits one sitting"
+    },
+    "months": {
+      "value": 12,
+      "source": "estimate: run length set by the brief"
+    },
+    "bankruptcyCash": {
+      "value": -1000,
+      "source": "estimate: game rule: the run ends if cash drops below this at closing"
     }
   },
   "customers": {
     "basePerDay": {
-      "value": 2,
-      "source": "placeholder"
+      "value": 3,
+      "source": "derived: store_profit_dollars,store_pretax_profit,service_share_avg,open_days"
     },
     "reputationPerExtraCustomer": {
       "value": 30,
-      "source": "placeholder"
+      "source": "estimate: how reputation turns into walk-ins; no data"
     },
     "maxPerDay": {
-      "value": 6,
-      "source": "placeholder"
+      "value": 5,
+      "source": "derived: service_share_top,service_share_avg"
     },
     "bigCustomerFirstDay": {
       "value": 2,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     },
     "bigCustomerChance": {
       "value": 0.35,
-      "source": "placeholder"
+      "source": "estimate: frequency of big team orders; no data"
     },
     "lastArrivalBeforeCloseMinutes": {
       "value": 150,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     }
   },
   "economy": {
-    "rentPerDay": {
-      "value": 120,
-      "source": "placeholder"
+    "overheadPerDay": {
+      "value": 29,
+      "source": "derived: expense_share,payroll_share,store_profit_dollars,store_pretax_profit,service_share_avg,open_days"
     },
     "wagePerStaffPerDay": {
-      "value": 90,
-      "source": "placeholder"
+      "value": 151,
+      "source": "derived: bls_mechanic_wage"
     },
-    "restockCost": {
-      "value": 150,
-      "source": "placeholder"
+    "partsPointRetail": {
+      "value": 10,
+      "source": "stat: parts_point_value"
+    },
+    "partsMargin": {
+      "value": 0.48,
+      "source": "stat: pa_margin"
     },
     "restockAmount": {
       "value": 25,
-      "source": "placeholder"
-    },
-    "rushOrderPartsCost": {
-      "value": 40,
-      "source": "placeholder"
+      "source": "estimate: parts points per restock order; game unit"
     },
     "rushOrderMinutes": {
       "value": 30,
-      "source": "placeholder"
+      "source": "estimate: delay for a same-day parts run; no data"
     },
     "declineReputationPenalty": {
       "value": 1,
-      "source": "placeholder"
+      "source": "estimate: game scale"
     },
     "unservedReputationPenalty": {
       "value": 2,
-      "source": "placeholder"
+      "source": "estimate: game scale"
     },
     "staffJobsPerDay": {
-      "value": 1,
-      "source": "placeholder"
+      "value": 2,
+      "source": "estimate: walk-in jobs a hired mechanic finishes per game day; no data"
     },
     "staffEarningsPerJob": {
-      "value": 45,
-      "source": "placeholder"
+      "value": 68,
+      "source": "derived: rei_flat_fix,rei_derailleur_adjust,helens_pad_install,helens_fork_overhaul,stbg_fork_aircan_combo,parts_point_value,repair_mix_flats"
     },
     "inventoryDecayPerDay": {
       "value": 2,
-      "source": "placeholder"
+      "source": "estimate: shrinkage and small sales; no data"
     }
   },
   "scoring": {
     "qualityWeight": {
       "value": 0.6,
-      "source": "placeholder"
+      "source": "estimate: how customers weigh quality vs speed; no data"
     },
     "timeWeight": {
       "value": 0.4,
-      "source": "placeholder"
+      "source": "estimate: how customers weigh quality vs speed; no data"
     },
     "payAtZeroSatisfaction": {
       "value": 0.6,
-      "source": "placeholder"
+      "source": "estimate: discount for a bad job; no data"
     },
     "payAtFullSatisfaction": {
       "value": 1.2,
-      "source": "placeholder"
+      "source": "estimate: tips and add-ons for a great job; no data"
     },
     "reputationPivot": {
       "value": 60,
-      "source": "placeholder"
+      "source": "estimate: game scale"
     },
     "satisfactionPerReputationPoint": {
       "value": 12,
-      "source": "placeholder"
+      "source": "estimate: game scale"
     },
     "timeSlack": {
       "value": 1.25,
-      "source": "placeholder"
+      "source": "estimate: how late a job can be before the customer minds; no data"
     },
     "walkAllowanceMinutes": {
       "value": 20,
-      "source": "placeholder"
+      "source": "estimate: game-feel tuning, not a real-world statistic"
     },
     "skillRewardPerLevel": {
       "value": 0.1,
-      "source": "placeholder"
+      "source": "estimate: pay bonus per skill level; no data"
+    },
+    "skillQualityPerLevel": {
+      "value": 3,
+      "source": "estimate: quality points per skill level above 1; no data"
+    },
+    "skillTimeSavingPerLevel": {
+      "value": 0.08,
+      "source": "estimate: share of task time saved per skill level above 1; no data"
     },
     "rushDeadlineFactor": {
       "value": 0.6,
-      "source": "placeholder"
+      "source": "estimate: rush deadlines; no data"
     },
     "rushPriceFactor": {
       "value": 1.5,
-      "source": "placeholder"
+      "source": "estimate: rush surcharge; shop rush fees vary and no survey was found"
     },
     "moraleFromGreatJob": {
       "value": 1,
-      "source": "placeholder"
+      "source": "estimate: game scale"
     },
     "greatJobSatisfaction": {
       "value": 85,
-      "source": "placeholder"
+      "source": "estimate: game scale"
     }
   },
   "minigames": {
     "timing": {
       "zoneWidth": {
         "value": 0.22,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "zoneWidthPerSkill": {
         "value": 0.04,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "speed": {
         "value": 0.8,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "speedPerDifficulty": {
         "value": 0.3,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "speedPerSkill": {
         "value": -0.05,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "hits": {
         "value": 3,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "hitTimeoutMs": {
         "value": 6000,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       }
     },
     "sequence": {
       "length": {
         "value": 4,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "lengthPerDifficulty": {
         "value": 1,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "lengthPerSkill": {
         "value": -0.5,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "stepTimeMs": {
         "value": 1800,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "stepTimePerSkill": {
         "value": 250,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "mistakePenalty": {
         "value": 20,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "slownessPenalty": {
         "value": 20,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       }
     },
     "torque": {
       "tolerance": {
         "value": 0.08,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "tolerancePerSkill": {
         "value": 0.03,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "fillMs": {
         "value": 2200,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "fillMsPerDifficulty": {
         "value": -400,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "fillMsPerSkill": {
         "value": 200,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "bolts": {
         "value": 2,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       },
       "overTorqueMultiple": {
         "value": 2,
-        "source": "placeholder"
+        "source": "estimate: game-feel tuning, not a real-world statistic"
       }
     }
   },
   "events": {
     "supplierFirstDay": {
       "value": 2,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     },
     "supplierEveryDays": {
       "value": 2,
-      "source": "placeholder"
+      "source": "estimate: game rule, not a real-world statistic"
     },
     "warrantyRedoCost": {
-      "value": 30,
-      "source": "placeholder"
+      "value": 35,
+      "source": "derived: rei_derailleur_adjust"
     },
     "warrantyReputationSaved": {
       "value": 2,
-      "source": "placeholder"
+      "source": "estimate: game scale"
     }
   }
 }

@@ -1,0 +1,98 @@
+{
+  "_readme": "One Industry Report per in-game month (index = month - 1). Each shows a real stat from stats.json as news; 'event' optionally runs a decision event that the stat makes more attractive. {value} is replaced with the formatted stat.",
+  "reports": [
+    {
+      "id": "rep_market",
+      "month": 1,
+      "stat_id": "us_bike_market_total",
+      "headline": "US BIKE SALES DIP",
+      "body": "US bike shops sold {value} in bikes, parts and service, down from $7.8B the year before. Riders are watching their wallets.",
+      "event": "ev_report_market"
+    },
+    {
+      "id": "rep_service",
+      "month": 2,
+      "stat_id": "service_share_top",
+      "headline": "SERVICE PAYS",
+      "body": "Top-earning bike shops make {value} from repair parts and labor. Average shops make 6.5%.",
+      "event": "ev_report_service"
+    },
+    {
+      "id": "rep_ebike",
+      "month": 3,
+      "stat_id": "ebike_dollar_share",
+      "headline": "E-BIKES SURGE",
+      "body": "E-bikes were {value} of US bike dollar sales, and 63% of all bike sales growth since 2019.",
+      "event": "ev_report_ebike"
+    },
+    {
+      "id": "rep_riders",
+      "month": 4,
+      "stat_id": "mtb_participants",
+      "headline": "TRAILS ARE BUSY",
+      "body": "About {value} Americans ride mountain bikes. 41.5% of them ride 13 or more times a year."
+    },
+    {
+      "id": "rep_safety",
+      "month": 5,
+      "stat_id": "mtb_fractures_ed",
+      "headline": "CRASH REPORT",
+      "body": "ERs treated about {value} MTB fractures from 2013 to 2022. Fractures jumped 247% from 2019 to 2020.",
+      "event": "ev_report_safety"
+    },
+    {
+      "id": "rep_wages",
+      "month": 6,
+      "stat_id": "bls_mechanic_wage",
+      "headline": "MECHANIC PAY",
+      "body": "US bike mechanics earn about {value} on average (13,980 jobs).",
+      "event": "ev_report_wages"
+    },
+    {
+      "id": "rep_tourism",
+      "month": 7,
+      "stat_id": "mtb_trip_spend",
+      "headline": "TRAIL TOURISTS",
+      "body": "Mountain bike visitors spend about {value} on average. Towns with trails are cashing in.",
+      "event": "ev_report_tourism"
+    },
+    {
+      "id": "rep_parts",
+      "month": 8,
+      "stat_id": "pa_margin",
+      "headline": "PARTS MARGINS",
+      "body": "Bike shops keep about a {value} margin on parts and accessories, better than the 36% on bikes.",
+      "event": "ev_report_parts"
+    },
+    {
+      "id": "rep_ebike2",
+      "month": 9,
+      "stat_id": "ebike_unit_growth_2024",
+      "headline": "E-BIKES KEEP GROWING",
+      "body": "E-bike unit sales rose {value} in early 2024. Average shop e-bike price: $3,055.",
+      "event": "ev_report_ebike2"
+    },
+    {
+      "id": "rep_profit",
+      "month": 10,
+      "stat_id": "store_profit_top",
+      "headline": "WHAT WINNERS EARN",
+      "body": "High-profit bike stores net about {value} a year. The average store nets $46,000."
+    },
+    {
+      "id": "rep_kids",
+      "month": 11,
+      "stat_id": "kids_bike_unit_share",
+      "headline": "KIDS RIDE TOO",
+      "body": "Kids' bikes were {value} of all bikes sold in the US. Today's groms are tomorrow's customers.",
+      "event": "ev_report_kids"
+    },
+    {
+      "id": "rep_erider",
+      "month": 12,
+      "stat_id": "ebike_rider_share",
+      "headline": "MORE E-RIDERS",
+      "body": "{value} of US bike riders used an e-bike, up from 7.8% two years earlier."
+    }
+  ]
+}

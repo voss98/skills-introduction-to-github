@@ -1,5 +1,5 @@
 import type Phaser from 'phaser';
-import { describeDiff, END, type DecisionEngine } from '../core/decisions';
+import { describeDiff, END, type DecisionEngine, type DecisionEvent } from '../core/decisions';
 import type { Trigger } from '../core/shop';
 import { showDialog } from './DialogScene';
 
@@ -11,6 +11,12 @@ import { showDialog } from './DialogScene';
 export async function runDecision(scene: Phaser.Scene, engine: DecisionEngine, trigger: Trigger): Promise<string | null> {
   const event = engine.begin(trigger);
   if (!event) return null;
+  await playEvent(scene, engine, event);
+  return event.id;
+}
+
+/** Play one specific event's nodes. */
+export async function playEvent(scene: Phaser.Scene, engine: DecisionEngine, event: DecisionEvent): Promise<void> {
   let id = event.entry;
   while (id !== END) {
     const view = engine.enter(id);
@@ -32,5 +38,4 @@ export async function runDecision(scene: Phaser.Scene, engine: DecisionEngine, t
       id = engine.advance(id);
     }
   }
-  return event.id;
 }
