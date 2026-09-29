@@ -50,6 +50,8 @@ export interface DaySummary {
   jobsDone: number;
   revenue: number;
   overhead: number;
+  /** You pay yourself a mechanic's wage (BLS mean) every day. */
+  ownerPay: number;
   wages: number;
   staffIncome: number;
   unserved: number;
@@ -103,7 +105,12 @@ export class ShopController {
 
     const count = Math.min(
       cfg.maxPerDay,
-      cfg.basePerDay + Math.floor(s.reputation / cfg.reputationPerExtraCustomer) + s.modifier('extraCustomersPerDay'),
+      Math.max(
+        1,
+        cfg.basePerDay +
+          Math.trunc((s.reputation - cfg.reputationBaseline) / cfg.reputationPerExtraCustomer) +
+          s.modifier('extraCustomersPerDay'),
+      ),
     );
     const lastArrival = C.dayEndMinute - cfg.lastArrivalBeforeCloseMinutes;
     const walkIns = JOB_TEMPLATES.filter((t) => !t.big && t.weight > 0 && (!t.requiresFlag || s.hasFlag(t.requiresFlag)));
@@ -250,7 +257,9 @@ export class ShopController {
     const wages = Math.round(staff * e.wagePerStaffPerDay);
     const moraleFactor = 0.5 + s.staffMorale / 100;
     const staffIncome = Math.round(staff * e.staffJobsPerDay * e.staffEarningsPerJob * moraleFactor);
-    s.addCash(staffIncome - overhead - wages);
+    const ownerPay = e.ownerPayPerDay;
+    s.addCash(staffIncome - overhead - wages - ownerPay);
+    s.adjust('staffMorale', -e.moraleDecayPerDay);
 
     // Away at training: a "closed" sign turns people away without upsetting them.
     const unserved = opts.away ? 0 : this.waiting.length;
@@ -266,6 +275,7 @@ export class ShopController {
       jobsDone: this.day.jobsDone,
       revenue: this.day.revenue,
       overhead,
+      ownerPay,
       wages,
       staffIncome,
       unserved,

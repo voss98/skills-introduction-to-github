@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "simulate": "vitest run tests/endings.test.ts tests/simulation.test.ts"
   },
   "dependencies": {
     "phaser": "^3.90.0"

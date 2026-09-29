@@ -116,8 +116,8 @@
       "source": "estimate: run length set by the brief"
     },
     "bankruptcyCash": {
-      "value": -1000,
-      "source": "estimate: game rule: the run ends if cash drops below this at closing"
+      "value": 0,
+      "source": "estimate: the run ends if cash is below $0 at closing; game rule"
     }
   },
   "customers": {
@@ -126,7 +126,7 @@
       "source": "derived: store_profit_dollars,store_pretax_profit,service_share_avg,open_days"
     },
     "reputationPerExtraCustomer": {
-      "value": 30,
+      "value": 25,
       "source": "estimate: how reputation turns into walk-ins; no data"
     },
     "maxPerDay": {
@@ -138,12 +138,16 @@
       "source": "estimate: game rule, not a real-world statistic"
     },
     "bigCustomerChance": {
-      "value": 0.35,
+      "value": 0.2,
       "source": "estimate: frequency of big team orders; no data"
     },
     "lastArrivalBeforeCloseMinutes": {
       "value": 150,
       "source": "estimate: game rule, not a real-world statistic"
+    },
+    "reputationBaseline": {
+      "value": 50,
+      "source": "estimate: reputation above this brings extra walk-ins, below it loses them; game design"
     }
   },
   "economy": {
@@ -190,31 +194,39 @@
     "inventoryDecayPerDay": {
       "value": 2,
       "source": "estimate: shrinkage and small sales; no data"
+    },
+    "ownerPayPerDay": {
+      "value": 151,
+      "source": "derived: bls_mechanic_wage"
+    },
+    "moraleDecayPerDay": {
+      "value": 3,
+      "source": "estimate: daily wear on morale from long shop days; no data"
     }
   },
   "scoring": {
     "qualityWeight": {
-      "value": 0.6,
+      "value": 0.75,
       "source": "estimate: how customers weigh quality vs speed; no data"
     },
     "timeWeight": {
-      "value": 0.4,
+      "value": 0.25,
       "source": "estimate: how customers weigh quality vs speed; no data"
     },
     "payAtZeroSatisfaction": {
-      "value": 0.6,
+      "value": 0.4,
       "source": "estimate: discount for a bad job; no data"
     },
     "payAtFullSatisfaction": {
-      "value": 1.2,
+      "value": 1.1,
       "source": "estimate: tips and add-ons for a great job; no data"
     },
     "reputationPivot": {
-      "value": 60,
+      "value": 70,
       "source": "estimate: game scale"
     },
     "satisfactionPerReputationPoint": {
-      "value": 12,
+      "value": 18,
       "source": "estimate: game scale"
     },
     "timeSlack": {
@@ -360,7 +372,7 @@
       "source": "derived: rei_derailleur_adjust"
     },
     "warrantyReputationSaved": {
-      "value": 2,
+      "value": 1,
       "source": "estimate: game scale"
     }
   }

@@ -1,0 +1,269 @@
+{
+  "_readme": "Run endings. The highest-priority ending whose conditions all hold is chosen (exactly one). Conditions use the same format as decision 'requires' (flags, any_flags, not_flags, min, max) over cash, reputation, staffMorale, skill (average), communityGoodwill, inventoryHealth. 'drivers' explain 'choices that mattered'. The run also ends early on bankruptcy or when the shop is sold.",
+  "endings": [
+    {
+      "id": "trail_guardian",
+      "title": "Guardian of the Trails",
+      "secret": true,
+      "priority": 100,
+      "vignette": "trail",
+      "conditions": {
+        "flags": [
+          "certified_mechanic",
+          "trail_clinic",
+          "group_ride"
+        ],
+        "any_flags": [
+          "trail_sponsor",
+          "trail_volunteer"
+        ],
+        "min": {
+          "communityGoodwill": {
+            "value": 60,
+            "source": "estimate: ending threshold; game design"
+          }
+        }
+      },
+      "text": "Your shop became the heart of the local trail scene. Certified wrenches, packed clinics, and group rides every week. The trail crew names a new line after you.",
+      "drivers": [
+        {
+          "flag": "trail_sponsor",
+          "text": "You sponsored the trail crew."
+        },
+        {
+          "flag": "trail_volunteer",
+          "text": "You dug trail with the volunteers."
+        },
+        {
+          "flag": "trail_clinic",
+          "text": "You ran the Trail Day repair clinic."
+        },
+        {
+          "flag": "group_ride",
+          "text": "You hosted group rides."
+        },
+        {
+          "flag": "certified_mechanic",
+          "text": "You earned your mechanic certification."
+        }
+      ]
+    },
+    {
+      "id": "bankruptcy",
+      "title": "Bankruptcy",
+      "priority": 90,
+      "vignette": "closed",
+      "conditions": {
+        "max": {
+          "cash": {
+            "value": -1,
+            "source": "estimate: matches calendar.bankruptcyCash (cash below $0 at closing); game design"
+          }
+        }
+      },
+      "text": "The bills piled up faster than the tickets. The lights go off and the tools go to auction.",
+      "drivers": [
+        {
+          "flag": "premium_parts",
+          "text": "Premium parts drained the budget."
+        },
+        {
+          "flag": "hired_pro",
+          "text": "A pro mechanic's wages added up."
+        },
+        {
+          "flag": "rental_fleet",
+          "text": "The rental fleet cost more than it earned."
+        },
+        {
+          "flag": "ebike_center",
+          "text": "E-bike tools were a big bet."
+        },
+        {
+          "stat": "cash",
+          "below": 0,
+          "text": "Cash ran out."
+        }
+      ]
+    },
+    {
+      "id": "sold_to_chain",
+      "title": "Sold to a Big-Box Chain",
+      "priority": 80,
+      "vignette": "bigbox",
+      "conditions": {
+        "flags": [
+          "sold_to_chain"
+        ]
+      },
+      "text": "You cash the check. The shop lives on as a MegaSport service counter, and you finally take a weekend off.",
+      "drivers": [
+        {
+          "flag": "sold_to_chain",
+          "text": "You took MegaSport's offer."
+        },
+        {
+          "flag": "premium_pricing",
+          "text": "Premium pricing made the shop look valuable."
+        },
+        {
+          "flag": "solo_shop",
+          "text": "Running solo wore you down."
+        }
+      ]
+    },
+    {
+      "id": "thriving_flagship",
+      "title": "Thriving Flagship Shop",
+      "priority": 70,
+      "vignette": "flagship",
+      "conditions": {
+        "min": {
+          "cash": {
+            "value": 4500,
+            "source": "estimate: ending threshold; game design"
+          },
+          "reputation": {
+            "value": 75,
+            "source": "estimate: ending threshold; game design"
+          },
+          "communityGoodwill": {
+            "value": 50,
+            "source": "estimate: ending threshold; game design"
+          },
+          "staffMorale": {
+            "value": 50,
+            "source": "estimate: ending threshold; game design"
+          },
+          "skill": {
+            "value": 1.5,
+            "source": "estimate: ending threshold; game design"
+          }
+        }
+      },
+      "text": "Lines out the door, a waiting list for builds, and a reputation that reaches three counties. You open a second location next spring.",
+      "drivers": [
+        {
+          "flag": "cs_trained",
+          "text": "Customer service training built loyalty."
+        },
+        {
+          "flag": "service_focus",
+          "text": "You grew the service department."
+        },
+        {
+          "flag": "ebike_center",
+          "text": "You became the e-bike service center."
+        },
+        {
+          "flag": "warranty_generous",
+          "text": "A generous warranty won trust."
+        },
+        {
+          "stat": "reputation",
+          "above": 75,
+          "text": "Your reputation soared."
+        }
+      ]
+    },
+    {
+      "id": "burned_out",
+      "title": "Burned Out",
+      "priority": 65,
+      "vignette": "tired",
+      "conditions": {
+        "max": {
+          "staffMorale": {
+            "value": 25,
+            "source": "estimate: ending threshold; game design"
+          }
+        }
+      },
+      "text": "The shop survived, but nobody wants to work there anymore, including you.",
+      "drivers": [
+        {
+          "flag": "solo_shop",
+          "text": "You tried to do it all yourself."
+        },
+        {
+          "flag": "overtime_used",
+          "text": "Staff overtime piled up."
+        },
+        {
+          "flag": "premium_pricing",
+          "text": "Price complaints wore on everyone."
+        },
+        {
+          "stat": "staffMorale",
+          "below": 25,
+          "text": "Morale hit rock bottom."
+        }
+      ]
+    },
+    {
+      "id": "steady_favorite",
+      "title": "Steady Local Favorite",
+      "priority": 60,
+      "vignette": "steady",
+      "conditions": {
+        "min": {
+          "cash": {
+            "value": 1500,
+            "source": "estimate: ending threshold; game design"
+          },
+          "reputation": {
+            "value": 55,
+            "source": "estimate: ending threshold; game design"
+          }
+        }
+      },
+      "text": "Not flashy, but everyone in town knows where to take a bike that needs love. You'll be here next year.",
+      "drivers": [
+        {
+          "flag": "local_discount",
+          "text": "The locals' discount kept regulars coming."
+        },
+        {
+          "flag": "kids_program",
+          "text": "Kids' trade-ins brought in families."
+        },
+        {
+          "flag": "safety_clinic",
+          "text": "Your safety clinic won respect."
+        },
+        {
+          "stat": "reputation",
+          "above": 55,
+          "text": "Your reputation held steady."
+        }
+      ]
+    },
+    {
+      "id": "barely_surviving",
+      "title": "Barely Surviving",
+      "priority": 0,
+      "vignette": "leaky",
+      "conditions": {},
+      "text": "The doors are open, the rent is paid (mostly), and next year has to be better.",
+      "drivers": [
+        {
+          "flag": "cheap_parts",
+          "text": "Budget parts cost you comebacks."
+        },
+        {
+          "flag": "warranty_none",
+          "text": "No warranty cost you trust."
+        },
+        {
+          "flag": "ebike_skeptic",
+          "text": "You skipped the e-bike boom."
+        },
+        {
+          "stat": "cash",
+          "below": 1500,
+          "text": "Cash stayed thin all year."
+        }
+      ]
+    }
+  ]
+}

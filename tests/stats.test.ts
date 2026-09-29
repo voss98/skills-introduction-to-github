@@ -94,6 +94,7 @@ describe('derived balance values match their stats (docs/balance.md)', () => {
   it('overhead, wages and parts margin come from NBDA and BLS figures', () => {
     expect(BALANCE.economy.overheadPerDay).toBe(Math.round(((v('expense_share') - v('payroll_share')) / 100) * serviceDay));
     expect(BALANCE.economy.wagePerStaffPerDay).toBe(Math.round(v('bls_mechanic_wage') * 8));
+    expect(BALANCE.economy.ownerPayPerDay).toBe(Math.round(v('bls_mechanic_wage') * 8));
     expect(BALANCE.economy.partsMargin).toBe(v('pa_margin') / 100);
   });
 

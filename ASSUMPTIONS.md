@@ -141,3 +141,23 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
   Wheel skill 2 unlocks "Host a wheel clinic", average skill 2 unlocks "Expert
   rush", and certification unlocks "Mentor them".
 - **Choice lists can have up to 5 entries** (was 4) to fit the new options.
+
+## Phase 7 – Endings
+- **Run length:** 12 months × 2 days = 24 shop days. The run is checked at closing,
+  after the end-of-day decision. It ends on bankruptcy (cash below $0), on selling
+  to the chain, or after the last day. `?runDays=N` shortens a run for testing.
+- **Seven endings** (the six required plus **Burned Out**, for morale below 25).
+  Priorities are unique and the last has no conditions, so exactly one is always
+  chosen. The secret ending, **Guardian of the Trails**, needs this chain: help the
+  trail crew (sponsor or volunteer) → run the Trail Day repair clinic → host a group
+  ride → pass the certification → goodwill 60+.
+- **Selling** comes from a new end-of-day decision (month 9+, reputation ≤ 75). It
+  ends the run immediately.
+- **You pay yourself.** Each day the owner takes a mechanic's wage (BLS mean ×
+  8 h). Without it, every run ended rich, because real shops spend about a quarter of
+  sales on payroll.
+- **"Choices that mattered"** lists the ending's `drivers` that apply to you (flags
+  you set, stats past a line), up to four.
+- **Ending gallery** is saved in this browser's localStorage. If storage is blocked
+  it still works for the session.
+- **`npm run simulate`** runs the scripted-choice simulations that reach every ending.

@@ -299,6 +299,43 @@ export function trainingArt(): Record<string, string[]> {
   return { wheel_academy: academy.rows(), suspension_lab: lab.rows(), cert_exam: exam.rows(), cs_workshop: cs.rows(), exit_door: exit.rows() };
 }
 
+/** 64x40 ending vignettes. */
+export function vignetteArt(): Record<string, string[]> {
+  const frame = () => new PixelGrid(64, 40).rect(0, 0, 64, 40, 0, 3);
+  const shopFront = (g: PixelGrid, x: number, w: number, h: number) => {
+    g.rect(x, 38 - h, w, h, 0, 2).rect(x - 2, 38 - h - 3, w + 4, 4, 0, 1);
+    return g;
+  };
+  const bike = (g: PixelGrid, x: number, y: number) =>
+    g.circle(x, y, 3, 0).circle(x + 9, y, 3, 0).line(x, y, x + 4, y - 4, 0).line(x + 4, y - 4, x + 9, y, 0).line(x + 4, y - 4, x + 3, y - 6, 0);
+
+  const trail = frame().line(1, 30, 18, 10, 1).line(18, 10, 32, 24, 1).line(28, 20, 44, 6, 1).line(44, 6, 62, 26, 1);
+  trail.line(4, 38, 30, 30, 0).line(30, 30, 50, 36, 0).rect(52, 22, 2, 16, 0).rect(47, 18, 12, 5, 0, 2).circle(12, 6, 3, 2);
+  bike(trail, 20, 30);
+
+  const closed = shopFront(frame(), 10, 44, 24);
+  closed.line(18, 18, 46, 34, 0).line(18, 34, 46, 18, 0).rect(22, 22, 20, 7, 0, 3).line(24, 25, 39, 25, 0);
+
+  const bigbox = frame().rect(4, 10, 56, 28, 0, 1).rect(4, 6, 56, 6, 0, 0);
+  for (let x = 8; x < 58; x += 10) bigbox.rect(x, 18, 6, 8, 0, 3);
+  bigbox.rect(26, 28, 12, 10, 0, 2).line(8, 8, 55, 8, 3);
+
+  const flagship = shopFront(frame(), 6, 30, 26).rect(40, 20, 20, 18, 0, 2).rect(38, 17, 24, 4, 0, 1);
+  flagship.line(20, 9, 20, 2, 0).rect(21, 2, 6, 4, 0, 1).rect(10, 20, 8, 8, 0, 3).rect(22, 26, 8, 12, 0, 1).rect(44, 24, 12, 6, 0, 3);
+  bike(flagship, 4, 34);
+
+  const tired = frame().rect(8, 28, 48, 3, 0).rect(12, 31, 2, 7, 0).rect(50, 31, 2, 7, 0);
+  tired.circle(28, 22, 5, 0).rect(20, 24, 14, 4, 0, 1).line(40, 8, 46, 8, 1).line(46, 8, 40, 14, 1).line(40, 14, 46, 14, 1).line(50, 2, 54, 2, 1).line(54, 2, 50, 6, 1).line(50, 6, 54, 6, 1);
+
+  const steady = shopFront(frame(), 14, 36, 24).rect(20, 20, 10, 8, 0, 3).rect(34, 24, 10, 14, 0, 1).rect(18, 10, 14, 5, 0, 3);
+  bike(steady, 48, 34);
+
+  const leaky = shopFront(frame(), 12, 40, 22).line(12, 14, 30, 16, 3).line(30, 16, 52, 13, 3);
+  leaky.set(32, 18, 1).set(32, 21, 1).set(32, 24, 1).rect(29, 30, 7, 8, 0, 3).rect(18, 22, 8, 8, 0, 3).line(18, 22, 26, 30, 1);
+
+  return { v_trail: trail.rows(), v_closed: closed.rows(), v_bigbox: bigbox.rows(), v_flagship: flagship.rows(), v_tired: tired.rows(), v_steady: steady.rows(), v_leaky: leaky.rows() };
+}
+
 /** Small bouncing "A" prompt shown over interactable stations. */
 export function promptArt(): string[] {
   return ['.00000.', '0333330', '0330330', '0303030', '0300030', '0303030', '0333330', '.00000.', '...0...'];

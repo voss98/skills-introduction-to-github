@@ -1,8 +1,7 @@
 {
   "title": {
     "name": "TRAIL SHOP TYCOON",
-    "pressStart": "PRESS START",
-    "selectHint": "SELECT: INPUT TEST"
+    "hint": "A/START: SELECT  ^~: MOVE"
   },
   "stations": {
     "front_counter": "No customers right now. They will show up during the day.",
@@ -51,7 +50,7 @@
   },
   "day": {
     "closing": "Closing time! The shop is closed for the day.",
-    "summary": "DAY {day} DONE\nJOBS {jobs}  REVENUE ${revenue}\nOVERHEAD -${overhead}\nWAGES -${wages} STAFF +${staffIncome}\nNET {net}  REP {rep}",
+    "summary": "DAY {day} DONE\nJOBS {jobs}  REVENUE ${revenue}\nOVERHEAD -${overhead} YOUR PAY -${ownerPay}\nWAGES -${wages} STAFF +${staffIncome}\nNET {net}  REP {rep}",
     "unserved": "{count} customer(s) left without being served.",
     "morning": "{month} DAY {day} (MONTH {n} OF 12). THE SHOP IS OPEN!",
     "endDayConfirm": "Close up early and end the day?"
@@ -69,7 +68,7 @@
     "coverClosed": "THE SHOP IS CLOSED.",
     "skillUp": "{skill} SKILL {from} -> {to}!",
     "workshopDone": "Workshop done! Happy customers now boost your reputation more, and new dialogue options open up.",
-    "awayDay": "DAY AWAY: OVERHEAD -${overhead}  WAGES -${wages}\nSTAFF WORK +${staffIncome}",
+    "awayDay": "DAY AWAY: OVERHEAD -${overhead}\nYOUR PAY -${ownerPay}  WAGES -${wages}\nSTAFF WORK +${staffIncome}",
     "backToShop": "You head back to the shop.",
     "examIntro": "10 questions. Score 7 or more to pass. Good luck!",
     "examQ": "QUESTION {n} OF {total}\n{question}",

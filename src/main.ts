@@ -6,6 +6,8 @@ import { bindKeyboard, bindTouchButtons } from './input/bindings';
 import { PALETTE, SCREEN_H, SCREEN_W } from './gfx/palette';
 import { BootScene } from './scenes/BootScene';
 import { DialogScene } from './scenes/DialogScene';
+import { EndingScene } from './scenes/EndingScene';
+import { GalleryScene } from './scenes/GalleryScene';
 import { InputTestScene } from './scenes/InputTestScene';
 import { LedgerScene } from './scenes/LedgerScene';
 import { MinigameScene } from './scenes/MinigameScene';
@@ -41,7 +43,7 @@ const game = new Phaser.Game({
     default: 'arcade',
     arcade: { gravity: { x: 0, y: BALANCE.movement.gravity }, debug: false },
   },
-  scene: [BootScene, TitleScene, ShopScene, TrainingScene, InputTestScene, MinigameScene, LedgerScene, DialogScene],
+  scene: [BootScene, TitleScene, ShopScene, TrainingScene, InputTestScene, MinigameScene, LedgerScene, EndingScene, GalleryScene, DialogScene],
 });
 
 // One input edge-detection tick per game step, before any scene updates.

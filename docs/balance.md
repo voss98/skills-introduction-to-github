@@ -85,3 +85,19 @@ effect sizes, starting cash, and the calendar are game design, labelled
   ($29/day), and wages ($90) became $151 (BLS). Base customers went 2 → 3 and max
   6 → 5. Restock cost is now derived from the parts margin ($130 for 25 points,
   was $150). Repair prices now follow REI / Helen's / Steve the Bike Guy.
+- **Phase 7 (endings):** random runs ended far too rich (median $14.7K; no
+  bankruptcies). The game's owner worked for free, whereas NBDA stores spend
+  25.4% of sales on payroll. Changes:
+  - Added `economy.ownerPayPerDay` = $151 (derived from `bls_mechanic_wage`, 8 h).
+  - Added `economy.moraleDecayPerDay` = 3 (estimate).
+  - Added `customers.reputationBaseline` = 50: below-average reputation now
+    *loses* walk-ins.
+  - Estimates retuned: `reputationPerExtraCustomer` 30→25,
+    `satisfactionPerReputationPoint` 12→18, `reputationPivot` 60→70,
+    `qualityWeight`/`timeWeight` 0.6/0.4→0.75/0.25, `payAtZeroSatisfaction`
+    0.6→0.4, `payAtFullSatisfaction` 1.2→1.1, `bigCustomerChance` 0.35→0.2,
+    `warrantyReputationSaved` 2→1.
+  - `calendar.bankruptcyCash` −1000→0.
+  - The big-box buyout offer now requires reputation ≤ 75 (decisions.json).
+  - Result over 300 random runs: steady 22%, sold 22%, barely 21%,
+    bankrupt 14%, thriving 13%, burned out 8%, secret <1%.

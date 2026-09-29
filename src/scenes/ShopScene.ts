@@ -14,6 +14,7 @@ import { playEvent, runDecision } from './decisionRunner';
 import type { LedgerData } from './LedgerScene';
 import { dayInMonth, monthName, monthOf } from '../core/calendar';
 import { reportForMonth, reportText } from '../core/reports';
+import { runEndReason } from '../core/endings';
 import type { MinigameData } from './MinigameScene';
 import type { Player } from './Player';
 import { PlatformWorld } from './platformWorld';
@@ -65,7 +66,10 @@ export class ShopScene extends Phaser.Scene {
       const pending = session.pendingTriggers;
       session.pendingTriggers = null;
       void this.run(async () => {
-        for (const t of pending) await this.onTrigger(t);
+        for (const t of pending) {
+          await this.onTrigger(t);
+          if (t === 'end_of_day' && this.checkRunEnd()) return;
+        }
         await this.say([fmt(D.day.morning, { month: monthName(gameState.day), day: dayInMonth(gameState.day), n: monthOf(gameState.day) })]);
       });
     }
@@ -105,7 +109,7 @@ export class ShopScene extends Phaser.Scene {
 
   private refreshHud(): void {
     const s = gameState;
-    setText(this.hudTop, `$${s.cash} R${s.reputation} ${monthName(s.day)}${dayInMonth(s.day)} ${this.shop.clockText}`);
+    setText(this.hudTop, `$${s.cash} R${s.reputation} M${monthOf(s.day)} ${monthName(s.day)}${dayInMonth(s.day)} ${this.shop.clockText}`);
   }
 
   private hudHint(): string {
@@ -416,6 +420,7 @@ export class ShopScene extends Phaser.Scene {
         jobs: sum.jobsDone,
         revenue: sum.revenue,
         overhead: sum.overhead,
+        ownerPay: sum.ownerPay,
         wages: sum.wages,
         staffIncome: sum.staffIncome,
         net: signedMoney(sum.cashChange),
@@ -425,8 +430,18 @@ export class ShopScene extends Phaser.Scene {
     if (sum.unserved) pages.push(fmt(D.day.unserved, { count: sum.unserved }));
     await this.say(pages, 'END OF DAY');
     await this.onTrigger('end_of_day');
+    if (this.checkRunEnd()) return;
     const triggers = this.shop.nextDay();
     await this.morning(triggers);
+  }
+
+  /** After closing: bankrupt, sold, or 12 months done? Then show the ending. */
+  private checkRunEnd(): boolean {
+    const reason = runEndReason(gameState, session.totalDays);
+    if (!reason) return false;
+    session.lastEnd = reason;
+    this.scene.start('Ending', { reason });
+    return true;
   }
 
   private async morning(triggers: Trigger[]): Promise<void> {

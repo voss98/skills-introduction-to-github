@@ -238,6 +238,22 @@
       "minDay": 1,
       "priority": 0,
       "once": true
+    },
+    {
+      "id": "ev_buyout",
+      "trigger": "end_of_day",
+      "entry": "buyout_offer",
+      "minDay": 17,
+      "priority": 95,
+      "once": true,
+      "requires": {
+        "max": {
+          "reputation": {
+            "value": 75,
+            "source": "estimate: the chain targets shops that are not yet local favorites; game design"
+          }
+        }
+      }
     }
   ],
   "nodes": {
@@ -571,7 +587,8 @@
           ],
           "sets_flags": [
             "rush_current_job",
-            "overtime_current_job"
+            "overtime_current_job",
+            "overtime_used"
           ],
           "next": "big_rush_overtime"
         },
@@ -988,7 +1005,10 @@
               "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
-          "next": "trail_day_clinic"
+          "next": "trail_day_clinic",
+          "sets_flags": [
+            "trail_clinic"
+          ]
         },
         {
           "text": "BRING DEMO BIKES",
@@ -1124,7 +1144,10 @@
               "source": "estimate: game effect size, not a real-world statistic"
             }
           ],
-          "next": "marketing_ride"
+          "next": "marketing_ride",
+          "sets_flags": [
+            "group_ride"
+          ]
         },
         {
           "text": "HOST A WHEEL CLINIC",
@@ -1882,6 +1905,56 @@
     "staff_training_mentor": {
       "id": "staff_training_mentor",
       "text": "Your certification pays off: you teach them everything, free. Suspension skill up!",
+      "next": "END"
+    },
+    "buyout_offer": {
+      "id": "buyout_offer",
+      "speaker": "BIG-BOX REP",
+      "text": "MegaSport Outfitters wants a bike service counter in town. They'll buy your shop, name and all, for a fat check.",
+      "choices": [
+        {
+          "text": "SELL THE SHOP",
+          "effects": [
+            {
+              "var": "cash",
+              "delta": 5000,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "sold_to_chain"
+          ],
+          "next": "buyout_sold"
+        },
+        {
+          "text": "NOT FOR SALE",
+          "effects": [
+            {
+              "var": "communityGoodwill",
+              "delta": 5,
+              "source": "estimate: game effect size, not a real-world statistic"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 5,
+              "source": "estimate: game effect size, not a real-world statistic"
+            }
+          ],
+          "sets_flags": [
+            "refused_buyout"
+          ],
+          "next": "buyout_refused"
+        }
+      ]
+    },
+    "buyout_sold": {
+      "id": "buyout_sold",
+      "text": "You sign. Tomorrow the sign says MEGASPORT. Your run ends here.",
+      "next": "END"
+    },
+    "buyout_refused": {
+      "id": "buyout_refused",
+      "text": "The locals hear you turned down the chain. Your staff stand a little taller.",
       "next": "END"
     }
   }

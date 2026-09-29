@@ -20,6 +20,7 @@ import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
 import { PlatformWorld } from './platformWorld';
 import { session } from './session';
+import { runEndReason } from '../core/endings';
 
 const D = dialogue.training;
 const SKILL_NAMES: Record<WorkStationId, string> = {
@@ -133,7 +134,10 @@ export class TrainingScene extends Phaser.Scene {
     for (let i = 0; i < days; i++) {
       const sum = session.shop.endDay({ away: true });
       await showDialog(this, { speaker: `DAY ${sum.day}`, pages: [fmt(D.awayDay, { ...sum })] });
-      triggers.push('end_of_day', ...session.shop.nextDay());
+      triggers.push('end_of_day');
+      // Last day of the run (or broke): the shop scene shows the ending after the end-of-day event.
+      if (runEndReason(gameState, session.totalDays)) break;
+      triggers.push(...session.shop.nextDay());
     }
     session.pendingTriggers = triggers;
   }
