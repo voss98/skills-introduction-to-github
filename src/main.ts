@@ -13,8 +13,9 @@ import { TitleScene } from './scenes/TitleScene';
 
 /** Largest whole-number zoom that fits the window (pixel-perfect scaling). */
 function integerZoom(): number {
-  const touch = document.getElementById('touch-controls');
-  const reserved = touch && getComputedStyle(touch).display !== 'none' ? touch.offsetHeight + 24 : 16;
+  // Leave room for everything else in the shell (touch buttons, legends), plus the canvas border.
+  const others = [...document.querySelectorAll<HTMLElement>('#shell > :not(#game)')];
+  const reserved = others.reduce((h, el) => h + (getComputedStyle(el).display === 'none' ? 0 : el.offsetHeight + 12), 0) + 16;
   const z = Math.floor(Math.min((window.innerWidth - 16) / SCREEN_W, (window.innerHeight - reserved) / SCREEN_H));
   return Math.max(1, z);
 }
