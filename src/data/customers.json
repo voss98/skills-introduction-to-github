@@ -1,0 +1,18 @@
+{
+  "_readme": "Fictional customers. Names are invented.",
+  "names": ["ALEX", "SAM", "JO", "RIO", "KAI", "MAX", "NOOR", "TESS", "OMAR", "BEA", "LEE", "PAZ", "IVY", "RUDI", "MEI", "FINN"],
+  "bigCustomerNames": ["COACH DANA", "RIDGE RACING", "PEAK TEAM"],
+  "requests": {
+    "flat_tire": ["Flatted on the rock garden. Can you fix it?", "My tire keeps going soft. Help?"],
+    "bent_hanger": ["Crashed and now it ghost shifts.", "My derailleur is hanging crooked."],
+    "worn_pads": ["My brakes squeal and barely stop.", "Pads are down to the metal, I think."],
+    "suspension_service": ["Fork feels sticky and the shock is sad.", "Time for a suspension service!"],
+    "trail_build": ["I bought a frame kit. Build it up?", "Dream bike in a box. Make it real!"],
+    "team_build": ["Our team needs a race bike built. Big order!"]
+  },
+  "reactions": {
+    "great": ["This rides like new! Thanks!", "Wow. Best shop in town."],
+    "ok": ["Works fine. Thanks.", "Good enough, see you."],
+    "bad": ["Hmm. It still feels off...", "That took forever."]
+  }
+}

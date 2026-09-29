@@ -146,7 +146,7 @@ export class DialogScene extends Phaser.Scene {
       drawWindow(this.g, 0, y0, SCREEN_W, h);
       this.choiceTexts.forEach((t) => t.destroy());
       this.choiceTexts = choices.map((c, i) =>
-        addText(this, 14, y0 + 5 + i * 9, `${c.locked ? '[' : ''}${c.label}`.slice(0, CHARS - 1), c.locked ? 2 : 0),
+        addText(this, 14, y0 + 5 + i * 9, `${c.locked ? '[' : ''}${c.label}`.slice(0, CHARS - 1), c.locked ? 1 : 0),
       );
     }
     this.cursor.setPosition(6, y0 + 5 + this.cursorIdx * 9);

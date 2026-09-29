@@ -1,0 +1,124 @@
+{
+  "_readme": "Tasks are single minigame steps at one station. Jobs are customer tickets made of tasks. Every number is a placeholder: prices, minutes and torque targets are invented for gameplay and are NOT real shop rates or manufacturer specs.",
+  "tasks": {
+    "prep_frame": {
+      "name": "Prep frame + BB", "station": "frame_jig", "slot": "frame", "minigame": "torque",
+      "hint": "Hold A to torque the bottom bracket. Let go on the target.",
+      "minutes": { "value": 40, "source": "placeholder" }, "partsUse": { "value": 4, "source": "placeholder" },
+      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 40, "source": "placeholder" }
+    },
+    "install_cockpit": {
+      "name": "Fit cockpit", "station": "frame_jig", "slot": "cockpit", "minigame": "torque",
+      "hint": "Hold A to torque the stem bolts. Let go on the target.",
+      "minutes": { "value": 25, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
+      "difficulty": { "value": 0, "source": "placeholder" }, "targetNm": { "value": 5, "source": "placeholder" }
+    },
+    "install_fork": {
+      "name": "Install fork", "station": "suspension_bench", "slot": "fork", "minigame": "sequence",
+      "hint": "Follow the steps: press each button as it lights up.",
+      "minutes": { "value": 35, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
+      "difficulty": { "value": 1, "source": "placeholder" }
+    },
+    "install_shock": {
+      "name": "Mount shock", "station": "suspension_bench", "slot": "shock", "minigame": "torque",
+      "hint": "Hold A to torque the shock mount bolts.",
+      "minutes": { "value": 25, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
+      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 12, "source": "placeholder" }
+    },
+    "true_wheels": {
+      "name": "True wheels", "station": "wheel_stand", "slot": "wheels", "minigame": "timing",
+      "hint": "Press A when the marker is in the zone to tension a spoke.",
+      "minutes": { "value": 40, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
+      "difficulty": { "value": 1, "source": "placeholder" }
+    },
+    "mount_tires": {
+      "name": "Mount tires", "station": "wheel_stand", "slot": "tires", "minigame": "timing",
+      "hint": "Press A in the zone to seat the bead.",
+      "minutes": { "value": 20, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
+      "difficulty": { "value": 0, "source": "placeholder" }
+    },
+    "install_drivetrain": {
+      "name": "Fit drivetrain", "station": "drivetrain_bench", "slot": "drivetrain", "minigame": "sequence",
+      "hint": "Follow the steps: chain, cassette, derailleur, cable.",
+      "minutes": { "value": 45, "source": "placeholder" }, "partsUse": { "value": 5, "source": "placeholder" },
+      "difficulty": { "value": 2, "source": "placeholder" }
+    },
+    "install_brakes": {
+      "name": "Fit brakes", "station": "drivetrain_bench", "slot": "brakes", "minigame": "torque",
+      "hint": "Hold A to torque the rotor bolts.",
+      "minutes": { "value": 30, "source": "placeholder" }, "partsUse": { "value": 4, "source": "placeholder" },
+      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 6, "source": "placeholder" }
+    },
+    "fix_flat": {
+      "name": "Fix flat", "station": "wheel_stand", "slot": "tires", "minigame": "timing",
+      "hint": "Press A in the zone to seat the new tube.",
+      "minutes": { "value": 15, "source": "placeholder" }, "partsUse": { "value": 1, "source": "placeholder" },
+      "difficulty": { "value": 0, "source": "placeholder" }
+    },
+    "align_hanger": {
+      "name": "Align hanger", "station": "drivetrain_bench", "slot": "drivetrain", "minigame": "timing",
+      "hint": "Press A when the hanger lines up with the gauge.",
+      "minutes": { "value": 20, "source": "placeholder" }, "partsUse": { "value": 1, "source": "placeholder" },
+      "difficulty": { "value": 1, "source": "placeholder" }
+    },
+    "index_shifting": {
+      "name": "Index gears", "station": "drivetrain_bench", "slot": "drivetrain", "minigame": "sequence",
+      "hint": "Click through the gears: press each button as it lights up.",
+      "minutes": { "value": 15, "source": "placeholder" }, "partsUse": { "value": 0, "source": "placeholder" },
+      "difficulty": { "value": 0, "source": "placeholder" }
+    },
+    "replace_pads": {
+      "name": "Replace pads", "station": "drivetrain_bench", "slot": "brakes", "minigame": "sequence",
+      "hint": "Pads out, clean, pads in, bed in. Follow the steps.",
+      "minutes": { "value": 20, "source": "placeholder" }, "partsUse": { "value": 2, "source": "placeholder" },
+      "difficulty": { "value": 0, "source": "placeholder" }
+    },
+    "service_fork": {
+      "name": "Service fork", "station": "suspension_bench", "slot": "fork", "minigame": "sequence",
+      "hint": "Strip, clean, new seals, oil, rebuild. Follow the steps.",
+      "minutes": { "value": 50, "source": "placeholder" }, "partsUse": { "value": 3, "source": "placeholder" },
+      "difficulty": { "value": 2, "source": "placeholder" }
+    },
+    "service_shock": {
+      "name": "Service shock", "station": "suspension_bench", "slot": "shock", "minigame": "torque",
+      "hint": "Hold A to torque the air can. Let go on the target.",
+      "minutes": { "value": 30, "source": "placeholder" }, "partsUse": { "value": 2, "source": "placeholder" },
+      "difficulty": { "value": 1, "source": "placeholder" }, "targetNm": { "value": 10, "source": "placeholder" }
+    }
+  },
+  "jobs": [
+    {
+      "id": "flat_tire", "kind": "repair", "name": "Flat tire",
+      "tasks": ["fix_flat"], "price": { "value": 25, "source": "placeholder" }, "weight": { "value": 4, "source": "placeholder" },
+      "issues": [{ "slot": "tires", "condition": { "value": 10, "source": "placeholder" } }]
+    },
+    {
+      "id": "bent_hanger", "kind": "repair", "name": "Bent derailleur hanger",
+      "tasks": ["align_hanger", "index_shifting"], "price": { "value": 45, "source": "placeholder" }, "weight": { "value": 3, "source": "placeholder" },
+      "issues": [{ "slot": "drivetrain", "condition": { "value": 30, "source": "placeholder" } }]
+    },
+    {
+      "id": "worn_pads", "kind": "repair", "name": "Worn brake pads",
+      "tasks": ["replace_pads"], "price": { "value": 50, "source": "placeholder" }, "weight": { "value": 3, "source": "placeholder" },
+      "issues": [{ "slot": "brakes", "condition": { "value": 20, "source": "placeholder" } }]
+    },
+    {
+      "id": "suspension_service", "kind": "repair", "name": "Suspension service",
+      "tasks": ["service_fork", "service_shock"], "price": { "value": 160, "source": "placeholder" }, "weight": { "value": 2, "source": "placeholder" },
+      "issues": [
+        { "slot": "fork", "condition": { "value": 40, "source": "placeholder" } },
+        { "slot": "shock", "condition": { "value": 45, "source": "placeholder" } }
+      ]
+    },
+    {
+      "id": "trail_build", "kind": "build", "name": "Trail bike build",
+      "tasks": ["prep_frame", "install_fork", "install_shock", "true_wheels", "mount_tires", "install_drivetrain", "install_brakes", "install_cockpit"],
+      "price": { "value": 380, "source": "placeholder" }, "weight": { "value": 1, "source": "placeholder" }
+    },
+    {
+      "id": "team_build", "kind": "build", "name": "Race team build", "big": true,
+      "tasks": ["prep_frame", "install_fork", "install_shock", "true_wheels", "mount_tires", "install_drivetrain", "install_brakes", "install_cockpit"],
+      "price": { "value": 900, "source": "placeholder" }, "weight": { "value": 0, "source": "placeholder" }
+    }
+  ]
+}

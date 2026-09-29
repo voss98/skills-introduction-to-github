@@ -5,7 +5,7 @@
     "selectHint": "SELECT: INPUT TEST"
   },
   "stations": {
-    "front_counter": "The front counter. Customers drop off bikes here.",
+    "front_counter": "No customers right now. They will show up during the day.",
     "parts_wall": "The parts wall. Tires, pads, chains and cables.",
     "frame_jig": "The frame jig. Nothing clamped in it yet.",
     "wheel_stand": "The truing stand. No wheel to true right now.",
@@ -16,7 +16,45 @@
   "pauseMenu": {
     "title": "PAUSED",
     "resume": "RESUME",
+    "job": "CURRENT JOB",
     "stats": "SHOP STATS",
+    "endDay": "END DAY",
     "inputTest": "INPUT TEST"
-  }
+  },
+  "idle": "Nothing to do here right now. Take a job at the front counter.",
+  "counter": {
+    "offerSummary": "JOB: {job}\nPAYS ABOUT ${price}\nWORK AT: {stations}",
+    "accept": "ACCEPT JOB",
+    "decline": "DECLINE",
+    "later": "NOT NOW",
+    "declined": "The customer heads off to another shop.",
+    "accepted": "Great! Bring the bike to: {stations}.",
+    "busy": "Finish the {job} first. Left to do: {tasks}.",
+    "handoverSummary": "QUALITY {quality}  TIME {time}\nSATISFACTION {satisfaction}%\nPAID ${payment}  REP {rep}",
+    "rushNote": "RUSH JOB: PAYS MORE, LESS TIME."
+  },
+  "work": {
+    "start": "START",
+    "later": "LATER",
+    "done": "DONE! QUALITY {quality}. TOOK {minutes} MIN.",
+    "rushOrdered": "The parts wall was empty, so you rush-ordered parts. -${cost} and extra time.",
+    "bikeReady": "The bike is ready! Take it to the front counter."
+  },
+  "parts": {
+    "status": "PARTS STOCK {inventory}/100\nRESTOCK: +{amount} FOR ${cost}",
+    "restock": "RESTOCK",
+    "leave": "LEAVE",
+    "restocked": "Fresh boxes on the wall.",
+    "cannot": "Can't restock: not enough cash, or the wall is full."
+  },
+  "day": {
+    "closing": "Closing time! The shop is closed for the day.",
+    "summary": "DAY {day} DONE\nJOBS {jobs}  REVENUE ${revenue}\nRENT -${rent}  WAGES -${wages}\nSTAFF WORK +${staffIncome}\nNET {net}  REP {rep}",
+    "unserved": "{count} customer(s) left without being served.",
+    "morning": "DAY {day}. The shop is open!",
+    "endDayConfirm": "Close up early and end the day?"
+  },
+  "noJob": "No active job. Take one at the front counter.",
+  "yes": "YES",
+  "no": "NO"
 }

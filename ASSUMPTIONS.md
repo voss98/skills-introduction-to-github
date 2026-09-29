@@ -36,3 +36,34 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
   bottom bar. The full stat list is under Start > Shop Stats.
 - **Shop map** is an ASCII grid in `src/data/shopLayout.json` so it can be edited
   without touching code.
+
+## Phase 3 – Build and repair
+- **Station ↔ component mapping:** Frame Jig = frame + cockpit; Wheel Truing Stand =
+  wheels + tires; Drivetrain Bench = drivetrain + brakes; Suspension Bench = fork +
+  shock. A full build visits all four stations (8 tasks, one per component).
+- **Minigame per task:** timing bar (truing, tires, hanger alignment), button
+  sequence (fork install/service, drivetrain, pads, gear indexing), torque meter
+  (BB, stem, shock mount, rotors, air can). Over-torque scores worse than
+  under-torque, and holding to the top of the scale strips the bolt.
+- **Torque targets and prices are game values, not specs.** The "Nm" numbers and
+  prices in `jobs.json` are labelled placeholder and must not be read as real
+  manufacturer torque specs or shop rates.
+- **One active job at a time.** The counter won't hand out a new ticket until the
+  current bike is returned. Tasks within a job can be done in any order.
+- **Time score** uses a shop clock that only runs during open hours (9:00–17:00):
+  it ticks while you walk around and jumps forward by each task's minutes. Taking
+  longer than the estimate × slack lowers the time score.
+- **Payment** = price × price modifier × (0.6–1.2 by satisfaction) × skill bonus.
+  Reputation change = (satisfaction − 60) / 12, rounded. Satisfaction is 60%
+  quality + 40% time.
+- **Skill level (default 1, max 5)** widens timing zones and torque tolerance,
+  slows the timing marker, shortens sequences, gives more time per step, and adds
+  10% pay per level above 1. It is only changed by decisions for now; the locked
+  Training Center is where it will grow later.
+- **Inventory health** is one 0–100 "parts stock" number. Tasks use a few points;
+  if the wall is empty the part is rush-ordered (costs cash and time). Restock at
+  the Parts Wall.
+- **Customers** arrive through the day (more with higher reputation). Anyone still
+  waiting at closing time leaves and costs reputation. Declining costs 1 point.
+- **Dev URL params:** `?seed=N` fixes the random seed, `?job=trail_build` (or any
+  job id) puts that customer first in line on day 1, and `?scene=shop` skips the title.
