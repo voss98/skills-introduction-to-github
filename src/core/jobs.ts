@@ -55,10 +55,20 @@ export interface Job {
   tasks: JobTask[];
   /** Shop-clock minute the job was accepted. */
   acceptedAt: number;
+  /** Rush jobs pay more but have a tighter deadline... */
   rush: boolean;
+  /** ...unless staff work overtime on it, which keeps the normal deadline. */
+  overtime: boolean;
 }
 
-export function createJob(id: number, template: JobTemplate, customer: string, acceptedAt: number, rush = false): Job {
+export function createJob(
+  id: number,
+  template: JobTemplate,
+  customer: string,
+  acceptedAt: number,
+  rush = false,
+  overtime = false,
+): Job {
   return {
     id,
     template,
@@ -67,6 +77,7 @@ export function createJob(id: number, template: JobTemplate, customer: string, a
     tasks: template.tasks.map((t) => ({ def: TASKS[t], done: false, quality: null })),
     acceptedAt,
     rush,
+    overtime,
   };
 }
 
@@ -76,7 +87,7 @@ export const estimatedMinutes = (t: JobTemplate) =>
 /** Minutes the customer is happy to wait before the time score starts dropping. */
 export function deadlineMinutes(job: Job): number {
   const s = BALANCE.scoring;
-  return Math.round(estimatedMinutes(job.template) * s.timeSlack * (job.rush ? s.rushDeadlineFactor : 1));
+  return Math.round(estimatedMinutes(job.template) * s.timeSlack * (job.rush && !job.overtime ? s.rushDeadlineFactor : 1));
 }
 
 export const pendingTasks = (job: Job) => job.tasks.filter((t) => !t.done);

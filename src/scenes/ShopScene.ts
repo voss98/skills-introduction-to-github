@@ -11,6 +11,7 @@ import { TILE_FRAMES } from '../gfx/sprites';
 import { addText, setText } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
+import { runDecision } from './decisionRunner';
 import type { MinigameData } from './MinigameScene';
 import { Player } from './Player';
 import { session } from './session';
@@ -18,6 +19,7 @@ import { session } from './session';
 const HUD_H = 8;
 const D = dialogue;
 const stationName = (id: string) => SHOP_LAYOUT.stations.find((s) => s.id === id)?.name ?? id;
+const stationShort = (id: string) => SHOP_LAYOUT.stations.find((s) => s.id === id)?.short ?? id;
 const isWorkStation = (id: string): id is WorkStationId => (WORK_STATIONS as readonly string[]).includes(id);
 
 /** The shop floor: platforming, stations, customers, the clock and the HUD. */
@@ -246,7 +248,7 @@ export class ShopScene extends Phaser.Scene {
       return;
     }
     if (action.kind === 'busy') {
-      const tasks = pendingTasks(action.job).map((t) => `${t.def.name} (${stationName(t.def.station)})`);
+      const tasks = pendingTasks(action.job).map((t) => `${t.def.name} (${stationShort(t.def.station)})`);
       await this.say([fmt(D.counter.busy, { job: action.job.template.name, tasks: tasks.join(', ') })], 'FRONT COUNTER');
       return;
     }
@@ -257,27 +259,48 @@ export class ShopScene extends Phaser.Scene {
     await this.offerJob(action.customer);
   }
 
-  /** Hook for decision events (phase 4): may turn the job into a rush job. */
-  protected async beforeOffer(_customer: Customer): Promise<{ rush: boolean }> {
-    return { rush: false };
+  /**
+   * Big customers trigger a rush-vs-quality decision first. The decision leaves
+   * flags behind that say how to take the job; they are consumed here.
+   */
+  private async beforeOffer(customer: Customer): Promise<{ rush: boolean; overtime: boolean; skip: boolean }> {
+    if (!customer.big) return { rush: false, overtime: false, skip: false };
+    if (!customer.plan) {
+      await this.say([customer.request], customer.name);
+      await runDecision(this, session.decisions, 'big_customer');
+      const take = (flag: string) => {
+        const had = gameState.hasFlag(flag);
+        gameState.clearFlag(flag);
+        return had;
+      };
+      const rush = take('rush_current_job');
+      const overtime = take('overtime_current_job');
+      if (take('decline_current_job')) {
+        this.shop.decline(customer);
+        return { rush, overtime, skip: true };
+      }
+      customer.plan = { rush, overtime };
+    }
+    return { ...customer.plan, skip: false };
   }
 
   private async offerJob(customer: Customer): Promise<void> {
-    const { rush } = await this.beforeOffer(customer);
+    const { rush, overtime, skip } = await this.beforeOffer(customer);
+    if (skip) return;
     const t = customer.template;
-    const stations = [...new Set(t.tasks.map((id) => stationName(TASKS[id].station)))];
+    const stations = [...new Set(t.tasks.map((id) => stationShort(TASKS[id].station)))];
     const price = Math.round(
       t.price * gameState.modifier('priceMultiplier') * (rush ? BALANCE.scoring.rushPriceFactor : 1),
     );
     const summary = fmt(D.counter.offerSummary, { job: t.name, price, stations: stations.join(', ') });
     const choice = await showDialog(this, {
       speaker: customer.name,
-      pages: [customer.request, rush ? `${summary}\n${D.counter.rushNote}` : summary],
+      pages: [...(customer.big ? [] : [customer.request]), rush ? `${summary}\n${D.counter.rushNote}` : summary],
       choices: [{ label: D.counter.accept }, { label: D.counter.decline }, { label: D.counter.later }],
       cancellable: true,
     });
     if (choice === 0) {
-      this.shop.accept(customer, rush);
+      this.shop.accept(customer, rush, overtime);
       await this.say([fmt(D.counter.accepted, { stations: stations.join(', ') })], customer.name);
     } else if (choice === 1) {
       this.shop.decline(customer);
@@ -373,15 +396,21 @@ export class ShopScene extends Phaser.Scene {
     await this.say([`${job.customer}: ${job.template.name}${job.rush ? ' (RUSH)' : ''}`, lines.join('\n'), `ESTIMATE ${est} MIN`], 'CURRENT JOB');
   }
 
-  protected async showStats(): Promise<void> {
+  private async showStats(): Promise<void> {
     const s = gameState;
     await this.say(
       [
         `CASH $${s.cash}\nREPUTATION ${s.reputation}\nSTAFF MORALE ${s.staffMorale}\nINVENTORY ${s.inventoryHealth}\nGOODWILL ${s.communityGoodwill}`,
         `SKILL LEVELS\nFRAME JIG ${s.skill('frame_jig')}\nWHEELS ${s.skill('wheel_stand')}\nDRIVETRAIN ${s.skill('drivetrain_bench')}\nSUSPENSION ${s.skill('suspension_bench')}`,
+        `PRICES X${s.modifier('priceMultiplier').toFixed(2)}\nSTAFF ${s.modifier('staffCount')}\nPARTS QUALITY ${signed(s.modifier('partsQualityBonus'))}\nEXTRA CUSTOMERS ${s.modifier('extraCustomersPerDay')}\nDECISIONS MADE ${this.decisionsMade()}`,
       ],
       'SHOP STATS',
     );
+  }
+
+  private decisionsMade(): number {
+    const withChoices = (id: string) => !!session.decisions.data.nodes[id]?.choices;
+    return gameState.snapshot.decisionsSeen.filter(withChoices).length;
   }
 
   private async endOfDay(auto: boolean): Promise<void> {
@@ -411,6 +440,7 @@ export class ShopScene extends Phaser.Scene {
     for (const t of triggers) await this.onTrigger(t);
   }
 
-  /** Decision events hook in here (phase 4). */
-  protected async onTrigger(_trigger: Trigger): Promise<void> {}
+  private async onTrigger(trigger: Trigger): Promise<void> {
+    await runDecision(this, session.decisions, trigger);
+  }
 }

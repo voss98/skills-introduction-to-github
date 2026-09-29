@@ -5,6 +5,8 @@ export type TileKind = 'solid' | 'oneway' | 'ladder' | 'ladderTop' | 'empty';
 export interface StationDef {
   id: StationId;
   name: string;
+  /** Short label for tight text boxes. */
+  short: string;
   tx: number;
   ty: number;
   w: number;

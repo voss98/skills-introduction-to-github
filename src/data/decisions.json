@@ -1,0 +1,1235 @@
+{
+  "_readme": "Decision tree. events pick an entry node for a gameplay trigger (end_of_day, big_customer, supplier_offer). Nodes: id, speaker, text, choices, effects, requires, sets_flags, next. A node with no choices uses next. next \"END\" closes the conversation. requires: flags (all), any_flags, not_flags, min/max stat thresholds. Every effect number is a placeholder, not real data. minDay/priority are scheduling, not balance.",
+  "events": [
+    {
+      "id": "ev_pricing",
+      "trigger": "end_of_day",
+      "entry": "pricing_start",
+      "minDay": 1,
+      "priority": 100,
+      "once": true
+    },
+    {
+      "id": "ev_hiring",
+      "trigger": "end_of_day",
+      "entry": "hiring_start",
+      "minDay": 2,
+      "priority": 90,
+      "once": true
+    },
+    {
+      "id": "ev_warranty",
+      "trigger": "end_of_day",
+      "entry": "warranty_start",
+      "minDay": 3,
+      "priority": 80,
+      "once": true
+    },
+    {
+      "id": "ev_price_complaints",
+      "trigger": "end_of_day",
+      "entry": "price_complaints",
+      "minDay": 3,
+      "priority": 85,
+      "once": true,
+      "requires": {
+        "flags": [
+          "premium_pricing"
+        ]
+      }
+    },
+    {
+      "id": "ev_sponsor",
+      "trigger": "end_of_day",
+      "entry": "sponsor_start",
+      "minDay": 4,
+      "priority": 70,
+      "once": true
+    },
+    {
+      "id": "ev_staff_training",
+      "trigger": "end_of_day",
+      "entry": "staff_training",
+      "minDay": 4,
+      "priority": 75,
+      "once": true,
+      "requires": {
+        "flags": [
+          "hired_staff"
+        ]
+      }
+    },
+    {
+      "id": "ev_marketing",
+      "trigger": "end_of_day",
+      "entry": "marketing_start",
+      "minDay": 5,
+      "priority": 60,
+      "once": true
+    },
+    {
+      "id": "ev_warranty_claim",
+      "trigger": "end_of_day",
+      "entry": "warranty_claim",
+      "minDay": 5,
+      "priority": 65,
+      "once": true,
+      "requires": {
+        "any_flags": [
+          "warranty_generous",
+          "warranty_standard",
+          "warranty_none"
+        ]
+      }
+    },
+    {
+      "id": "ev_trail_day",
+      "trigger": "end_of_day",
+      "entry": "trail_day",
+      "minDay": 5,
+      "priority": 68,
+      "once": true,
+      "requires": {
+        "any_flags": [
+          "trail_sponsor",
+          "trail_volunteer"
+        ]
+      }
+    },
+    {
+      "id": "ev_quiet_evening",
+      "trigger": "end_of_day",
+      "entry": "quiet_evening",
+      "minDay": 1,
+      "priority": 0,
+      "once": false
+    },
+    {
+      "id": "ev_supplier_intro",
+      "trigger": "supplier_offer",
+      "entry": "supplier_intro",
+      "minDay": 1,
+      "priority": 100,
+      "once": true
+    },
+    {
+      "id": "ev_supplier_cheap",
+      "trigger": "supplier_offer",
+      "entry": "supplier_cheap_trouble",
+      "minDay": 1,
+      "priority": 90,
+      "once": true,
+      "requires": {
+        "flags": [
+          "cheap_parts"
+        ]
+      }
+    },
+    {
+      "id": "ev_supplier_loyalty",
+      "trigger": "supplier_offer",
+      "entry": "supplier_loyalty",
+      "minDay": 1,
+      "priority": 80,
+      "once": true,
+      "requires": {
+        "flags": [
+          "premium_parts"
+        ],
+        "not_flags": [
+          "supplier_contract"
+        ]
+      }
+    },
+    {
+      "id": "ev_supplier_deal",
+      "trigger": "supplier_offer",
+      "entry": "supplier_restock_deal",
+      "minDay": 1,
+      "priority": 0,
+      "once": false
+    },
+    {
+      "id": "ev_big_customer",
+      "trigger": "big_customer",
+      "entry": "big_rush",
+      "minDay": 1,
+      "priority": 100,
+      "once": false
+    }
+  ],
+  "nodes": {
+    "pricing_start": {
+      "id": "pricing_start",
+      "speaker": "YOU",
+      "text": "First day done! Time to set prices. The shop down the road charges less, but you do careful work.",
+      "choices": [
+        {
+          "text": "RAISE PRICES 20%",
+          "effects": [
+            {
+              "var": "priceMultiplier",
+              "delta": 0.2,
+              "source": "placeholder"
+            },
+            {
+              "var": "reputation",
+              "delta": -2,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "premium_pricing"
+          ],
+          "next": "pricing_raise"
+        },
+        {
+          "text": "KEEP PRICES",
+          "effects": [],
+          "next": "pricing_keep"
+        },
+        {
+          "text": "LOCALS DISCOUNT 10%",
+          "effects": [
+            {
+              "var": "priceMultiplier",
+              "delta": -0.1,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 5,
+              "source": "placeholder"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "local_discount"
+          ],
+          "next": "pricing_discount"
+        }
+      ]
+    },
+    "pricing_raise": {
+      "id": "pricing_raise",
+      "text": "The new price sheet is up. A couple of regulars raise an eyebrow, but each job pays more now.",
+      "next": "END"
+    },
+    "pricing_keep": {
+      "id": "pricing_keep",
+      "text": "Prices stay put. Steady and fair.",
+      "next": "END"
+    },
+    "pricing_discount": {
+      "id": "pricing_discount",
+      "text": "Word spreads fast: locals get 10% off. Expect a few more riders at the counter.",
+      "next": "END"
+    },
+    "supplier_intro": {
+      "id": "supplier_intro",
+      "speaker": "PARTS REP",
+      "text": "Hey! I rep two parts lines. Premium stuff, or budget boxes that move fast. Want a bulk order?",
+      "choices": [
+        {
+          "text": "PREMIUM BULK $400",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 400,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -400,
+              "source": "placeholder"
+            },
+            {
+              "var": "inventoryHealth",
+              "delta": 40,
+              "source": "placeholder"
+            },
+            {
+              "var": "partsQualityBonus",
+              "delta": 5,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "premium_parts"
+          ],
+          "next": "supplier_premium"
+        },
+        {
+          "text": "BUDGET BULK $150",
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -150,
+              "source": "placeholder"
+            },
+            {
+              "var": "inventoryHealth",
+              "delta": 40,
+              "source": "placeholder"
+            },
+            {
+              "var": "partsQualityBonus",
+              "delta": -5,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "cheap_parts"
+          ],
+          "next": "supplier_budget"
+        },
+        {
+          "text": "NO THANKS",
+          "effects": [],
+          "next": "supplier_none"
+        }
+      ]
+    },
+    "supplier_premium": {
+      "id": "supplier_premium",
+      "speaker": "PARTS REP",
+      "text": "Good call. Those parts make every job look better.",
+      "next": "END"
+    },
+    "supplier_budget": {
+      "id": "supplier_budget",
+      "speaker": "PARTS REP",
+      "text": "Cheap and cheerful! Nobody will notice... probably.",
+      "next": "END"
+    },
+    "supplier_none": {
+      "id": "supplier_none",
+      "speaker": "PARTS REP",
+      "text": "No worries. I'll swing by again.",
+      "next": "END"
+    },
+    "supplier_cheap_trouble": {
+      "id": "supplier_cheap_trouble",
+      "speaker": "PARTS REP",
+      "text": "Bad news. Riders say those budget chains and pads are wearing out fast.",
+      "choices": [
+        {
+          "text": "SWITCH TO PREMIUM",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 200,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -200,
+              "source": "placeholder"
+            },
+            {
+              "var": "partsQualityBonus",
+              "delta": 10,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "premium_parts"
+          ],
+          "clears_flags": [
+            "cheap_parts"
+          ],
+          "next": "supplier_switched"
+        },
+        {
+          "text": "STICK WITH BUDGET",
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": -3,
+              "source": "placeholder"
+            }
+          ],
+          "next": "supplier_stuck"
+        }
+      ]
+    },
+    "supplier_switched": {
+      "id": "supplier_switched",
+      "speaker": "PARTS REP",
+      "text": "Premium parts from now on. Your work will shine.",
+      "next": "END"
+    },
+    "supplier_stuck": {
+      "id": "supplier_stuck",
+      "speaker": "PARTS REP",
+      "text": "Suit yourself. Some customers are grumbling.",
+      "next": "END"
+    },
+    "supplier_loyalty": {
+      "id": "supplier_loyalty",
+      "speaker": "PARTS REP",
+      "text": "You've been a great customer. Sign a season deal and I'll knock 15% off all parts.",
+      "choices": [
+        {
+          "text": "SIGN THE DEAL",
+          "effects": [
+            {
+              "var": "partsCostMultiplier",
+              "delta": -0.15,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "supplier_contract"
+          ],
+          "next": "supplier_signed"
+        },
+        {
+          "text": "STAY FLEXIBLE",
+          "effects": [],
+          "next": "supplier_none"
+        }
+      ]
+    },
+    "supplier_signed": {
+      "id": "supplier_signed",
+      "speaker": "PARTS REP",
+      "text": "Deal! Restocks are cheaper from now on.",
+      "next": "END"
+    },
+    "supplier_restock_deal": {
+      "id": "supplier_restock_deal",
+      "speaker": "PARTS REP",
+      "text": "Overstock sale: 20 points of parts for $100?",
+      "choices": [
+        {
+          "text": "BUY IT $100",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 100,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -100,
+              "source": "placeholder"
+            },
+            {
+              "var": "inventoryHealth",
+              "delta": 20,
+              "source": "placeholder"
+            }
+          ],
+          "next": "supplier_bought"
+        },
+        {
+          "text": "NO THANKS",
+          "effects": [],
+          "next": "supplier_none"
+        }
+      ]
+    },
+    "supplier_bought": {
+      "id": "supplier_bought",
+      "speaker": "PARTS REP",
+      "text": "Boxes stacked on the parts wall.",
+      "next": "END"
+    },
+    "big_rush": {
+      "id": "big_rush",
+      "speaker": "BIG CUSTOMER",
+      "text": "Our racer needs this bike before the weekend race. Can you rush it? We'll pay 50% more.",
+      "choices": [
+        {
+          "text": "RUSH IT (+50%)",
+          "effects": [],
+          "sets_flags": [
+            "rush_current_job"
+          ],
+          "next": "big_rush_yes"
+        },
+        {
+          "text": "NORMAL PACE",
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": 1,
+              "source": "placeholder"
+            }
+          ],
+          "next": "big_rush_quality"
+        },
+        {
+          "text": "STAFF OVERTIME",
+          "requires": {
+            "flags": [
+              "hired_staff"
+            ]
+          },
+          "effects": [
+            {
+              "var": "staffMorale",
+              "delta": -8,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "rush_current_job",
+            "overtime_current_job"
+          ],
+          "next": "big_rush_overtime"
+        },
+        {
+          "text": "DECLINE ORDER",
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": -2,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "decline_current_job"
+          ],
+          "next": "big_rush_decline"
+        }
+      ]
+    },
+    "big_rush_yes": {
+      "id": "big_rush_yes",
+      "text": "Rush job it is. Big money, but the clock is ticking. Don't cut corners!",
+      "next": "END"
+    },
+    "big_rush_quality": {
+      "id": "big_rush_quality",
+      "text": "\"Fine. Quality first.\" They'll pay the normal rate.",
+      "next": "END"
+    },
+    "big_rush_overtime": {
+      "id": "big_rush_overtime",
+      "text": "Your mechanic stays late to help. Rush pay, normal deadline, tired staff.",
+      "next": "END"
+    },
+    "big_rush_decline": {
+      "id": "big_rush_decline",
+      "text": "They take the order elsewhere. Some people are talking.",
+      "next": "END"
+    },
+    "hiring_start": {
+      "id": "hiring_start",
+      "speaker": "YOU",
+      "text": "You can't be at every bench at once. Two people applied for a mechanic job.",
+      "choices": [
+        {
+          "text": "HIRE PRO MECHANIC",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 200,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -200,
+              "source": "placeholder"
+            },
+            {
+              "var": "staffCount",
+              "delta": 1,
+              "source": "placeholder"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 5,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "hired_staff",
+            "hired_pro"
+          ],
+          "next": "hiring_pro"
+        },
+        {
+          "text": "HIRE APPRENTICE",
+          "effects": [
+            {
+              "var": "staffCount",
+              "delta": 1,
+              "source": "placeholder"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 10,
+              "source": "placeholder"
+            },
+            {
+              "var": "partsQualityBonus",
+              "delta": -2,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "hired_staff",
+            "hired_apprentice"
+          ],
+          "next": "hiring_apprentice"
+        },
+        {
+          "text": "DO IT ALL MYSELF",
+          "effects": [
+            {
+              "var": "staffMorale",
+              "delta": -5,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "solo_shop"
+          ],
+          "next": "hiring_none"
+        }
+      ]
+    },
+    "hiring_pro": {
+      "id": "hiring_pro",
+      "text": "A seasoned wrench joins the team. Signing bonus paid. They'll handle walk-in work each day.",
+      "next": "END"
+    },
+    "hiring_apprentice": {
+      "id": "hiring_apprentice",
+      "text": "An eager apprentice joins. Lots of energy, a few mistakes.",
+      "next": "END"
+    },
+    "hiring_none": {
+      "id": "hiring_none",
+      "text": "Just you and the shop cat. Long days ahead.",
+      "next": "END"
+    },
+    "warranty_start": {
+      "id": "warranty_start",
+      "speaker": "YOU",
+      "text": "Customers keep asking: what if something breaks after a repair? Pick a warranty policy.",
+      "choices": [
+        {
+          "text": "30-DAY FREE FIXES",
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": 3,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 3,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "warranty_generous"
+          ],
+          "next": "warranty_generous_node"
+        },
+        {
+          "text": "PARTS ONLY",
+          "effects": [],
+          "sets_flags": [
+            "warranty_standard"
+          ],
+          "next": "warranty_standard_node"
+        },
+        {
+          "text": "NO WARRANTY",
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": -3,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "warranty_none"
+          ],
+          "next": "warranty_none_node"
+        }
+      ]
+    },
+    "warranty_generous_node": {
+      "id": "warranty_generous_node",
+      "text": "Bad jobs will be redone free. It costs money, but saves your name.",
+      "next": "END"
+    },
+    "warranty_standard_node": {
+      "id": "warranty_standard_node",
+      "text": "Parts are covered, labor isn't. Fair and simple.",
+      "next": "END"
+    },
+    "warranty_none_node": {
+      "id": "warranty_none_node",
+      "text": "All sales final. Some riders won't like that.",
+      "next": "END"
+    },
+    "warranty_claim": {
+      "id": "warranty_claim",
+      "speaker": "RIDER",
+      "text": "A rider is back: their wheel went out of true after a week.",
+      "choices": [
+        {
+          "text": "FIX IT FREE",
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -40,
+              "source": "placeholder"
+            },
+            {
+              "var": "reputation",
+              "delta": 3,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 2,
+              "source": "placeholder"
+            }
+          ],
+          "next": "warranty_claim_free"
+        },
+        {
+          "text": "CHARGE FOR IT",
+          "requires": {
+            "not_flags": [
+              "warranty_generous"
+            ]
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": 30,
+              "source": "placeholder"
+            },
+            {
+              "var": "reputation",
+              "delta": -4,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": -3,
+              "source": "placeholder"
+            }
+          ],
+          "next": "warranty_claim_charge"
+        }
+      ]
+    },
+    "warranty_claim_free": {
+      "id": "warranty_claim_free",
+      "text": "They leave happy and tell their friends.",
+      "next": "END"
+    },
+    "warranty_claim_charge": {
+      "id": "warranty_claim_charge",
+      "text": "They pay, but grumble all the way out the door.",
+      "next": "END"
+    },
+    "sponsor_start": {
+      "id": "sponsor_start",
+      "speaker": "TRAIL CREW",
+      "text": "The local trail crew is fixing washed-out berms. They ask if the shop can help.",
+      "choices": [
+        {
+          "text": "SPONSOR $300",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 300,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -300,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 15,
+              "source": "placeholder"
+            },
+            {
+              "var": "reputation",
+              "delta": 3,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "trail_sponsor"
+          ],
+          "next": "sponsor_yes"
+        },
+        {
+          "text": "VOLUNTEER AT DIG DAY",
+          "effects": [
+            {
+              "var": "communityGoodwill",
+              "delta": 8,
+              "source": "placeholder"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 5,
+              "source": "placeholder"
+            }
+          ],
+          "sets_flags": [
+            "trail_volunteer"
+          ],
+          "next": "sponsor_volunteer"
+        },
+        {
+          "text": "NOT RIGHT NOW",
+          "effects": [
+            {
+              "var": "communityGoodwill",
+              "delta": -2,
+              "source": "placeholder"
+            }
+          ],
+          "next": "sponsor_no"
+        }
+      ]
+    },
+    "sponsor_yes": {
+      "id": "sponsor_yes",
+      "speaker": "TRAIL CREW",
+      "text": "Your logo goes on the trailhead sign. The crew cheers.",
+      "next": "END"
+    },
+    "sponsor_volunteer": {
+      "id": "sponsor_volunteer",
+      "speaker": "TRAIL CREW",
+      "text": "You spend the evening with shovels. Sore arms, happy hearts.",
+      "next": "END"
+    },
+    "sponsor_no": {
+      "id": "sponsor_no",
+      "speaker": "TRAIL CREW",
+      "text": "\"Maybe next season.\"",
+      "next": "END"
+    },
+    "trail_day": {
+      "id": "trail_day",
+      "speaker": "TRAIL CREW",
+      "text": "The trail crew invites the shop to Trail Day this weekend!",
+      "choices": [
+        {
+          "text": "RUN A REPAIR CLINIC",
+          "effects": [
+            {
+              "var": "skill",
+              "station": "wheel_stand",
+              "delta": 1,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 8,
+              "source": "placeholder"
+            }
+          ],
+          "next": "trail_day_clinic"
+        },
+        {
+          "text": "BRING DEMO BIKES",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 50,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -50,
+              "source": "placeholder"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "placeholder"
+            },
+            {
+              "var": "reputation",
+              "delta": 3,
+              "source": "placeholder"
+            }
+          ],
+          "next": "trail_day_demo"
+        },
+        {
+          "text": "SKIP IT",
+          "effects": [],
+          "next": "END"
+        }
+      ]
+    },
+    "trail_day_clinic": {
+      "id": "trail_day_clinic",
+      "text": "You fix a hundred flats in a day. Your wheel skills level up!",
+      "next": "END"
+    },
+    "trail_day_demo": {
+      "id": "trail_day_demo",
+      "text": "Riders love the demo fleet. More folks will visit the shop.",
+      "next": "END"
+    },
+    "marketing_start": {
+      "id": "marketing_start",
+      "speaker": "YOU",
+      "text": "Business could be busier. How do you get the word out?",
+      "choices": [
+        {
+          "text": "SOCIAL ADS $200",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 200,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -200,
+              "source": "placeholder"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "placeholder"
+            }
+          ],
+          "next": "marketing_ads"
+        },
+        {
+          "text": "TRAILHEAD FLYERS $60",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 60,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -60,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 3,
+              "source": "placeholder"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "placeholder"
+            }
+          ],
+          "next": "marketing_flyers"
+        },
+        {
+          "text": "HOST A GROUP RIDE",
+          "requires": {
+            "any_flags": [
+              "trail_sponsor",
+              "trail_volunteer"
+            ]
+          },
+          "effects": [
+            {
+              "var": "communityGoodwill",
+              "delta": 10,
+              "source": "placeholder"
+            },
+            {
+              "var": "reputation",
+              "delta": 4,
+              "source": "placeholder"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 3,
+              "source": "placeholder"
+            },
+            {
+              "var": "extraCustomersPerDay",
+              "delta": 1,
+              "source": "placeholder"
+            }
+          ],
+          "next": "marketing_ride"
+        },
+        {
+          "text": "WORD OF MOUTH",
+          "effects": [],
+          "next": "marketing_none"
+        }
+      ]
+    },
+    "marketing_ads": {
+      "id": "marketing_ads",
+      "text": "Your ads run all week. Expect more customers.",
+      "next": "END"
+    },
+    "marketing_flyers": {
+      "id": "marketing_flyers",
+      "text": "Flyers go up at every trailhead.",
+      "next": "END"
+    },
+    "marketing_ride": {
+      "id": "marketing_ride",
+      "text": "Thirty riders show up! Your trail work paid off.",
+      "next": "END"
+    },
+    "marketing_none": {
+      "id": "marketing_none",
+      "text": "Good work speaks for itself... slowly.",
+      "next": "END"
+    },
+    "staff_training": {
+      "id": "staff_training",
+      "speaker": "MECHANIC",
+      "text": "Your mechanic asks: can the shop pay for a suspension course? It costs $250.",
+      "choices": [
+        {
+          "text": "PAY FOR THE COURSE",
+          "requires": {
+            "min": {
+              "cash": {
+                "value": 250,
+                "source": "placeholder"
+              }
+            }
+          },
+          "effects": [
+            {
+              "var": "cash",
+              "delta": -250,
+              "source": "placeholder"
+            },
+            {
+              "var": "skill",
+              "station": "suspension_bench",
+              "delta": 1,
+              "source": "placeholder"
+            },
+            {
+              "var": "staffMorale",
+              "delta": 10,
+              "source": "placeholder"
+            }
+          ],
+          "next": "staff_training_paid"
+        },
+        {
+          "text": "TEACH THEM MYSELF",
+          "effects": [
+            {
+              "var": "staffMorale",
+              "delta": 3,
+              "source": "placeholder"
+            }
+          ],
+          "next": "staff_training_self"
+        },
+        {
+          "text": "NOT THIS YEAR",
+          "effects": [
+            {
+              "var": "staffMorale",
+              "delta": -8,
+              "source": "placeholder"
+            }
+          ],
+          "next": "staff_training_no"
+        }
+      ]
+    },
+    "staff_training_paid": {
+      "id": "staff_training_paid",
+      "text": "They come back full of tricks and share them with you. Suspension skill up!",
+      "next": "END"
+    },
+    "staff_training_self": {
+      "id": "staff_training_self",
+      "text": "Evenings at the bench together. They learn a bit.",
+      "next": "END"
+    },
+    "staff_training_no": {
+      "id": "staff_training_no",
+      "text": "They nod, but look disappointed.",
+      "next": "END"
+    },
+    "price_complaints": {
+      "id": "price_complaints",
+      "speaker": "REGULAR",
+      "text": "A few regulars say your prices are the highest in town.",
+      "choices": [
+        {
+          "text": "KEEP PREMIUM",
+          "effects": [
+            {
+              "var": "reputation",
+              "delta": -2,
+              "source": "placeholder"
+            }
+          ],
+          "next": "price_keep"
+        },
+        {
+          "text": "ROLL PRICES BACK",
+          "effects": [
+            {
+              "var": "priceMultiplier",
+              "delta": -0.2,
+              "source": "placeholder"
+            },
+            {
+              "var": "communityGoodwill",
+              "delta": 3,
+              "source": "placeholder"
+            }
+          ],
+          "clears_flags": [
+            "premium_pricing"
+          ],
+          "next": "price_rollback"
+        },
+        {
+          "text": "ADD FREE SAFETY CHECK",
+          "effects": [
+            {
+              "var": "communityGoodwill",
+              "delta": 5,
+              "source": "placeholder"
+            },
+            {
+              "var": "staffMorale",
+              "delta": -3,
+              "source": "placeholder"
+            }
+          ],
+          "next": "price_value"
+        }
+      ]
+    },
+    "price_keep": {
+      "id": "price_keep",
+      "text": "You stand by your prices. Some riders drift away.",
+      "next": "END"
+    },
+    "price_rollback": {
+      "id": "price_rollback",
+      "text": "Prices are back to normal. Regulars relax.",
+      "next": "END"
+    },
+    "price_value": {
+      "id": "price_value",
+      "text": "Free safety checks with every job. Riders feel looked after.",
+      "next": "END"
+    },
+    "quiet_evening": {
+      "id": "quiet_evening",
+      "speaker": "YOU",
+      "text": "A quiet evening at the shop. What now?",
+      "choices": [
+        {
+          "text": "TIDY THE PARTS WALL",
+          "effects": [
+            {
+              "var": "inventoryHealth",
+              "delta": 3,
+              "source": "placeholder"
+            }
+          ],
+          "next": "quiet_tidy"
+        },
+        {
+          "text": "EVENING TRAIL RIDE",
+          "effects": [
+            {
+              "var": "staffMorale",
+              "delta": 5,
+              "source": "placeholder"
+            }
+          ],
+          "next": "quiet_ride"
+        },
+        {
+          "text": "PRACTICE TRUING",
+          "requires": {
+            "flags": [
+              "solo_shop"
+            ],
+            "not_flags": [
+              "practiced_truing"
+            ]
+          },
+          "effects": [
+            {
+              "var": "skill",
+              "station": "wheel_stand",
+              "delta": 1,
+              "source": "placeholder"
+            }
+          ],
+          "next": "quiet_practice",
+          "sets_flags": [
+            "practiced_truing"
+          ]
+        }
+      ]
+    },
+    "quiet_tidy": {
+      "id": "quiet_tidy",
+      "text": "You find a box of brake pads you forgot you had.",
+      "next": "END"
+    },
+    "quiet_ride": {
+      "id": "quiet_ride",
+      "text": "Golden hour on the ridge. You come back grinning.",
+      "next": "END"
+    },
+    "quiet_practice": {
+      "id": "quiet_practice",
+      "text": "Hours of spoke-by-spoke practice. Wheel truing skill up!",
+      "next": "END"
+    }
+  }
+}

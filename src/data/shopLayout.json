@@ -21,19 +21,86 @@
     "#....................H.................#",
     "########################################"
   ],
-  "playerStart": { "tx": 6, "ty": 16 },
+  "playerStart": {
+    "tx": 6,
+    "ty": 16
+  },
   "stations": [
-    { "id": "front_counter", "name": "Front Counter", "tx": 2, "ty": 16, "w": 3 },
-    { "id": "parts_wall", "name": "Parts Wall", "tx": 6, "ty": 16, "w": 3 },
-    { "id": "frame_jig", "name": "Frame Jig", "tx": 11, "ty": 16, "w": 3 },
-    { "id": "wheel_stand", "name": "Wheel Truing Stand", "tx": 16, "ty": 16, "w": 2 },
-    { "id": "drivetrain_bench", "name": "Drivetrain Bench", "tx": 29, "ty": 16, "w": 3 },
-    { "id": "suspension_bench", "name": "Suspension Bench", "tx": 25, "ty": 7, "w": 3 },
-    { "id": "training_door", "name": "Training Center", "tx": 35, "ty": 7, "w": 2 }
+    {
+      "id": "front_counter",
+      "name": "Front Counter",
+      "tx": 2,
+      "ty": 16,
+      "w": 3,
+      "short": "COUNTER"
+    },
+    {
+      "id": "parts_wall",
+      "name": "Parts Wall",
+      "tx": 6,
+      "ty": 16,
+      "w": 3,
+      "short": "PARTS"
+    },
+    {
+      "id": "frame_jig",
+      "name": "Frame Jig",
+      "tx": 11,
+      "ty": 16,
+      "w": 3,
+      "short": "JIG"
+    },
+    {
+      "id": "wheel_stand",
+      "name": "Wheel Truing Stand",
+      "tx": 16,
+      "ty": 16,
+      "w": 2,
+      "short": "WHEELS"
+    },
+    {
+      "id": "drivetrain_bench",
+      "name": "Drivetrain Bench",
+      "tx": 29,
+      "ty": 16,
+      "w": 3,
+      "short": "DRIVETRAIN"
+    },
+    {
+      "id": "suspension_bench",
+      "name": "Suspension Bench",
+      "tx": 25,
+      "ty": 7,
+      "w": 3,
+      "short": "SUSPENSION"
+    },
+    {
+      "id": "training_door",
+      "name": "Training Center",
+      "tx": 35,
+      "ty": 7,
+      "w": 2,
+      "short": "TRAINING"
+    }
   ],
   "decor": [
-    { "sprite": "bike_rack", "tx": 34, "ty": 16, "w": 4 },
-    { "sprite": "shop_door", "tx": 1, "ty": 16, "w": 1 },
-    { "sprite": "desk", "tx": 30, "ty": 7, "w": 3 }
+    {
+      "sprite": "bike_rack",
+      "tx": 34,
+      "ty": 16,
+      "w": 4
+    },
+    {
+      "sprite": "shop_door",
+      "tx": 1,
+      "ty": 16,
+      "w": 1
+    },
+    {
+      "sprite": "desk",
+      "tx": 30,
+      "ty": 7,
+      "w": 3
+    }
   ]
 }

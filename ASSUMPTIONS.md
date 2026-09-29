@@ -67,3 +67,30 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
   waiting at closing time leaves and costs reputation. Declining costs 1 point.
 - **Dev URL params:** `?seed=N` fixes the random seed, `?job=trail_build` (or any
   job id) puts that customer first in line on day 1, and `?scene=shop` skips the title.
+
+## Phase 4 – Decision tree
+- **Effects live on choices** (and optionally on nodes, applied on entry). Besides
+  `sets_flags` I added `clears_flags`, so a later choice can undo an earlier
+  policy (e.g. rolling back premium pricing).
+- **`requires`** supports `flags` (all), `any_flags`, `not_flags`, and `min`/`max`
+  stat thresholds. Choices that fail are shown greyed out with a padlock rather
+  than hidden, so the player can see what an earlier choice locked or could unlock.
+- **Events** tie decisions to triggers (`end_of_day`, `big_customer`,
+  `supplier_offer`). Each trigger runs the highest-priority eligible event. Each
+  trigger also has a repeatable fallback (quiet evening, overstock deal, rush
+  request), so every end of day has a decision.
+- **"No dead ends"** means: every `next` exists, the node graph has no cycles, and
+  every choice list has at least one choice without requirements.
+  **"Reachable"** is checked two ways: a flag fixpoint analysis, and 300 seeded
+  random playthroughs that must visit every node and event.
+- **Skill level** is per station (4 values). The overall `skillLevel` is their
+  average, exposed on `GameState`. Decisions can raise one station or `all`.
+- **Rush vs quality** is the big-customer decision. A rush pays 50% more with a
+  60% deadline. Staff overtime (needs a hire) keeps the normal deadline but costs
+  morale. The choice is passed to gameplay through short-lived flags that the shop
+  reads and clears.
+- **Hiring** adds staff who earn a little from walk-in work each day (scaled by
+  morale) and cost wages. They don't appear on the shop floor yet.
+- **Decision effects are placeholders.** Every effect carries
+  `"source": "placeholder"`. `minDay` and `priority` are scheduling fields, not
+  balance numbers.

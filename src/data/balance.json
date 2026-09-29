@@ -46,6 +46,28 @@
     "skillMax": {
       "value": 5,
       "source": "placeholder"
+    },
+    "modifierMin": {
+      "priceMultiplier": {
+        "value": 0.5,
+        "source": "placeholder"
+      },
+      "partsCostMultiplier": {
+        "value": 0.5,
+        "source": "placeholder"
+      },
+      "partsQualityBonus": {
+        "value": -30,
+        "source": "placeholder"
+      },
+      "extraCustomersPerDay": {
+        "value": 0,
+        "source": "placeholder"
+      },
+      "staffCount": {
+        "value": 0,
+        "source": "placeholder"
+      }
     }
   },
   "movement": {

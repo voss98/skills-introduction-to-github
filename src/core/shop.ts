@@ -25,6 +25,8 @@ export interface Customer {
   /** Minute of the day they walk in. */
   arrivesAt: number;
   big: boolean;
+  /** How the player agreed to take a big order (set once its decision has run). */
+  plan?: { rush: boolean; overtime: boolean };
 }
 
 /** Gameplay moments that can trigger a decision. */
@@ -146,10 +148,10 @@ export class ShopController {
     return next ? { kind: 'offer', customer: next } : { kind: 'empty' };
   }
 
-  accept(customer: Customer, rush = false): Job {
+  accept(customer: Customer, rush = false, overtime = false): Job {
     if (this.activeJob) throw new Error('Already working on a job');
     this.customers = this.customers.filter((c) => c.id !== customer.id);
-    this.activeJob = createJob(customer.id, customer.template, customer.name, this.worked, rush);
+    this.activeJob = createJob(customer.id, customer.template, customer.name, this.worked, rush, overtime);
     return this.activeJob;
   }
 

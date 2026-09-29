@@ -57,7 +57,7 @@ export interface GameStateData {
 
 export type StateListener = (state: Readonly<GameStateData>) => void;
 
-const { statMin, statMax, skillMin, skillMax } = BALANCE.limits;
+const { statMin, statMax, skillMin, skillMax, modifierMin } = BALANCE.limits;
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 export function initialState(): GameStateData {
@@ -147,7 +147,7 @@ export class GameState {
       this.data[k] = clamp(Math.round(next(this.data[k])), statMin, statMax);
     } else if ((MODIFIER_KEYS as string[]).includes(e.var)) {
       const k = e.var as ModifierKey;
-      this.data.modifiers[k] = Math.max(0, Math.round(next(this.data.modifiers[k]) * 100) / 100);
+      this.data.modifiers[k] = Math.max(modifierMin[k], Math.round(next(this.data.modifiers[k]) * 100) / 100);
     } else {
       throw new Error(`Unknown effect variable: ${String(e.var)}`);
     }
