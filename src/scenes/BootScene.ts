@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { bikeArt, customerArt, playerArt, promptArt, stationArt, tileArt, trainingArt, vignetteArt } from '../gfx/sprites';
 import { createFontTextures, createPixelTexture } from '../gfx/textures';
+import { applyPalette, PALETTE_HEX } from '../gfx/palette';
+import { loadSettings } from '../audio/settings';
 import { setPublishers } from '../core/reports';
 import { publisherShortNames } from './LedgerScene';
 
@@ -11,6 +13,9 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
+    // Use the player's saved palette before any texture is drawn.
+    applyPalette(loadSettings().paletteId);
+    this.cameras.main.setBackgroundColor(PALETTE_HEX[3]);
     createFontTextures(this);
     createPixelTexture(this, 'tiles', tileArt());
     createPixelTexture(this, 'player', playerArt());

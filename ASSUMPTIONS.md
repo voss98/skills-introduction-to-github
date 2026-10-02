@@ -196,3 +196,13 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
 - **Not deployed anywhere.** The README lists free hosting options for you to
   choose from. The private claude.ai artifact from earlier was updated at your
   request; it is only visible to you unless you share it.
+
+## Color palettes (post-Phase 9)
+- **"An array of colors"** was read as selectable palettes. `src/data/palettes.json`
+  holds 7 four-shade palettes (Classic green, Pocket, Dusk, Desert, Alpine, Forest,
+  Contrast). Pick one in Settings > Colors with Left/Right. Everything keeps the
+  4-shade rule; only the 4 colors change.
+- **Switching is live:** the generated textures are repainted in place and the page
+  border and touch buttons follow. The choice is saved with the other settings.
+- **Readability guard:** a test requires each palette to go darkest → lightest and
+  have at least 4.5:1 contrast between its darkest and lightest shade.

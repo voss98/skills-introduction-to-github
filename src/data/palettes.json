@@ -1,0 +1,12 @@
+{
+  "_readme": "Selectable 4-shade palettes, listed darkest to lightest. Every sprite, tile and font is drawn with these 4 slots, so any palette here recolors the whole game. The first entry is the default. Colors are original picks, not copied from a console's hardware palette tables.",
+  "palettes": [
+    { "id": "dmg_green", "name": "CLASSIC", "colors": ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"] },
+    { "id": "pocket_gray", "name": "POCKET", "colors": ["#1a1a1a", "#555555", "#a8a8a8", "#e6e6e6"] },
+    { "id": "trail_dusk", "name": "DUSK", "colors": ["#2b1b3d", "#6b3e75", "#d9827a", "#f8e3c4"] },
+    { "id": "desert_sand", "name": "DESERT", "colors": ["#3b2414", "#8a5a2b", "#d4a35f", "#f4e4bc"] },
+    { "id": "alpine_ice", "name": "ALPINE", "colors": ["#0d1b2a", "#2f5d8a", "#7fb3d5", "#e3f2fd"] },
+    { "id": "forest_moss", "name": "FOREST", "colors": ["#1b2416", "#3f5a2a", "#8aa05a", "#dfe8c4"] },
+    { "id": "high_contrast", "name": "CONTRAST", "colors": ["#000000", "#404040", "#b0b0b0", "#ffffff"] }
+  ]
+}

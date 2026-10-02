@@ -3,10 +3,12 @@ export interface Settings {
   musicVolume: number; // 0..10
   sfxVolume: number; // 0..10
   muted: boolean;
+  /** Id of the color palette (see src/data/palettes.json). */
+  paletteId: string;
 }
 
 const KEY = 'trail-shop-tycoon.settings.v1';
-export const DEFAULT_SETTINGS: Settings = { musicVolume: 6, sfxVolume: 8, muted: false };
+export const DEFAULT_SETTINGS: Settings = { musicVolume: 6, sfxVolume: 8, muted: false, paletteId: 'dmg_green' };
 
 export function loadSettings(): Settings {
   try {

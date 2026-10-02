@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { sound } from '../audio/sound';
-import { PALETTE_HEX, SCREEN_H, SCREEN_W } from '../gfx/palette';
+import { applyPalette, cyclePalette, PALETTE_HEX, paletteById, SCREEN_H, SCREEN_W } from '../gfx/palette';
+import { repaintAllTextures } from '../gfx/textures';
 import { addText, drawWindow, setText } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
@@ -25,9 +26,9 @@ export class SettingsScene extends Phaser.Scene {
     super('Settings');
   }
 
-  init(data: { back?: string }): void {
+  init(data: { back?: string; cursor?: number }): void {
     this.back = data.back ?? 'Title';
-    this.cursor = 0;
+    this.cursor = data.cursor ?? 0;
     this.busy = false;
   }
 
@@ -46,6 +47,12 @@ export class SettingsScene extends Phaser.Scene {
         left: () => sound.update({ sfxVolume: clamp(s().sfxVolume - 1) }),
         right: () => sound.update({ sfxVolume: clamp(s().sfxVolume + 1) }),
       },
+      {
+        label: () => `COLORS {${paletteById(s().paletteId).name}}`,
+        left: () => this.setPalette(-1),
+        right: () => this.setPalette(1),
+        press: () => this.setPalette(1),
+      },
       { label: () => `SOUND ${s().muted ? 'MUTED' : 'ON'}`, press: () => void sound.toggleMute(), left: () => void sound.toggleMute(), right: () => void sound.toggleMute() },
       { label: () => 'CONTROLS', press: () => showDialog(this, { speaker: 'CONTROLS', pages: CONTROLS }).then(() => undefined) },
       { label: () => 'INPUT TEST', press: () => void this.scene.start('InputTest') },
@@ -55,16 +62,35 @@ export class SettingsScene extends Phaser.Scene {
     const g = this.add.graphics();
     drawWindow(g, 0, 0, SCREEN_W, 16);
     addText(this, 6, 5, 'SETTINGS', 0);
-    this.texts = this.rows.map((_, i) => addText(this, 14, 24 + i * 14, '', 0));
-    this.cursorText = addText(this, 4, 24, ']', 0);
+    this.texts = this.rows.map((_, i) => addText(this, 14, 22 + i * 13, '', 0));
+    this.drawSwatches(g);
+    this.cursorText = addText(this, 4, 22, ']', 0);
     g.fillStyle(PALETTE_HEX[0]).fillRect(0, SCREEN_H - 10, SCREEN_W, 10);
     addText(this, 2, SCREEN_H - 9, '{}:CHANGE A:OK B:BACK', 2);
     this.render();
   }
 
+  /** Change palette, recolor every texture, and redraw this screen in the new colors. */
+  private setPalette(dir: 1 | -1): void {
+    const next = cyclePalette(sound.current.paletteId, dir);
+    sound.update({ paletteId: next.id });
+    applyPalette(next.id);
+    repaintAllTextures(this.textures);
+    this.scene.restart({ back: this.back, cursor: this.cursor });
+  }
+
+  /** Four squares previewing the active palette, darkest to lightest. */
+  private drawSwatches(g: Phaser.GameObjects.Graphics): void {
+    const y = 22 + 7 * 13; // below the last row
+    PALETTE_HEX.forEach((c, i) => {
+      g.fillStyle(PALETTE_HEX[0]).fillRect(14 + i * 14, y, 12, 10);
+      g.fillStyle(c).fillRect(15 + i * 14, y + 1, 10, 8);
+    });
+  }
+
   private render(): void {
     this.rows.forEach((r, i) => setText(this.texts[i], r.label()));
-    this.cursorText.setY(24 + this.cursor * 14);
+    this.cursorText.setY(22 + this.cursor * 13);
   }
 
   update(time: number): void {

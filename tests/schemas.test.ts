@@ -7,6 +7,7 @@ import dialogue from '../src/data/dialogue.json';
 import endings from '../src/data/endings.json';
 import examQuestions from '../src/data/examQuestions.json';
 import industryReports from '../src/data/industryReports.json';
+import palettes from '../src/data/palettes.json';
 import jobs from '../src/data/jobs.json';
 import shopLayout from '../src/data/shopLayout.json';
 import stats from '../src/data/stats.json';
@@ -283,6 +284,17 @@ const SCHEMAS: Record<string, [z.ZodType, unknown]> = {
       })
       .strict(),
     customers,
+  ],
+  'palettes.json': [
+    z
+      .object({
+        _readme: readme,
+        palettes: z
+          .array(z.object({ id, name: z.string().max(10), colors: z.array(z.string().regex(/^#[0-9a-f]{6}$/)).length(4) }).strict())
+          .min(1),
+      })
+      .strict(),
+    palettes,
   ],
   'dialogue.json': [z.record(z.string(), z.union([z.string(), z.record(z.string(), z.string())])), dialogue],
   'shopLayout.json': [layout, shopLayout],

@@ -68,6 +68,7 @@ src/
     industryReports.json  One real stat per month, optionally tied to a decision
     training.json         Training programs
     examQuestions.json    Certification exam question bank
+    palettes.json         Selectable 4-shade color palettes (Settings > Colors)
     endings.json          Endings with conditions, priority and "choices that mattered" drivers
     dialogue.json, customers.json, shopLayout.json, trainingLayout.json
   core/                 Pure TypeScript game logic (no Phaser), all unit tested
@@ -117,6 +118,12 @@ ASSUMPTIONS.md          Every judgement call, by phase
    in `trainingArt()` in `src/gfx/sprites.ts`.
 3. `tests/training.test.ts` checks the four required programs and that every
    station can be reached.
+
+### A color palette
+Add an entry to `src/data/palettes.json`: `id`, `name` (≤ 10 chars) and exactly 4
+`colors` as `#rrggbb`, darkest first. It appears in Settings > Colors right away.
+`tests/palettes.test.ts` checks the shades get lighter in order and that the
+darkest and lightest colors have at least 4.5:1 contrast so text stays readable.
 
 ### An ending
 1. Add it to `src/data/endings.json` with a unique `priority`, `conditions`
