@@ -5,6 +5,8 @@ Build and repair bikes in station minigames, make business decisions, train at t
 Training Center, and see which of seven endings your choices lead to. The balance
 is driven by real, cited bike-industry data.
 
+Features, known limitations and the roadmap are in [docs/GAME_INFO.md](docs/GAME_INFO.md).
+
 Built with Vite + TypeScript + Phaser 3 + Vitest. The native resolution is 160×144 in
 the 4-shade DMG green palette. All art, sound and music are generated in code.
 
