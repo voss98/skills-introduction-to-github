@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { bob } from '../gfx/blink';
 import { BALANCE } from '../core/balance';
 import { ladderRects, runsOf, type ShopLayout, type StationDef } from '../core/layout';
 import { PALETTE_HEX } from '../gfx/palette';
@@ -96,9 +97,9 @@ export class PlatformWorld {
     this.nearby = this.findNearby();
     if (this.nearby) {
       const ts = this.layout.tileSize;
-      const bob = Math.floor(time / 300) % 2;
+      const dy = bob(time);
       const top = this.stationImages.get(this.nearby.id)?.height ?? 16;
-      this.prompt.setPosition((this.nearby.tx + this.nearby.w / 2) * ts, (this.nearby.ty + 1) * ts - top - 1 - bob);
+      this.prompt.setPosition((this.nearby.tx + this.nearby.w / 2) * ts, (this.nearby.ty + 1) * ts - top - 1 - dy);
     }
     this.prompt.setVisible(!!this.nearby);
     return this.nearby;

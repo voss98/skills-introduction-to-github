@@ -1,6 +1,6 @@
 # Trail Shop Tycoon: Game Info and Roadmap
 
-**Version:** 0.1.0 (first complete playable build)
+**Version:** 0.2.0 (see `CHANGELOG.md`)
 **Genre:** Game Boy-style 2D platformer / business sim / RPG
 **Platform:** Web browser (desktop keyboard or phone touch controls)
 **Length:** one run is 12 in-game months, about an hour of play
@@ -75,6 +75,12 @@ Flagship Shop, Burned Out, Steady Local Favorite and Barely Surviving. Each endi
 screen shows a pixel-art scene, your final stats and the choices that mattered.
 The Ending Gallery tracks which ones you've found.
 
+### Help and accessibility
+- A first-day tutorial explains the counter, stations, minigames and closing up.
+  It can be turned off in Settings.
+- Text speed (slow, normal, fast, instant) and a reduce-flashing option.
+- The ending screen charts your cash and reputation over the whole year.
+
 ### Presentation
 - 160×144 resolution with pixel-perfect scaling.
 - 7 selectable 4-shade color palettes: Classic, Pocket, Dusk, Desert, Alpine, Forest
@@ -104,7 +110,7 @@ On phones, on-screen buttons appear under the screen.
 - **Stack:** Vite, TypeScript, Phaser 3, Vitest.
 - **Structure:** game data (stats, dialogue, decisions, endings, training, palettes)
   lives in JSON under `src/data`, separate from game logic.
-- **Tests:** 167 automated tests covering:
+- **Tests:** 178 automated tests covering:
   - unit tests and JSON schema checks
   - 1,000 simulated playthroughs that check no ending dominates
   - a headless-browser test that plays a job and a decision, saves, continues and
@@ -132,12 +138,13 @@ On phones, on-screen buttons appear under the screen.
 This is a proposal, not a commitment. Each item fits the existing data-driven
 design, so most of the work is new JSON content plus a little code.
 
-### v0.2: Polish and feedback (next)
-- Playtest the full 12-month run with real players and tune the economy (JSON only).
-- Have a working mechanic review the exam questions.
-- Add a short tutorial for the first day: counter, first minigame, end of day.
-- Accessibility: remappable keys, a slower text speed option, and a reduced-flash option.
-- Add a stats-over-time screen at the ending (cash and reputation by month).
+### v0.2: Polish and feedback (released in 0.2.0, except where noted)
+- Done: a first-day tutorial (counter, stations, minigames, hand-over, closing).
+- Done: text speed (slow to instant) and a reduce-flashing option.
+- Done: a "Your Year" chart of cash and reputation on the ending screen.
+- Still to do (needs people): playtest the full 12-month run with real players and
+  tune the economy (JSON only), and have a working mechanic review the exam questions.
+- Still to do: remappable keys.
 
 ### v0.3: More shop life
 - Show hired staff on the shop floor, working stations on their own.

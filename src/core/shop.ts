@@ -290,6 +290,7 @@ export class ShopController {
     s.adjust('inventoryHealth', -e.inventoryDecayPerDay);
 
     this.minute = C.dayEndMinute;
+    s.recordDay();
     return {
       day: s.day,
       jobsDone: this.day.jobsDone,

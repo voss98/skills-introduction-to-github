@@ -1,4 +1,6 @@
 import Phaser from 'phaser';
+import { blinkOn } from '../gfx/blink';
+import { CHARS_PER_SECOND } from '../audio/settings';
 import { wrapText } from '../gfx/font';
 import { SCREEN_H, SCREEN_W } from '../gfx/palette';
 import { addText, drawWindow, setText } from '../gfx/ui';
@@ -24,7 +26,6 @@ const BOX_Y = SCREEN_H - BOX_H;
 const PAD = 6;
 const LINES = 5;
 const CHARS = Math.floor((SCREEN_W - PAD * 2) / 6);
-const CHARS_PER_SEC = 90;
 
 /**
  * RPG-style text box. Always running on top of the other scenes; hidden when idle.
@@ -90,7 +91,7 @@ export class DialogScene extends Phaser.Scene {
     const choices = this.opts.choices ?? [];
 
     if (typing) {
-      this.shown = Math.min(pageText.length, this.shown + (CHARS_PER_SEC * delta) / 1000);
+      this.shown = Math.min(pageText.length, this.shown + (CHARS_PER_SECOND[sound.current.textSpeed] * delta) / 1000);
       if (gamepad.justPressed('A') || gamepad.justPressed('B')) this.shown = pageText.length;
     } else if (lastPage && choices.length) {
       if (gamepad.justPressed('UP')) this.moveCursor(this.firstUnlocked(this.cursorIdx - 1, -1));
@@ -109,7 +110,7 @@ export class DialogScene extends Phaser.Scene {
 
     setText(this.body, pageText.slice(0, Math.floor(this.shown)));
     const done = this.shown >= pageText.length;
-    this.more.setVisible(done && (!lastPage || !choices.length) && Math.floor(this.time.now / 300) % 2 === 0);
+    this.more.setVisible(done && (!lastPage || !choices.length) && blinkOn(this.time.now, 300, 1, 2));
     this.drawChoices(done && lastPage ? choices : []);
   }
 
@@ -160,7 +161,7 @@ export class DialogScene extends Phaser.Scene {
       );
     }
     this.cursor.setPosition(6, y0 + 5 + this.cursorIdx * 9);
-    this.cursor.setVisible(Math.floor(this.time.now / 400) % 4 !== 0);
+    this.cursor.setVisible(blinkOn(this.time.now));
     this.children.bringToTop(this.cursor);
   }
 

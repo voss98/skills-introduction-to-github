@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
+import { blinkOn } from '../gfx/blink';
 import dialogue from '../data/dialogue.json';
+import { version } from '../../package.json';
 import { PALETTE_HEX, SCREEN_W } from '../gfx/palette';
 import { addText, drawWindow } from '../gfx/ui';
 import { gamepad } from '../input/InputManager';
@@ -55,6 +57,8 @@ export class TitleScene extends Phaser.Scene {
     const center = (s: string) => Math.floor((SCREEN_W - s.length * 6) / 2);
     addText(this, center('TRAIL SHOP'), 14, 'TRAIL SHOP', 0);
     addText(this, center('TYCOON'), 24, 'TYCOON', 1);
+    const v = `V${version}`;
+    addText(this, SCREEN_W - v.length * 6 - 4, 41, v, 1);
     this.add.image(SCREEN_W / 2, 74, 'bike_rack').setOrigin(0.5, 1);
     g.fillStyle(PALETTE_HEX[1]).fillRect(0, 74, SCREEN_W, 2);
     this.items = this.menu();
@@ -74,7 +78,7 @@ export class TitleScene extends Phaser.Scene {
       this.cursor = (this.cursor - 1 + n) % n;
       sound.play('blip');
     }
-    this.cursorText.setY(this.menuY + this.cursor * 10).setVisible(Math.floor(time / 400) % 4 !== 0);
+    this.cursorText.setY(this.menuY + this.cursor * 10).setVisible(blinkOn(time));
     if (gamepad.justPressed('START') || gamepad.justPressed('A')) {
       gamepad.consume('A');
       gamepad.consume('START');

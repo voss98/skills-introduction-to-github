@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { blinkOn } from '../gfx/blink';
 import sourcesMd from '../data/sources.md?raw';
 import { compactStat, formatStat, parseSources, STATS, type Stat } from '../core/stats';
 import { PALETTE_HEX, SCREEN_H, SCREEN_W } from '../gfx/palette';
@@ -67,7 +68,7 @@ export class LedgerScene extends Phaser.Scene {
 
   update(time: number): void {
     if (this.busy) return;
-    this.cursorText.setVisible(Math.floor(time / 400) % 4 !== 0);
+    this.cursorText.setVisible(blinkOn(time));
     const n = this.current.length;
     if (gamepad.justPressed('DOWN')) this.cursor = (this.cursor + 1) % n;
     if (gamepad.justPressed('UP')) this.cursor = (this.cursor - 1 + n) % n;

@@ -8,6 +8,7 @@ import endings from '../src/data/endings.json';
 import examQuestions from '../src/data/examQuestions.json';
 import industryReports from '../src/data/industryReports.json';
 import palettes from '../src/data/palettes.json';
+import tutorial from '../src/data/tutorial.json';
 import jobs from '../src/data/jobs.json';
 import shopLayout from '../src/data/shopLayout.json';
 import stats from '../src/data/stats.json';
@@ -295,6 +296,23 @@ const SCHEMAS: Record<string, [z.ZodType, unknown]> = {
       })
       .strict(),
     palettes,
+  ],
+  'tutorial.json': [
+    z
+      .object({
+        _readme: readme,
+        tips: z.array(
+          z
+            .object({
+              id,
+              trigger: z.enum(['first_morning', 'job_accepted', 'first_minigame', 'bike_ready', 'first_payment', 'first_closing']),
+              pages: z.array(z.string().min(1).max(150)).min(1).max(3),
+            })
+            .strict(),
+        ),
+      })
+      .strict(),
+    tutorial,
   ],
   'dialogue.json': [z.record(z.string(), z.union([z.string(), z.record(z.string(), z.string())])), dialogue],
   'shopLayout.json': [layout, shopLayout],

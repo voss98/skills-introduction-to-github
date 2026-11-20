@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { blinkOn } from '../gfx/blink';
 import { ENDINGS } from '../core/endings';
 import { unlockedEndings } from '../core/gallery';
 import { PALETTE_HEX, SCREEN_H, SCREEN_W } from '../gfx/palette';
@@ -46,7 +47,7 @@ export class GalleryScene extends Phaser.Scene {
     const n = ENDINGS.length;
     if (gamepad.justPressed('DOWN')) this.cursor = (this.cursor + 1) % n;
     if (gamepad.justPressed('UP')) this.cursor = (this.cursor - 1 + n) % n;
-    this.cursorText.setY(20 + this.cursor * 9).setVisible(Math.floor(time / 400) % 4 !== 0);
+    this.cursorText.setY(20 + this.cursor * 9).setVisible(blinkOn(time));
     const e = ENDINGS[this.cursor];
     const open = unlocked.has(e.id);
     this.vignette.setVisible(open);

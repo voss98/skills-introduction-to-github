@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
+import { blinkOn } from '../gfx/blink';
 import { sound } from '../audio/sound';
+import { TEXT_SPEEDS } from '../audio/settings';
 import { applyPalette, cyclePalette, PALETTE_HEX, paletteById, SCREEN_H, SCREEN_W } from '../gfx/palette';
 import { repaintAllTextures } from '../gfx/textures';
 import { addText, drawWindow, setText } from '../gfx/ui';
@@ -7,6 +9,14 @@ import { gamepad } from '../input/InputManager';
 import { showDialog } from './DialogScene';
 
 type Row = { label: () => string; left?: () => void; right?: () => void; press?: () => void | Promise<void> };
+
+const ROW_Y = 21;
+const ROW_H = 11;
+
+/** The next item in a list, wrapping around. */
+function cycle<T>(list: readonly T[], current: T, dir: 1 | -1): T {
+  return list[(list.indexOf(current) + dir + list.length) % list.length];
+}
 
 const CONTROLS = [
   'D-PAD  ARROWS: WALK/CLIMB\nA      X: TALK, CONFIRM\nB      Z: JUMP, BACK\nSTART  ENTER: MENU\nSELECT SHIFT: MUTE',
@@ -54,6 +64,24 @@ export class SettingsScene extends Phaser.Scene {
         press: () => this.setPalette(1),
       },
       { label: () => `SOUND ${s().muted ? 'MUTED' : 'ON'}`, press: () => void sound.toggleMute(), left: () => void sound.toggleMute(), right: () => void sound.toggleMute() },
+      {
+        label: () => `TEXT  {${s().textSpeed.toUpperCase()}}`,
+        left: () => sound.update({ textSpeed: cycle(TEXT_SPEEDS, s().textSpeed, -1) }),
+        right: () => sound.update({ textSpeed: cycle(TEXT_SPEEDS, s().textSpeed, 1) }),
+        press: () => sound.update({ textSpeed: cycle(TEXT_SPEEDS, s().textSpeed, 1) }),
+      },
+      {
+        label: () => `FLASHING ${s().reduceFlash ? 'REDUCED' : 'ON'}`,
+        left: () => sound.update({ reduceFlash: !s().reduceFlash }),
+        right: () => sound.update({ reduceFlash: !s().reduceFlash }),
+        press: () => sound.update({ reduceFlash: !s().reduceFlash }),
+      },
+      {
+        label: () => `TUTORIAL ${s().tutorial ? 'ON' : 'OFF'}`,
+        left: () => sound.update({ tutorial: !s().tutorial }),
+        right: () => sound.update({ tutorial: !s().tutorial }),
+        press: () => sound.update({ tutorial: !s().tutorial }),
+      },
       { label: () => 'CONTROLS', press: () => showDialog(this, { speaker: 'CONTROLS', pages: CONTROLS }).then(() => undefined) },
       { label: () => 'INPUT TEST', press: () => void this.scene.start('InputTest') },
       { label: () => 'BACK', press: () => void this.scene.start(this.back) },
@@ -62,9 +90,9 @@ export class SettingsScene extends Phaser.Scene {
     const g = this.add.graphics();
     drawWindow(g, 0, 0, SCREEN_W, 16);
     addText(this, 6, 5, 'SETTINGS', 0);
-    this.texts = this.rows.map((_, i) => addText(this, 14, 22 + i * 13, '', 0));
+    this.texts = this.rows.map((_, i) => addText(this, 14, ROW_Y + i * ROW_H, '', 0));
     this.drawSwatches(g);
-    this.cursorText = addText(this, 4, 22, ']', 0);
+    this.cursorText = addText(this, 4, ROW_Y, ']', 0);
     g.fillStyle(PALETTE_HEX[0]).fillRect(0, SCREEN_H - 10, SCREEN_W, 10);
     addText(this, 2, SCREEN_H - 9, '{}:CHANGE A:OK B:BACK', 2);
     this.render();
@@ -81,16 +109,16 @@ export class SettingsScene extends Phaser.Scene {
 
   /** Four squares previewing the active palette, darkest to lightest. */
   private drawSwatches(g: Phaser.GameObjects.Graphics): void {
-    const y = 22 + 7 * 13; // below the last row
+    const y = ROW_Y + 2 * ROW_H; // beside the COLORS row
     PALETTE_HEX.forEach((c, i) => {
-      g.fillStyle(PALETTE_HEX[0]).fillRect(14 + i * 14, y, 12, 10);
-      g.fillStyle(c).fillRect(15 + i * 14, y + 1, 10, 8);
+      g.fillStyle(PALETTE_HEX[0]).fillRect(116 + i * 10, y - 1, 9, 9);
+      g.fillStyle(c).fillRect(117 + i * 10, y, 7, 7);
     });
   }
 
   private render(): void {
     this.rows.forEach((r, i) => setText(this.texts[i], r.label()));
-    this.cursorText.setY(22 + this.cursor * 13);
+    this.cursorText.setY(ROW_Y + this.cursor * ROW_H);
   }
 
   update(time: number): void {
@@ -124,7 +152,7 @@ export class SettingsScene extends Phaser.Scene {
       }
     }
     if (gamepad.justPressed('B')) this.scene.start(this.back);
-    this.cursorText.setVisible(Math.floor(time / 400) % 4 !== 0);
+    this.cursorText.setVisible(blinkOn(time));
     this.render();
   }
 }

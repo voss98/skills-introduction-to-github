@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { blinkOn } from '../gfx/blink';
 import dialogue from '../data/dialogue.json';
 import { BALANCE } from '../core/balance';
 import { gameState, WORK_STATIONS, type WorkStationId } from '../core/gameState';
@@ -20,6 +21,7 @@ import type { MinigameData } from './MinigameScene';
 import type { Player } from './Player';
 import { PlatformWorld } from './platformWorld';
 import { saveGame, session } from './session';
+import { nextTip, type TutorialTrigger } from '../core/tutorial';
 import { clearSave } from '../core/save';
 
 const HUD_H = 8;
@@ -40,6 +42,8 @@ export class ShopScene extends Phaser.Scene {
   private hudBottom!: Phaser.GameObjects.BitmapText;
   private nearby: StationDef | null = null;
   private busy = false;
+  /** A tip to show once the current interaction's text boxes are done. */
+  private pendingTip: TutorialTrigger | null = null;
   /** >0: show MUTED, <0: show SOUND ON, for this many ms. */
   private muteToast = 0;
 
@@ -140,7 +144,7 @@ export class ShopScene extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     // Visuals that reflect shop state
-    const blink = Math.floor(time / 400) % 2 === 0;
+    const blink = blinkOn(time, 400, 1, 2);
     for (const [id, marker] of this.taskMarkers) {
       marker.setVisible(blink && !!this.shop.taskAt(id as WorkStationId));
     }
@@ -177,6 +181,11 @@ export class ShopScene extends Phaser.Scene {
     this.prompt.setVisible(false);
     try {
       await fn();
+      if (this.pendingTip && this.scene.isActive()) {
+        const t = this.pendingTip;
+        this.pendingTip = null;
+        await this.tip(t);
+      }
     } finally {
       this.busy = false;
       this.refreshHud();
@@ -214,6 +223,7 @@ export class ShopScene extends Phaser.Scene {
     const action = this.shop.counter();
     if (action.kind === 'handover') {
       const r = this.shop.handOver();
+      this.pendingTip = 'first_payment';
       sound.play('coin');
       await this.say([r.reaction], r.customer);
       await this.say(
@@ -284,6 +294,7 @@ export class ShopScene extends Phaser.Scene {
     });
     if (choice === 0) {
       this.shop.accept(customer, rush, overtime);
+      this.pendingTip = 'job_accepted';
       await this.say([fmt(D.counter.accepted, { stations: stations.join(', ') })], customer.name);
     } else if (choice === 1) {
       this.shop.decline(customer);
@@ -305,6 +316,7 @@ export class ShopScene extends Phaser.Scene {
       cancellable: true,
     });
     if (choice !== 0) return;
+    await this.tip('first_minigame');
     const quality = await this.playMinigame(task, name);
     const result = this.shop.finishTask(task, quality);
     const pages = [fmt(D.work.done, { quality: result.quality, minutes: result.minutes })];
@@ -313,6 +325,7 @@ export class ShopScene extends Phaser.Scene {
     }
     if (this.shop.activeJob && isJobDone(this.shop.activeJob)) pages.push(D.work.bikeReady);
     await this.say(pages, name);
+    if (this.shop.activeJob && isJobDone(this.shop.activeJob)) await this.tip('bike_ready');
   }
 
   private playMinigame(task: JobTask, stationLabel: string): Promise<number> {
@@ -442,7 +455,14 @@ export class ShopScene extends Phaser.Scene {
     return gameState.snapshot.decisionsSeen.filter(withChoices).length;
   }
 
+  /** Show a first-day tutorial tip, once per run, if the tutorial is on. */
+  private async tip(trigger: TutorialTrigger): Promise<void> {
+    const t = nextTip(trigger, gameState, sound.current.tutorial);
+    if (t) await this.say(t.pages, 'TIP');
+  }
+
   private async endOfDay(auto: boolean): Promise<void> {
+    await this.tip('first_closing');
     if (auto) await this.say([D.day.closing]);
     const sum = this.shop.endDay();
     const pages = [
@@ -479,6 +499,7 @@ export class ShopScene extends Phaser.Scene {
   private async morning(triggers: Trigger[]): Promise<void> {
     await this.say([fmt(D.day.morning, { month: monthName(gameState.day), day: dayInMonth(gameState.day), n: monthOf(gameState.day) })]);
     for (const t of triggers) await this.onTrigger(t);
+    if (gameState.day === 1) await this.tip('first_morning');
     saveGame(); // autosave once the new day has started
   }
 

@@ -57,6 +57,16 @@ export interface GameStateData {
   eventsFired: string[];
   /** Training programs completed (one entry per enrollment). */
   trainingDone: string[];
+  /** End-of-day snapshot for each day played (for the year chart at the ending). */
+  history: DayRecord[];
+  /** Tutorial tips already shown this run. */
+  tutorialSeen: string[];
+}
+
+export interface DayRecord {
+  day: number;
+  cash: number;
+  reputation: number;
 }
 
 export type StateListener = (state: Readonly<GameStateData>) => void;
@@ -79,7 +89,14 @@ export function initialState(): GameStateData {
     decisionsSeen: [],
     eventsFired: [],
     trainingDone: [],
+    history: [],
+    tutorialSeen: [],
   };
+}
+
+/** Fill fields added in later versions so older saves still load. */
+function withDefaults(data: GameStateData): GameStateData {
+  return { ...initialState(), ...structuredClone(data) };
 }
 
 export class GameState {
@@ -87,7 +104,7 @@ export class GameState {
   private listeners = new Set<StateListener>();
 
   constructor(data: GameStateData = initialState()) {
-    this.data = structuredClone(data);
+    this.data = withDefaults(data);
   }
 
   get snapshot(): Readonly<GameStateData> {
@@ -186,12 +203,26 @@ export class GameState {
     this.emit();
   }
 
+  /** Record the shop's numbers at closing time (one entry per day). */
+  recordDay(): void {
+    this.data.history = this.data.history.filter((h) => h.day !== this.data.day);
+    this.data.history.push({ day: this.data.day, cash: this.data.cash, reputation: this.data.reputation });
+  }
+
+  hasSeenTutorial(id: string): boolean {
+    return this.data.tutorialSeen.includes(id);
+  }
+
+  markTutorial(id: string): void {
+    if (!this.hasSeenTutorial(id)) this.data.tutorialSeen.push(id);
+  }
+
   markEventFired(eventId: string): void {
     if (!this.data.eventsFired.includes(eventId)) this.data.eventsFired.push(eventId);
   }
 
   reset(data: GameStateData = initialState()): void {
-    this.data = structuredClone(data);
+    this.data = withDefaults(data);
     this.emit();
   }
 

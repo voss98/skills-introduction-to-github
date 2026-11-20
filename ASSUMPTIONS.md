@@ -206,3 +206,14 @@ Decisions made where the brief was ambiguous. Each is easy to revisit.
   border and touch buttons follow. The choice is saved with the other settings.
 - **Readability guard:** a test requires each palette to go darkest → lightest and
   have at least 4.5:1 contrast between its darkest and lightest shade.
+
+## Version 0.2.0
+- **"Build me an updated game"** was read as: ship the next roadmap version (v0.2).
+  Done: tutorial, text speed, reduce flashing, the year chart, version number.
+  Not done: the real-player playtest and the mechanic review (both need people), and
+  remappable keys (left for a later version).
+- **Tutorial tips show once per run** and are stored in the save, so continuing a
+  run doesn't repeat them. They default to on; Settings > Tutorial turns them off
+  for future tips.
+- **The year chart uses closing-time numbers** (one point per day played), with
+  cash scaled to include $0 so profit and loss are easy to see.

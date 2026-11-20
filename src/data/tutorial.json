@@ -1,0 +1,44 @@
+{
+  "_readme": "First-day tutorial tips. Each tip shows once per run, when its trigger happens, if Settings > Tutorial is on. Triggers are fired by the shop scene.",
+  "tips": [
+    {
+      "id": "welcome",
+      "trigger": "first_morning",
+      "pages": [
+        "Welcome to your shop! Customers wait at the FRONT COUNTER on the far left. Walk with the D-pad and press A to talk to them.",
+        "B jumps. START opens the menu: your job, shop stats, training, the Shop Ledger and End Day."
+      ]
+    },
+    {
+      "id": "stations",
+      "trigger": "job_accepted",
+      "pages": ["A blinking ! marks every station with work for this job. Walk there and press A. The bottom bar shows your progress."]
+    },
+    {
+      "id": "minigames",
+      "trigger": "first_minigame",
+      "pages": [
+        "Each task is a quick minigame: press A while the marker is in the dark zone, press each button as it lights up, or hold A and let go on the target.",
+        "Better work means better pay and a better reputation."
+      ]
+    },
+    {
+      "id": "bike_ready",
+      "trigger": "bike_ready",
+      "pages": ["The bike is done! Take it back to the FRONT COUNTER to hand it over and get paid."]
+    },
+    {
+      "id": "first_pay",
+      "trigger": "first_payment",
+      "pages": [
+        "Quality and speed set what customers pay and how your reputation moves.",
+        "Restock at the PARTS WALL. The door up the ladder is the TRAINING CENTER. When you're done for the day: START > END DAY."
+      ]
+    },
+    {
+      "id": "closing",
+      "trigger": "first_closing",
+      "pages": ["Each night you pay overhead and your own wage, then make a decision. Twelve months to build your shop. Good luck!"]
+    }
+  ]
+}

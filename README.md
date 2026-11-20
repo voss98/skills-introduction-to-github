@@ -5,7 +5,7 @@ Build and repair bikes in station minigames, make business decisions, train at t
 Training Center, and see which of seven endings your choices lead to. The balance
 is driven by real, cited bike-industry data.
 
-Features, known limitations and the roadmap are in [docs/GAME_INFO.md](docs/GAME_INFO.md).
+Features, known limitations and the roadmap are in [docs/GAME_INFO.md](docs/GAME_INFO.md); what changed in each version is in [CHANGELOG.md](CHANGELOG.md).
 
 Built with Vite + TypeScript + Phaser 3 + Vitest. The native resolution is 160×144 in
 the 4-shade DMG green palette. All art, sound and music are generated in code.
@@ -54,6 +54,8 @@ on desktop.
 - **Endings:** Thriving Flagship Shop, Steady Local Favorite, Barely Surviving,
   Bankruptcy, Sold to a Big-Box Chain, Burned Out, and one secret. The Ending
   Gallery remembers the ones you've found.
+- **New players:** a first-day tutorial explains the basics (Settings > Tutorial
+  turns it off). Settings also has text speed and a reduce-flashing option.
 - **Saving:** autosaves at the start of each new day. Start > Save & Quit, then
   Continue from the title. Saves live in your browser's localStorage.
 
@@ -71,6 +73,7 @@ src/
     training.json         Training programs
     examQuestions.json    Certification exam question bank
     palettes.json         Selectable 4-shade color palettes (Settings > Colors)
+    tutorial.json         First-day tutorial tips
     endings.json          Endings with conditions, priority and "choices that mattered" drivers
     dialogue.json, customers.json, shopLayout.json, trainingLayout.json
   core/                 Pure TypeScript game logic (no Phaser), all unit tested
@@ -120,6 +123,12 @@ ASSUMPTIONS.md          Every judgement call, by phase
    in `trainingArt()` in `src/gfx/sprites.ts`.
 3. `tests/training.test.ts` checks the four required programs and that every
    station can be reached.
+
+### A tutorial tip
+Add an entry to `src/data/tutorial.json` with an `id`, one of the existing
+`trigger`s, and 1–3 `pages` of at most 150 characters each. To fire it at a new
+moment, add the trigger name to `TutorialTrigger` in `src/core/tutorial.ts` and
+call `this.tip('<trigger>')` from the shop scene.
 
 ### A color palette
 Add an entry to `src/data/palettes.json`: `id`, `name` (≤ 10 chars) and exactly 4
